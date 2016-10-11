@@ -12,6 +12,8 @@ import gui.MainGui;
 public class Main {
 	
 	public static void main(String[] args) {
+		
+		// Starte GUI
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
 				try {

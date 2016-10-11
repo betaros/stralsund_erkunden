@@ -154,13 +154,28 @@ public class MainGui {
 		gbc_geldpanel.gridx = 0;
 		gbc_geldpanel.gridy = 1;
 		profilpanel.add(geldpanel, gbc_geldpanel);
+		GridBagLayout gbl_geldpanel = new GridBagLayout();
+		gbl_geldpanel.columnWidths = new int[]{86, 6, 0};
+		gbl_geldpanel.rowHeights = new int[]{20, 0};
+		gbl_geldpanel.columnWeights = new double[]{0.0, 0.0, Double.MIN_VALUE};
+		gbl_geldpanel.rowWeights = new double[]{0.0, Double.MIN_VALUE};
+		geldpanel.setLayout(gbl_geldpanel);
 		
 		textField_2 = new JTextField();
-		geldpanel.add(textField_2);
+		GridBagConstraints gbc_textField_2 = new GridBagConstraints();
+		gbc_textField_2.anchor = GridBagConstraints.NORTHWEST;
+		gbc_textField_2.insets = new Insets(0, 0, 0, 5);
+		gbc_textField_2.gridx = 0;
+		gbc_textField_2.gridy = 0;
+		geldpanel.add(textField_2, gbc_textField_2);
 		textField_2.setColumns(10);
 		
 		JLabel label = new JLabel("\u20AC");
-		geldpanel.add(label);
+		GridBagConstraints gbc_label = new GridBagConstraints();
+		gbc_label.anchor = GridBagConstraints.WEST;
+		gbc_label.gridx = 1;
+		gbc_label.gridy = 0;
+		geldpanel.add(label, gbc_label);
 		
 		JPanel kategorienpanel = new JPanel();
 		kategorienpanel.setBorder(new TitledBorder(null, "Interessen", TitledBorder.LEADING, TitledBorder.TOP, null, null));
