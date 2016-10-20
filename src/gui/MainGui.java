@@ -9,15 +9,16 @@ import javax.swing.JPanel;
 import javax.swing.border.TitledBorder;
 
 import org.jxmapviewer.JXMapViewer;
-import org.jxmapviewer.OSMTileFactoryInfo;
-import org.jxmapviewer.viewer.DefaultTileFactory;
 import org.jxmapviewer.viewer.GeoPosition;
-import org.jxmapviewer.viewer.TileFactoryInfo;
+
+import map.Map;
 
 import javax.swing.JLabel;
 import java.awt.GridBagLayout;
 import java.awt.GridBagConstraints;
 import java.awt.Insets;
+import java.util.ArrayList;
+
 import javax.swing.JTextField;
 import javax.swing.JCheckBox;
 import java.awt.FlowLayout;
@@ -67,22 +68,18 @@ public class MainGui {
 		gbl_kartenpanel.columnWeights = new double[]{1.0, Double.MIN_VALUE};
 		gbl_kartenpanel.rowWeights = new double[]{1.0, Double.MIN_VALUE};
 		kartenpanel.setLayout(gbl_kartenpanel);
-		JXMapViewer mapViewer = new JXMapViewer();
 		
-		// Create a TileFactoryInfo for OpenStreetMap
-		TileFactoryInfo info = new OSMTileFactoryInfo();
-		DefaultTileFactory tileFactory = new DefaultTileFactory(info);
+		//JXMapViewer mapViewer = new JXMapViewer();
+		//JXMapViewer mapViewer = showMap();
+		Map map = new Map();
+		ArrayList<GeoPosition> waypoints = new ArrayList<GeoPosition>();
+		waypoints.add(new GeoPosition(54.3199026, 13.0416835));
+		waypoints.add(new GeoPosition(54.3200465, 13.0446653));
+		waypoints.add(new GeoPosition(54.315509,13.0949513));
+		JXMapViewer mapViewer = map.getMap(waypoints);
 		
-		// Use 8 threads in parallel to load the tiles
-		tileFactory.setThreadPoolSize(8);
-
-		// Set the focus
-		GeoPosition stralsund = new GeoPosition(54.31, 13.08);
-		
-		mapViewer.setZoom(7);
-		mapViewer.setAddressLocation(stralsund);
 		mapViewer.setLayout(new FlowLayout(FlowLayout.CENTER, 5, 5));
-						
+		
 		GridBagConstraints gbc_mapViewer = new GridBagConstraints();
 		gbc_mapViewer.fill = GridBagConstraints.BOTH;
 		gbc_mapViewer.gridx = 0;
@@ -207,5 +204,5 @@ public class MainGui {
 		gbc_chckbxSchwimmen.gridy = 1;
 		kategorienpanel.add(chckbxSchwimmen, gbc_chckbxSchwimmen);
 	}
-
+	
 }
