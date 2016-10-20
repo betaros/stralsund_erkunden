@@ -9,13 +9,14 @@ import jpl.*;
 public class PrologConnector {
 	
 	public PrologConnector(){
-		Query.hasSolution("consult(test.pl)");
+		Query.hasSolution("consult('test.pl')");
 		//new Query("consult",
 		//        new Term[] {new Atom("test.pl")}
 		//    );
+		
 	}
 	
-	public void sucheVeranstaltung(){
+	public void findEvent(){
 		//Query suchQuery = new Query(text, arg);
 	}
 	
