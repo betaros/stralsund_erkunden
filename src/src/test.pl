@@ -2,11 +2,11 @@
 * Konstanten fuer die Berechnungen
 */
 
-latInKm(X, Erg) :-
-	Erg is X * 111.66.
+latInKm(X, Res) :-
+	Res is X * 111.66.
 
-lonInKm(X, Erg) :-
-	Erg is X * 19.39.
+lonInKm(X, Res) :-
+	Res is X * 19.39.
 
 /*----------------------------------------------------------------------------------------------*/
 
@@ -23,10 +23,10 @@ position(citti, 54.3200465, 13.0446653).
 
 /*
 * Weist den Veranstaltungen Kategorien hinzu
-* kategorie(Name der Veranstaltung, Liste an zutreffenden Kategorien) 
+* category(Name der Veranstaltung, Liste an zutreffenden Kategorien) 
 */
-kategorie(hansedom, [sport,hotel,schwimmen]).
-kategorie(citti, [einkaufen,grosshandel]).
+category(hansedom, [sport,hotel,schwimmen]).
+category(citti, [einkaufen,grosshandel]).
 
 /*----------------------------------------------------------------------------------------------*/
 
@@ -36,24 +36,24 @@ kategorie(citti, [einkaufen,grosshandel]).
 
 /*
 * Sucht nach Veranstaltung mit passender Kategorie
-* sucheVeranstaltung(Liste an Kategorien, Liste an Ergebnissen)
+* findEvent(Liste an Kategorien, Liste an Ergebnissen)
 *
 * TODO: Logik ausdenken...
 */
-sucheVeranstaltung(_, []).
-sucheVeranstaltung([Kategorie|Rest], Ergebnis) :- 
-	sucheVeranstaltung(Rest, ErgebnisRest),
-	member(Kategorie,ErgebnisRest),
-	kategorie(Kategorie, Ergebnis).
+findEvent(_, []).
+findEvent([Category|Residual], Result) :- 
+	findEvent(Residual, Temp),
+	member(Category,Temp),
+	categorie(Category, Result).
 
 /*
 * Berechnet die Entfernung zwischen zwei Veranstaltungen
 * Entfernung = sqrt((XA-XB)^2 + (YA-YB)^2)
-* berechneEntfernung(Name Veranstaltung A, Name Veranstaltung B, Entfernung
+* calcDistance(Name Veranstaltung A, Name Veranstaltung B, Entfernung
 */	
-berechneEntfernung(VeranstaltungA, VeranstaltungB, Entfernung) :-
-	position(VeranstaltungA, XA, YA),
-	position(VeranstaltungB, XB, YB),
+calcDistance(EventA, EventB, Distance) :-
+	position(EventA, XA, YA),
+	position(EventB, XB, YB),
 	latInKm(XA, XAinKm),
 	latInKm(XB, XBinKm),
 	lonInKm(YA, YAinKm),
@@ -63,4 +63,4 @@ berechneEntfernung(VeranstaltungA, VeranstaltungB, Entfernung) :-
 	PotX is TempX * TempX,
 	PotY is TempY * TempY,
 	AddBoth is PotX + PotY,
-	Entfernung is sqrt(AddBoth).
+	Distance is sqrt(AddBoth).

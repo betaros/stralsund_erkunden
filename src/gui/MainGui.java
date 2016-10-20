@@ -50,24 +50,24 @@ public class MainGui {
 		JSplitPane splitPane_1 = new JSplitPane();
 		frmStralsundErkunden.getContentPane().add(splitPane_1, BorderLayout.CENTER);
 		
-		JPanel ergebnispanel = new JPanel();
-		splitPane_1.setLeftComponent(ergebnispanel);
+		JPanel resultpanel = new JPanel();
+		splitPane_1.setLeftComponent(resultpanel);
 		
 		JSplitPane splitPane = new JSplitPane();
 		splitPane.setOrientation(JSplitPane.VERTICAL_SPLIT);
 		splitPane_1.setRightComponent(splitPane);
 		
-		JPanel routenpanel = new JPanel();
-		splitPane.setLeftComponent(routenpanel);
+		JPanel routingpanel = new JPanel();
+		splitPane.setLeftComponent(routingpanel);
 		
-		JPanel kartenpanel = new JPanel();
-		splitPane.setRightComponent(kartenpanel);
-		GridBagLayout gbl_kartenpanel = new GridBagLayout();
-		gbl_kartenpanel.columnWidths = new int[]{652, 0};
-		gbl_kartenpanel.rowHeights = new int[]{118, 0};
-		gbl_kartenpanel.columnWeights = new double[]{1.0, Double.MIN_VALUE};
-		gbl_kartenpanel.rowWeights = new double[]{1.0, Double.MIN_VALUE};
-		kartenpanel.setLayout(gbl_kartenpanel);
+		JPanel mappanel = new JPanel();
+		splitPane.setRightComponent(mappanel);
+		GridBagLayout gbl_mappanel = new GridBagLayout();
+		gbl_mappanel.columnWidths = new int[]{652, 0};
+		gbl_mappanel.rowHeights = new int[]{118, 0};
+		gbl_mappanel.columnWeights = new double[]{1.0, Double.MIN_VALUE};
+		gbl_mappanel.rowWeights = new double[]{1.0, Double.MIN_VALUE};
+		mappanel.setLayout(gbl_mappanel);
 		
 		//JXMapViewer mapViewer = new JXMapViewer();
 		//JXMapViewer mapViewer = showMap();
@@ -84,7 +84,7 @@ public class MainGui {
 		gbc_mapViewer.fill = GridBagConstraints.BOTH;
 		gbc_mapViewer.gridx = 0;
 		gbc_mapViewer.gridy = 0;
-		kartenpanel.add(mapViewer, gbc_mapViewer);
+		mappanel.add(mapViewer, gbc_mapViewer);
 		
 		JPanel profilpanel = new JPanel();
 		frmStralsundErkunden.getContentPane().add(profilpanel, BorderLayout.WEST);
@@ -96,21 +96,21 @@ public class MainGui {
 		gbl_profilpanel.rowWeights = new double[]{0.0, 0.0, 1.0, Double.MIN_VALUE};
 		profilpanel.setLayout(gbl_profilpanel);
 		
-		JPanel personenpanel = new JPanel();
-		personenpanel.setBorder(new TitledBorder(null, "Personen", TitledBorder.LEADING, TitledBorder.TOP, null, null));
-		GridBagConstraints gbc_personenpanel = new GridBagConstraints();
-		gbc_personenpanel.fill = GridBagConstraints.HORIZONTAL;
-		gbc_personenpanel.anchor = GridBagConstraints.NORTH;
-		gbc_personenpanel.insets = new Insets(0, 0, 5, 0);
-		gbc_personenpanel.gridx = 0;
-		gbc_personenpanel.gridy = 0;
-		profilpanel.add(personenpanel, gbc_personenpanel);
-		GridBagLayout gbl_personenpanel = new GridBagLayout();
-		gbl_personenpanel.columnWidths = new int[]{0, 0, 0};
-		gbl_personenpanel.rowHeights = new int[]{0, 0, 0};
-		gbl_personenpanel.columnWeights = new double[]{1.0, 0.0, Double.MIN_VALUE};
-		gbl_personenpanel.rowWeights = new double[]{0.0, 0.0, Double.MIN_VALUE};
-		personenpanel.setLayout(gbl_personenpanel);
+		JPanel peoplepanel = new JPanel();
+		peoplepanel.setBorder(new TitledBorder(null, "Personen", TitledBorder.LEADING, TitledBorder.TOP, null, null));
+		GridBagConstraints gbc_peoplepanel = new GridBagConstraints();
+		gbc_peoplepanel.fill = GridBagConstraints.HORIZONTAL;
+		gbc_peoplepanel.anchor = GridBagConstraints.NORTH;
+		gbc_peoplepanel.insets = new Insets(0, 0, 5, 0);
+		gbc_peoplepanel.gridx = 0;
+		gbc_peoplepanel.gridy = 0;
+		profilpanel.add(peoplepanel, gbc_peoplepanel);
+		GridBagLayout gbl_peoplepanel = new GridBagLayout();
+		gbl_peoplepanel.columnWidths = new int[]{0, 0, 0};
+		gbl_peoplepanel.rowHeights = new int[]{0, 0, 0};
+		gbl_peoplepanel.columnWeights = new double[]{1.0, 0.0, Double.MIN_VALUE};
+		gbl_peoplepanel.rowWeights = new double[]{0.0, 0.0, Double.MIN_VALUE};
+		peoplepanel.setLayout(gbl_peoplepanel);
 		
 		textField = new JTextField();
 		GridBagConstraints gbc_textField = new GridBagConstraints();
@@ -118,15 +118,15 @@ public class MainGui {
 		gbc_textField.fill = GridBagConstraints.HORIZONTAL;
 		gbc_textField.gridx = 0;
 		gbc_textField.gridy = 0;
-		personenpanel.add(textField, gbc_textField);
+		peoplepanel.add(textField, gbc_textField);
 		textField.setColumns(10);
 		
-		JLabel lblErwachsene = new JLabel("Erwachsene");
-		GridBagConstraints gbc_lblErwachsene = new GridBagConstraints();
-		gbc_lblErwachsene.insets = new Insets(0, 0, 5, 0);
-		gbc_lblErwachsene.gridx = 1;
-		gbc_lblErwachsene.gridy = 0;
-		personenpanel.add(lblErwachsene, gbc_lblErwachsene);
+		JLabel lblAdult = new JLabel("Erwachsene");
+		GridBagConstraints gbc_lblAdult = new GridBagConstraints();
+		gbc_lblAdult.insets = new Insets(0, 0, 5, 0);
+		gbc_lblAdult.gridx = 1;
+		gbc_lblAdult.gridy = 0;
+		peoplepanel.add(lblAdult, gbc_lblAdult);
 		
 		textField_1 = new JTextField();
 		GridBagConstraints gbc_textField_1 = new GridBagConstraints();
@@ -134,29 +134,29 @@ public class MainGui {
 		gbc_textField_1.fill = GridBagConstraints.HORIZONTAL;
 		gbc_textField_1.gridx = 0;
 		gbc_textField_1.gridy = 1;
-		personenpanel.add(textField_1, gbc_textField_1);
+		peoplepanel.add(textField_1, gbc_textField_1);
 		textField_1.setColumns(10);
 		
-		JLabel lblKinder = new JLabel("Kinder");
-		GridBagConstraints gbc_lblKinder = new GridBagConstraints();
-		gbc_lblKinder.gridx = 1;
-		gbc_lblKinder.gridy = 1;
-		personenpanel.add(lblKinder, gbc_lblKinder);
+		JLabel lblChildren = new JLabel("Kinder");
+		GridBagConstraints gbc_lblChildren = new GridBagConstraints();
+		gbc_lblChildren.gridx = 1;
+		gbc_lblChildren.gridy = 1;
+		peoplepanel.add(lblChildren, gbc_lblChildren);
 		
-		JPanel geldpanel = new JPanel();
-		geldpanel.setBorder(new TitledBorder(null, "Budget", TitledBorder.LEADING, TitledBorder.TOP, null, null));
-		GridBagConstraints gbc_geldpanel = new GridBagConstraints();
-		gbc_geldpanel.insets = new Insets(0, 0, 5, 0);
-		gbc_geldpanel.fill = GridBagConstraints.HORIZONTAL;
-		gbc_geldpanel.gridx = 0;
-		gbc_geldpanel.gridy = 1;
-		profilpanel.add(geldpanel, gbc_geldpanel);
-		GridBagLayout gbl_geldpanel = new GridBagLayout();
-		gbl_geldpanel.columnWidths = new int[]{86, 6, 0};
-		gbl_geldpanel.rowHeights = new int[]{20, 0};
-		gbl_geldpanel.columnWeights = new double[]{0.0, 0.0, Double.MIN_VALUE};
-		gbl_geldpanel.rowWeights = new double[]{0.0, Double.MIN_VALUE};
-		geldpanel.setLayout(gbl_geldpanel);
+		JPanel moneypanel = new JPanel();
+		moneypanel.setBorder(new TitledBorder(null, "Budget", TitledBorder.LEADING, TitledBorder.TOP, null, null));
+		GridBagConstraints gbc_moneypanel = new GridBagConstraints();
+		gbc_moneypanel.insets = new Insets(0, 0, 5, 0);
+		gbc_moneypanel.fill = GridBagConstraints.HORIZONTAL;
+		gbc_moneypanel.gridx = 0;
+		gbc_moneypanel.gridy = 1;
+		profilpanel.add(moneypanel, gbc_moneypanel);
+		GridBagLayout gbl_moneypanel = new GridBagLayout();
+		gbl_moneypanel.columnWidths = new int[]{86, 6, 0};
+		gbl_moneypanel.rowHeights = new int[]{20, 0};
+		gbl_moneypanel.columnWeights = new double[]{0.0, 0.0, Double.MIN_VALUE};
+		gbl_moneypanel.rowWeights = new double[]{0.0, Double.MIN_VALUE};
+		moneypanel.setLayout(gbl_moneypanel);
 		
 		textField_2 = new JTextField();
 		GridBagConstraints gbc_textField_2 = new GridBagConstraints();
@@ -164,7 +164,7 @@ public class MainGui {
 		gbc_textField_2.insets = new Insets(0, 0, 0, 5);
 		gbc_textField_2.gridx = 0;
 		gbc_textField_2.gridy = 0;
-		geldpanel.add(textField_2, gbc_textField_2);
+		moneypanel.add(textField_2, gbc_textField_2);
 		textField_2.setColumns(10);
 		
 		JLabel label = new JLabel("\u20AC");
@@ -172,21 +172,21 @@ public class MainGui {
 		gbc_label.anchor = GridBagConstraints.WEST;
 		gbc_label.gridx = 1;
 		gbc_label.gridy = 0;
-		geldpanel.add(label, gbc_label);
+		moneypanel.add(label, gbc_label);
 		
-		JPanel kategorienpanel = new JPanel();
-		kategorienpanel.setBorder(new TitledBorder(null, "Interessen", TitledBorder.LEADING, TitledBorder.TOP, null, null));
-		GridBagConstraints gbc_kategorienpanel = new GridBagConstraints();
-		gbc_kategorienpanel.fill = GridBagConstraints.BOTH;
-		gbc_kategorienpanel.gridx = 0;
-		gbc_kategorienpanel.gridy = 2;
-		profilpanel.add(kategorienpanel, gbc_kategorienpanel);
-		GridBagLayout gbl_kategorienpanel = new GridBagLayout();
-		gbl_kategorienpanel.columnWidths = new int[]{63, 0};
-		gbl_kategorienpanel.rowHeights = new int[]{23, 0, 0};
-		gbl_kategorienpanel.columnWeights = new double[]{0.0, Double.MIN_VALUE};
-		gbl_kategorienpanel.rowWeights = new double[]{0.0, 0.0, Double.MIN_VALUE};
-		kategorienpanel.setLayout(gbl_kategorienpanel);
+		JPanel categoriespanel = new JPanel();
+		categoriespanel.setBorder(new TitledBorder(null, "Interessen", TitledBorder.LEADING, TitledBorder.TOP, null, null));
+		GridBagConstraints gbc_categoriespanel = new GridBagConstraints();
+		gbc_categoriespanel.fill = GridBagConstraints.BOTH;
+		gbc_categoriespanel.gridx = 0;
+		gbc_categoriespanel.gridy = 2;
+		profilpanel.add(categoriespanel, gbc_categoriespanel);
+		GridBagLayout gbl_categoriespanel = new GridBagLayout();
+		gbl_categoriespanel.columnWidths = new int[]{63, 0};
+		gbl_categoriespanel.rowHeights = new int[]{23, 0, 0};
+		gbl_categoriespanel.columnWeights = new double[]{0.0, Double.MIN_VALUE};
+		gbl_categoriespanel.rowWeights = new double[]{0.0, 0.0, Double.MIN_VALUE};
+		categoriespanel.setLayout(gbl_categoriespanel);
 		
 		JCheckBox chckbxMuseen = new JCheckBox("Museen");
 		GridBagConstraints gbc_chckbxMuseen = new GridBagConstraints();
@@ -195,14 +195,14 @@ public class MainGui {
 		gbc_chckbxMuseen.insets = new Insets(0, 0, 5, 0);
 		gbc_chckbxMuseen.gridx = 0;
 		gbc_chckbxMuseen.gridy = 0;
-		kategorienpanel.add(chckbxMuseen, gbc_chckbxMuseen);
+		categoriespanel.add(chckbxMuseen, gbc_chckbxMuseen);
 		
 		JCheckBox chckbxSchwimmen = new JCheckBox("Schwimmen");
 		GridBagConstraints gbc_chckbxSchwimmen = new GridBagConstraints();
 		gbc_chckbxSchwimmen.anchor = GridBagConstraints.NORTHWEST;
 		gbc_chckbxSchwimmen.gridx = 0;
 		gbc_chckbxSchwimmen.gridy = 1;
-		kategorienpanel.add(chckbxSchwimmen, gbc_chckbxSchwimmen);
+		categoriespanel.add(chckbxSchwimmen, gbc_chckbxSchwimmen);
 	}
 	
 }
