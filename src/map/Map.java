@@ -70,7 +70,7 @@ public class Map
 		ArrayList<MyWaypoint> waypointArray = new ArrayList<MyWaypoint>();
 		int counter = 1;
 		for(GeoPosition gp:_waypoints) {
-			waypointArray.add(new MyWaypoint(String.valueOf(counter), Color.RED, gp));
+			waypointArray.add(new MyWaypoint(String.valueOf(counter), Color.ORANGE, gp));
 			counter++;
 		}
 		Set<MyWaypoint> waypoints = new HashSet<MyWaypoint>(waypointArray);
