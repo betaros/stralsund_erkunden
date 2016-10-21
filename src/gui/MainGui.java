@@ -76,6 +76,7 @@ public class MainGui {
 		waypoints.add(new GeoPosition(54.3199026, 13.0416835));
 		waypoints.add(new GeoPosition(54.3200465, 13.0446653));
 		waypoints.add(new GeoPosition(54.315509,13.0949513));
+		waypoints.add(new GeoPosition(54.311055, 13.090076));
 		JXMapViewer mapViewer = map.getMap(waypoints);
 		
 		mapViewer.setLayout(new FlowLayout(FlowLayout.CENTER, 5, 5));

@@ -1,5 +1,7 @@
 package src;
 
+import prolog.PrologConnector;
+
 public class Test {
 
 	public static void main(String[] args) {

@@ -1,6 +1,6 @@
 // https://github.com/SWI-Prolog/packages-jpl/tree/master/examples/java
 
-package src;
+package prolog;
 
 import java.util.Hashtable;
 

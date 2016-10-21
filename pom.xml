@@ -28,10 +28,5 @@
   		<artifactId>jpl</artifactId>
   		<version>3.1.4-alpha</version>
   	</dependency>
-  	<dependency>
-  		<groupId>com.thesett</groupId>
-  		<artifactId>prolog</artifactId>
-  		<version>0.9.97</version>
-  	</dependency>
   </dependencies>
 </project>

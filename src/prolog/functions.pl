@@ -1,3 +1,5 @@
+:- use_module(events).
+
 /*
 * Konstanten fuer die Berechnungen
 */
@@ -7,26 +9,6 @@ latInKm(X, Res) :-
 
 lonInKm(X, Res) :-
 	Res is X * 19.39.
-
-/*----------------------------------------------------------------------------------------------*/
-
-/*
-* Wissensdatenbank
-*/
-
-/*
-* Spezifiziert die Position der Veranstaltung
-* position(Name der Veranstaltung, Latitude, Longitude) 
-*/
-position(hansedom, 54.3199026, 13.0416835).
-position(citti, 54.3200465, 13.0446653).
-
-/*
-* Weist den Veranstaltungen Kategorien hinzu
-* category(Name der Veranstaltung, Liste an zutreffenden Kategorien) 
-*/
-category(hansedom, [sport,hotel,schwimmen]).
-category(citti, [einkaufen,grosshandel]).
 
 /*----------------------------------------------------------------------------------------------*/
 
@@ -52,8 +34,8 @@ findEvent([Category|Residual], Result) :-
 * calcDistance(Name Veranstaltung A, Name Veranstaltung B, Entfernung
 */	
 calcDistance(EventA, EventB, Distance) :-
-	position(EventA, XA, YA),
-	position(EventB, XB, YB),
+	event(EventA, XA, YA, _),
+	event(EventB, XB, YB, _),
 	latInKm(XA, XAinKm),
 	latInKm(XB, XBinKm),
 	lonInKm(YA, YAinKm),
