@@ -9,7 +9,7 @@ import org.jpl7.*;
 public class PrologConnector {
 	
 	public PrologConnector(){
-		Query.hasSolution("consult('test.pl')");
+		Query.hasSolution("consult('functions.pl')");
 		//new Query("consult",
 		//        new Term[] {new Atom("test.pl")}
 		//    );

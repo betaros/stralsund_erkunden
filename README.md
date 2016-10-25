@@ -31,5 +31,5 @@ Um das Projekt ausführen zu können muss man folgendes machen:
 
 ## Verwendete Tools
 
-- [JPL](http://www.swi-prolog.org/packages/jpl/)
+- [JPL7](http://jpl7.org)
 - [JXMapViewer2](https://github.com/msteiger/jxmapviewer2)
