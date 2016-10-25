@@ -4,7 +4,7 @@ package prolog;
 
 import java.util.Hashtable;
 
-import jpl.*;
+import org.jpl7.*;
 
 public class PrologConnector {
 	
@@ -31,7 +31,7 @@ public class PrologConnector {
 					);
 		
 		@SuppressWarnings("rawtypes")
-		Hashtable ergebnis = distanceQuery.oneSolution();
+		Hashtable ergebnis = (Hashtable) distanceQuery.oneSolution();
 		
 		System.out.println("Entfernung zwischen " + placeA + " und " + placeB + ": " + ergebnis.get(distance));
 	}

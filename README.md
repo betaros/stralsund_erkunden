@@ -16,6 +16,18 @@ Wenn du an dem Tool mit entwickeln möchtest, dann benötigst du dafür folgende
 
 Das Projekt muss als lokales Maven Projekt importiert werden.
 
+Um das Projekt ausführen zu können muss man folgendes machen:
+1. Umgebungsvariable erstellen:
+   Name: SWI_HOME_DIR
+   Wert: Pfad zu Swipl
+2. Pfad hinzufügen
+   %SWI_HOME_DIR%\bin
+3. Pfad hinzufügen
+   %SWI_HOME_DIR%\lib\jpl.jar
+4. In Eclipse externe JAR zum Build in Properties hinzufügen, siehe 3.
+
+[siehe StackOverflow](http://stackoverflow.com/a/12309591)
+
 ## Verwendete Tools
 
 - [JPL](http://www.swi-prolog.org/packages/jpl/)
