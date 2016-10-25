@@ -17,6 +17,7 @@ Wenn du an dem Tool mit entwickeln möchtest, dann benötigst du dafür folgende
 Das Projekt muss als lokales Maven Projekt importiert werden.
 
 Um das Projekt ausführen zu können muss man folgendes machen:
+
 1. Umgebungsvariable erstellen:
    Name: SWI_HOME_DIR
    Wert: Pfad zu Swipl
