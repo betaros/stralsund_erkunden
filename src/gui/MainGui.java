@@ -3,7 +3,6 @@ package gui;
 // https://github.com/msteiger/jxmapviewer2
 
 import javax.swing.JFrame;
-import java.awt.BorderLayout;
 
 import javax.swing.JPanel;
 import javax.swing.border.TitledBorder;
@@ -53,22 +52,22 @@ public class MainGui {
 
 		boolean categories[][] = new boolean[2][2]; 
 		profile = new Profile(2, 20000, 2, 1, categories); 
-
-		mp = new MainPanel();
-		pe = new ProfileEditor(profile);
 		profileVisible = false;
-
-		JPanel content = new JPanel();
-		CardLayout cl = new CardLayout();
-		content.setLayout(cl);
-		content.add(pe, "profileeditor");
-		content.add(mp, "mainpanel");
-		cl.show(content, "mainpanel");
-
-		frmStralsundErkunden.getContentPane().add(content, BorderLayout.CENTER);
+		GridBagLayout gridBagLayout = new GridBagLayout();
+		gridBagLayout.columnWidths = new int[]{173, 780, 0};
+		gridBagLayout.rowHeights = new int[]{596, 0};
+		gridBagLayout.columnWeights = new double[]{0.0, 1.0, Double.MIN_VALUE};
+		gridBagLayout.rowWeights = new double[]{1.0, Double.MIN_VALUE};
+		frmStralsundErkunden.getContentPane().setLayout(gridBagLayout);
 
 		JPanel profilpanel = new JPanel();
-		frmStralsundErkunden.getContentPane().add(profilpanel, BorderLayout.WEST);
+		GridBagConstraints gbc_profilpanel = new GridBagConstraints();
+		gbc_profilpanel.anchor = GridBagConstraints.WEST;
+		gbc_profilpanel.fill = GridBagConstraints.VERTICAL;
+		gbc_profilpanel.insets = new Insets(0, 0, 0, 5);
+		gbc_profilpanel.gridx = 0;
+		gbc_profilpanel.gridy = 0;
+		frmStralsundErkunden.getContentPane().add(profilpanel, gbc_profilpanel);
 		profilpanel.setBorder(new TitledBorder(null, "Profil", TitledBorder.LEADING, TitledBorder.TOP, null, null));
 		GridBagLayout gbl_profilpanel = new GridBagLayout();
 		gbl_profilpanel.columnWidths = new int[]{161, 0};
@@ -106,6 +105,22 @@ public class MainGui {
 		gbc_btnSuchen.gridy = 2;
 		profilpanel.add(btnSuchen, gbc_btnSuchen);
 
+		mp = new MainPanel();
+		pe = new ProfileEditor(profile);
+
+		JPanel content = new JPanel();
+		CardLayout cl = new CardLayout();
+		content.setLayout(cl);
+		content.add(pe, "profileeditor");
+		content.add(mp, "mainpanel");
+		cl.show(content, "mainpanel");
+
+		GridBagConstraints gbc_content = new GridBagConstraints();
+		gbc_content.fill = GridBagConstraints.BOTH;
+		gbc_content.gridx = 1;
+		gbc_content.gridy = 0;
+		frmStralsundErkunden.getContentPane().add(content, gbc_content);
+
 		/**********************************************************************************************/
 		/* Funktionen */
 
@@ -113,13 +128,16 @@ public class MainGui {
 		profileButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				if(profileVisible){
-					// zeige ProfileEditor
-					profileButton.setText("Ergebnisse anzeigen");
-					profileVisible = false;
-					cl.show(content, "mainpanel");
-				} else {
 					// zeige Ergebnisse
 					profileButton.setText("Profil bearbeiten");
+					profileVisible = false;
+
+					profile = pe.getProfile();
+
+					cl.show(content, "mainpanel");
+				} else {
+					// zeige ProfileEditor
+					profileButton.setText("Ergebnisse anzeigen");
 					profileVisible = true;
 					cl.show(content, "profileeditor");
 				}

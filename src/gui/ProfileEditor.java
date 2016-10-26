@@ -7,7 +7,6 @@ import java.awt.Insets;
 import javax.swing.JLabel;
 import javax.swing.JTextField;
 import javax.swing.JButton;
-import java.awt.FlowLayout;
 import java.awt.event.ActionListener;
 import java.util.ArrayList;
 import java.awt.event.ActionEvent;
@@ -24,11 +23,15 @@ public class ProfileEditor extends JPanel {
 	private int days;
 	private int budgetInCent;
 	private JTextField textFieldBudget;
+	
+	private Profile profile;
 
 	/**
 	 * Create the panel.
 	 */
-	public ProfileEditor(Profile profile) {
+	public ProfileEditor(Profile _profile) {
+		this.profile = _profile;
+		
 		setBorder(new TitledBorder(null, "Profil Editor", TitledBorder.LEADING, TitledBorder.TOP, null, null));
 		GridBagLayout gridBagLayout = new GridBagLayout();
 		gridBagLayout.columnWidths = new int[]{0, 0};
@@ -45,9 +48,9 @@ public class ProfileEditor extends JPanel {
 		add(panel, gbc_panel);
 		GridBagLayout gbl_panel = new GridBagLayout();
 		gbl_panel.columnWidths = new int[]{0, 0, 0};
-		gbl_panel.rowHeights = new int[]{0, 0, 0, 0, 0, 0};
+		gbl_panel.rowHeights = new int[]{0, 0, 0, 0, 0};
 		gbl_panel.columnWeights = new double[]{0.0, 1.0, Double.MIN_VALUE};
-		gbl_panel.rowWeights = new double[]{0.0, 0.0, 0.0, 1.0, 0.0, Double.MIN_VALUE};
+		gbl_panel.rowWeights = new double[]{0.0, 0.0, 0.0, 1.0, Double.MIN_VALUE};
 		panel.setLayout(gbl_panel);
 		
 		JLabel lblPeople = new JLabel("Personen");
@@ -198,30 +201,17 @@ public class ProfileEditor extends JPanel {
 		JLabel lblCategories = new JLabel("Kategorien");
 		GridBagConstraints gbc_lblCategories = new GridBagConstraints();
 		gbc_lblCategories.anchor = GridBagConstraints.EAST;
-		gbc_lblCategories.insets = new Insets(0, 0, 5, 5);
+		gbc_lblCategories.insets = new Insets(0, 0, 0, 5);
 		gbc_lblCategories.gridx = 0;
 		gbc_lblCategories.gridy = 3;
 		panel.add(lblCategories, gbc_lblCategories);
 		
 		JPanel panel_2 = new JPanel();
 		GridBagConstraints gbc_panel_2 = new GridBagConstraints();
-		gbc_panel_2.insets = new Insets(0, 0, 5, 0);
 		gbc_panel_2.fill = GridBagConstraints.BOTH;
 		gbc_panel_2.gridx = 1;
 		gbc_panel_2.gridy = 3;
 		panel.add(panel_2, gbc_panel_2);
-		
-		JPanel panel_3 = new JPanel();
-		FlowLayout flowLayout = (FlowLayout) panel_3.getLayout();
-		flowLayout.setAlignment(FlowLayout.RIGHT);
-		GridBagConstraints gbc_panel_3 = new GridBagConstraints();
-		gbc_panel_3.fill = GridBagConstraints.BOTH;
-		gbc_panel_3.gridx = 1;
-		gbc_panel_3.gridy = 4;
-		panel.add(panel_3, gbc_panel_3);
-		
-		JButton btnSave = new JButton("Speichern");
-		panel_3.add(btnSave);
 		
 		/***********************************************************************************/
 		// Profil laden
@@ -311,18 +301,6 @@ public class ProfileEditor extends JPanel {
 				}
 			}
 		});
-		
-		/**
-		 * Speichern
-		 */
-		btnSave.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				profile.setAdultCounter(adultCounter);
-				profile.setChildCounter(childCounter);
-				profile.setDays(days);
-				profile.setBudgetInCent(budgetInCent);
-			}
-		});
 	}
 
 	private JPanel generateCategoryPanel(boolean adult){
@@ -330,6 +308,10 @@ public class ProfileEditor extends JPanel {
 		
 		
 		return panel;
+	}
+	
+	public Profile getProfile(){
+		return profile;
 	}
 	
 }

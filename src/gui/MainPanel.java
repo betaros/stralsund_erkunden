@@ -3,7 +3,6 @@ package gui;
 import java.awt.FlowLayout;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
-import java.awt.Insets;
 import java.util.ArrayList;
 
 import javax.swing.JLabel;
@@ -41,17 +40,15 @@ public class MainPanel extends JPanel {
 		gbc_panel.gridy = 0;
 		add(panel, gbc_panel);
 		GridBagLayout gbl_panel = new GridBagLayout();
-		gbl_panel.columnWidths = new int[]{0, 0, 0};
+		gbl_panel.columnWidths = new int[]{0, 0};
 		gbl_panel.rowHeights = new int[]{0, 0};
-		gbl_panel.columnWeights = new double[]{0.0, 1.0, Double.MIN_VALUE};
+		gbl_panel.columnWeights = new double[]{1.0, Double.MIN_VALUE};
 		gbl_panel.rowWeights = new double[]{1.0, Double.MIN_VALUE};
 		panel.setLayout(gbl_panel);
 		
 		JSplitPane splitPane_1 = new JSplitPane();
 		GridBagConstraints gbc_splitPane_1 = new GridBagConstraints();
-		gbc_splitPane_1.fill = GridBagConstraints.VERTICAL;
-		gbc_splitPane_1.anchor = GridBagConstraints.EAST;
-		gbc_splitPane_1.insets = new Insets(0, 0, 0, 5);
+		gbc_splitPane_1.fill = GridBagConstraints.BOTH;
 		gbc_splitPane_1.gridx = 0;
 		gbc_splitPane_1.gridy = 0;
 		panel.add(splitPane_1, gbc_splitPane_1);
@@ -75,7 +72,7 @@ public class MainPanel extends JPanel {
 		JPanel mappanel = new JPanel();
 		splitPane.setRightComponent(mappanel);
 		GridBagLayout gbl_mappanel = new GridBagLayout();
-		gbl_mappanel.columnWidths = new int[]{652, 0};
+		gbl_mappanel.columnWidths = new int[]{876, 0};
 		gbl_mappanel.rowHeights = new int[]{118, 0};
 		gbl_mappanel.columnWeights = new double[]{1.0, Double.MIN_VALUE};
 		gbl_mappanel.rowWeights = new double[]{1.0, Double.MIN_VALUE};
