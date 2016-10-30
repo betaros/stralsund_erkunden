@@ -13,6 +13,8 @@ import java.awt.event.ActionEvent;
 
 import src.Profile;
 import javax.swing.border.TitledBorder;
+import java.awt.GridLayout;
+import javax.swing.JCheckBox;
 
 public class ProfileEditor extends JPanel {
 
@@ -200,18 +202,20 @@ public class ProfileEditor extends JPanel {
 		
 		JLabel lblCategories = new JLabel("Kategorien");
 		GridBagConstraints gbc_lblCategories = new GridBagConstraints();
-		gbc_lblCategories.anchor = GridBagConstraints.EAST;
+		gbc_lblCategories.anchor = GridBagConstraints.NORTHEAST;
 		gbc_lblCategories.insets = new Insets(0, 0, 0, 5);
 		gbc_lblCategories.gridx = 0;
 		gbc_lblCategories.gridy = 3;
 		panel.add(lblCategories, gbc_lblCategories);
 		
-		JPanel panel_2 = new JPanel();
-		GridBagConstraints gbc_panel_2 = new GridBagConstraints();
-		gbc_panel_2.fill = GridBagConstraints.BOTH;
-		gbc_panel_2.gridx = 1;
-		gbc_panel_2.gridy = 3;
-		panel.add(panel_2, gbc_panel_2);
+		JPanel panelCategories = new JPanel();
+		GridBagConstraints gbc_panelCategories = new GridBagConstraints();
+		gbc_panelCategories.anchor = GridBagConstraints.NORTH;
+		gbc_panelCategories.fill = GridBagConstraints.HORIZONTAL;
+		gbc_panelCategories.gridx = 1;
+		gbc_panelCategories.gridy = 3;
+		panel.add(panelCategories, gbc_panelCategories);
+		panelCategories.setLayout(new GridLayout(0, 1, 0, 0));
 		
 		/***********************************************************************************/
 		// Profil laden
@@ -306,6 +310,10 @@ public class ProfileEditor extends JPanel {
 	private JPanel generateCategoryPanel(boolean adult){
 		JPanel panel = new JPanel();
 		
+		for(String s:profile.getCategories()){
+			JCheckBox chckbx = new JCheckBox(s);
+			panel.add(chckbx);
+		}
 		
 		return panel;
 	}
