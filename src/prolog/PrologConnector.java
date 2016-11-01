@@ -3,13 +3,14 @@
 package prolog;
 
 import java.util.Hashtable;
+import java.util.Map;
 
 import org.jpl7.*;
 
 public class PrologConnector {
 	
 	public PrologConnector(){
-		Query.hasSolution("consult('functions.pl')");
+		Query.hasSolution("consult('src/prolog/functions.pl')");
 		//new Query("consult",
 		//        new Term[] {new Atom("test.pl")}
 		//    );
@@ -26,12 +27,12 @@ public class PrologConnector {
 		Variable distance = new Variable();
 		Query distanceQuery = 
 				new Query(
-						"berechneEntfernung",
+						"calcDistance",
 						new Term[] {eventA, eventB, distance}
 					);
 		
 		@SuppressWarnings("rawtypes")
-		Hashtable ergebnis = (Hashtable) distanceQuery.oneSolution();
+		Map ergebnis = distanceQuery.oneSolution();
 		
 		System.out.println("Entfernung zwischen " + placeA + " und " + placeB + ": " + ergebnis.get(distance));
 	}
