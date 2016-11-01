@@ -1,20 +1,29 @@
 package src;
 
+import java.util.ArrayList;
+
+import prolog.PrologConnector;
+
 public class Profile {
 	
 	private int days;
 	private int budgetInCent;
 	private int adultCounter;
 	private int childCounter;
-	private boolean categories[][];
+	private ArrayList<String> categories;
 	
-	public Profile(int days, int budgetInCent, int adultCounter, int childCounter, boolean[][] categories) {
+	private PrologConnector pc;
+	
+	public Profile(int days, int budgetInCent, int adultCounter, int childCounter) {
 		super();
+		
+		pc = new PrologConnector();
+		
 		this.days = days;
 		this.budgetInCent = budgetInCent;
 		this.adultCounter = adultCounter;
 		this.childCounter = childCounter;
-		this.categories = categories;
+		this.categories = pc.getCategories();
 	}
 	
 	/**
@@ -68,16 +77,7 @@ public class Profile {
 	/**
 	 * @return the categories
 	 */
-	public boolean[][] getCategories() {
+	public ArrayList<String> getCategories() {
 		return categories;
 	}
-	/**
-	 * @param categories the categories to set
-	 */
-	public void setCategories(boolean[][] categories) {
-		this.categories = categories;
-	}
-	
-	
-	
 }

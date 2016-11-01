@@ -5,7 +5,6 @@ import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.util.ArrayList;
 
-import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JSplitPane;
 import javax.swing.border.TitledBorder;
@@ -16,6 +15,8 @@ import org.jxmapviewer.viewer.GeoPosition;
 import map.Map;
 import javax.swing.UIManager;
 import java.awt.Color;
+import javax.swing.JScrollPane;
+import java.awt.Insets;
 
 public class MainPanel extends JPanel {
 
@@ -55,9 +56,21 @@ public class MainPanel extends JPanel {
 		
 		JPanel resultpanel = new JPanel();
 		splitPane_1.setLeftComponent(resultpanel);
+		GridBagLayout gbl_resultpanel = new GridBagLayout();
+		gbl_resultpanel.columnWidths = new int[]{2, 0};
+		gbl_resultpanel.rowHeights = new int[]{2, 0, 0};
+		gbl_resultpanel.columnWeights = new double[]{1.0, Double.MIN_VALUE};
+		gbl_resultpanel.rowWeights = new double[]{1.0, 0.0, Double.MIN_VALUE};
+		resultpanel.setLayout(gbl_resultpanel);
 		
-		JLabel lblErgebnisliste = new JLabel("Ergebnisliste");
-		resultpanel.add(lblErgebnisliste);
+		JScrollPane scrollPane = new JScrollPane();
+		GridBagConstraints gbc_scrollPane = new GridBagConstraints();
+		gbc_scrollPane.insets = new Insets(0, 0, 5, 0);
+		gbc_scrollPane.fill = GridBagConstraints.HORIZONTAL;
+		gbc_scrollPane.anchor = GridBagConstraints.NORTH;
+		gbc_scrollPane.gridx = 0;
+		gbc_scrollPane.gridy = 0;
+		resultpanel.add(scrollPane, gbc_scrollPane);
 		
 		JSplitPane splitPane = new JSplitPane();
 		splitPane.setOrientation(JSplitPane.VERTICAL_SPLIT);
@@ -65,9 +78,20 @@ public class MainPanel extends JPanel {
 		
 		JPanel routingpanel = new JPanel();
 		splitPane.setLeftComponent(routingpanel);
+		GridBagLayout gbl_routingpanel = new GridBagLayout();
+		gbl_routingpanel.columnWidths = new int[]{2, 0};
+		gbl_routingpanel.rowHeights = new int[]{2, 0};
+		gbl_routingpanel.columnWeights = new double[]{1.0, Double.MIN_VALUE};
+		gbl_routingpanel.rowWeights = new double[]{1.0, Double.MIN_VALUE};
+		routingpanel.setLayout(gbl_routingpanel);
 		
-		JLabel lblAusflug = new JLabel("Ausflug");
-		routingpanel.add(lblAusflug);
+		JScrollPane scrollPane_1 = new JScrollPane();
+		GridBagConstraints gbc_scrollPane_1 = new GridBagConstraints();
+		gbc_scrollPane_1.fill = GridBagConstraints.HORIZONTAL;
+		gbc_scrollPane_1.anchor = GridBagConstraints.NORTH;
+		gbc_scrollPane_1.gridx = 0;
+		gbc_scrollPane_1.gridy = 0;
+		routingpanel.add(scrollPane_1, gbc_scrollPane_1);
 		
 		JPanel mappanel = new JPanel();
 		splitPane.setRightComponent(mappanel);

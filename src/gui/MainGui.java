@@ -7,6 +7,7 @@ import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.border.TitledBorder;
 
+import prolog.PrologConnector;
 import src.Event;
 import src.Profile;
 
@@ -32,11 +33,12 @@ public class MainGui {
 	private ProfileEditor pe;
 	private boolean profileVisible;
 
+	private PrologConnector pc;
 	/**
 	 * Create the application.
 	 */
-	public MainGui() {
-
+	public MainGui(PrologConnector _pc) {
+		this.pc = _pc;
 		initialize();
 	}
 
@@ -49,9 +51,8 @@ public class MainGui {
 		frmStralsundErkunden.setTitle("Stralsund erkunden");
 		frmStralsundErkunden.setBounds(100, 100, 969, 635);
 		frmStralsundErkunden.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-
-		boolean categories[][] = new boolean[2][2]; 
-		profile = new Profile(2, 20000, 2, 1, categories); 
+ 
+		profile = new Profile(2, 20000, 2, 1); 
 		profileVisible = false;
 		GridBagLayout gridBagLayout = new GridBagLayout();
 		gridBagLayout.columnWidths = new int[]{173, 780, 0};
@@ -73,23 +74,31 @@ public class MainGui {
 		gbl_profilpanel.columnWidths = new int[]{161, 0};
 		gbl_profilpanel.rowHeights = new int[]{0, 0, 0, 0};
 		gbl_profilpanel.columnWeights = new double[]{1.0, Double.MIN_VALUE};
-		gbl_profilpanel.rowWeights = new double[]{0.0, 1.0, 0.0, Double.MIN_VALUE};
+		gbl_profilpanel.rowWeights = new double[]{0.0, 0.0, 1.0, Double.MIN_VALUE};
 		profilpanel.setLayout(gbl_profilpanel);
+		
+				JButton btnSuchen = new JButton("Suchen");
+				GridBagConstraints gbc_btnSuchen = new GridBagConstraints();
+				gbc_btnSuchen.insets = new Insets(0, 0, 5, 0);
+				gbc_btnSuchen.fill = GridBagConstraints.HORIZONTAL;
+				gbc_btnSuchen.gridx = 0;
+				gbc_btnSuchen.gridy = 0;
+				profilpanel.add(btnSuchen, gbc_btnSuchen);
 
 		JButton profileButton = new JButton("Profil bearbeiten");
 		GridBagConstraints gbc_profileButton = new GridBagConstraints();
+		gbc_profileButton.fill = GridBagConstraints.HORIZONTAL;
 		gbc_profileButton.insets = new Insets(0, 0, 5, 0);
 		gbc_profileButton.gridx = 0;
-		gbc_profileButton.gridy = 0;
+		gbc_profileButton.gridy = 1;
 		profilpanel.add(profileButton, gbc_profileButton);
 
 		JPanel summarypanel = new JPanel();
 		summarypanel.setBorder(new TitledBorder(UIManager.getBorder("TitledBorder.border"), "Zusammenfassung", TitledBorder.LEADING, TitledBorder.TOP, null, new Color(0, 0, 0)));
 		GridBagConstraints gbc_summarypanel = new GridBagConstraints();
-		gbc_summarypanel.insets = new Insets(0, 0, 5, 0);
 		gbc_summarypanel.fill = GridBagConstraints.BOTH;
 		gbc_summarypanel.gridx = 0;
-		gbc_summarypanel.gridy = 1;
+		gbc_summarypanel.gridy = 2;
 		profilpanel.add(summarypanel, gbc_summarypanel);
 		GridBagLayout gbl_summarypanel = new GridBagLayout();
 		gbl_summarypanel.columnWidths = new int[]{63, 0};
@@ -97,13 +106,6 @@ public class MainGui {
 		gbl_summarypanel.columnWeights = new double[]{0.0, Double.MIN_VALUE};
 		gbl_summarypanel.rowWeights = new double[]{0.0, 0.0, Double.MIN_VALUE};
 		summarypanel.setLayout(gbl_summarypanel);
-
-		JButton btnSuchen = new JButton("Suchen");
-		GridBagConstraints gbc_btnSuchen = new GridBagConstraints();
-		gbc_btnSuchen.fill = GridBagConstraints.HORIZONTAL;
-		gbc_btnSuchen.gridx = 0;
-		gbc_btnSuchen.gridy = 2;
-		profilpanel.add(btnSuchen, gbc_btnSuchen);
 
 		mp = new MainPanel();
 		pe = new ProfileEditor(profile);

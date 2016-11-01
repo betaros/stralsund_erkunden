@@ -2,6 +2,7 @@
 
 package prolog;
 
+import java.util.ArrayList;
 import java.util.Hashtable;
 import java.util.Map;
 
@@ -10,11 +11,9 @@ import org.jpl7.*;
 public class PrologConnector {
 	
 	public PrologConnector(){
+
 		Query.hasSolution("consult('src/prolog/functions.pl')");
-		//new Query("consult",
-		//        new Term[] {new Atom("test.pl")}
-		//    );
-		
+	
 	}
 	
 	public void findEvent(){
@@ -35,5 +34,11 @@ public class PrologConnector {
 		Map ergebnis = distanceQuery.oneSolution();
 		
 		System.out.println("Entfernung zwischen " + placeA + " und " + placeB + ": " + ergebnis.get(distance));
+	}
+	
+	public ArrayList<String> getCategories(){
+		ArrayList<String> categories = new ArrayList<String>();
+		
+		return categories;
 	}
 }

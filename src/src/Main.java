@@ -11,10 +11,13 @@ import javax.swing.UIManager;
 import javax.swing.UnsupportedLookAndFeelException;
 
 import gui.MainGui;
+import prolog.PrologConnector;
 
 public class Main {
 	
 	public static void main(String[] args) {
+		
+		PrologConnector pc = new PrologConnector();
 		
 		// Starte GUI
 		EventQueue.invokeLater(new Runnable() {
@@ -44,7 +47,7 @@ public class Main {
 		    	}
 				
 				try {
-					MainGui window = new MainGui();
+					MainGui window = new MainGui(pc);
 					window.frmStralsundErkunden.setVisible(true);
 				} catch (Exception e) {
 					e.printStackTrace();

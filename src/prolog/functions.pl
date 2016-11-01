@@ -29,6 +29,21 @@ findEvent([Category|Residual], Result) :-
 	categorie(Category, Result).
 
 /*
+* Sucht alle Events
+*/
+findAllEvents(Events) :-
+	event(E, _, _, _),
+	append([E], Events).
+
+/*
+* Sucht alle Kategorien
+*/
+findAllCategories(Categories) :-
+	findAllEvents(E),
+	events(E, _, _, C),
+	Categories = C.
+
+/*
 * Berechnet die Entfernung zwischen zwei Veranstaltungen
 * Entfernung = sqrt((XA-XB)^2 + (YA-YB)^2)
 * calcDistance(Name Veranstaltung A, Name Veranstaltung B, Entfernung

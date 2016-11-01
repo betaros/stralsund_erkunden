@@ -11,7 +11,7 @@
 event(	'Hansedom', 
 	54.320021,
 	13.043840,
-	[sport,hotel,schwimmen]).
+	[sport,hotel,schwimmen,sauna]).
 event(	'Strelapark',
 	54.320678,
 	13.046984,
@@ -52,3 +52,14 @@ event(	'Haus 8',
 	54.340094,
 	13.076638,
 	[bar,kneipe]).
+	
+businesshours(	'Hansedom',
+		[
+			[mon, 930, 2100],
+			[tue, 930, 2100],
+			[wed, 930, 2100],
+			[thu, 930, 2100],
+			[fri, 930, 2200],
+			[sat, 930, 2200],
+			[sun, 930, 2100]
+		]).
