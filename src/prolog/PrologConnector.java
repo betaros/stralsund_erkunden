@@ -21,19 +21,22 @@ public class PrologConnector {
 	}
 	
 	public void calcDistance(String placeA, String placeB){
-		Variable eventA = new Variable(placeA);
-		Variable eventB = new Variable(placeB);
-		Variable distance = new Variable();
+	
 		Query distanceQuery = 
 				new Query(
-						"calcDistance",
-						new Term[] {eventA, eventB, distance}
+						new Compound(
+								"calcDistance",
+								new Term[] {new Atom(placeA), new Atom(placeB), new Variable("X")}
+						)
 					);
 		
 		@SuppressWarnings("rawtypes")
+		java.util.Hashtable solution;
 		Map ergebnis = distanceQuery.oneSolution();
 		
-		System.out.println("Entfernung zwischen " + placeA + " und " + placeB + ": " + ergebnis.get(distance));
+		System.out.println("Entfernung zwischen " + placeA + " und " + placeB + ": " + ergebnis.get("X"));
+	
+
 	}
 	
 	public ArrayList<String> getCategories(){

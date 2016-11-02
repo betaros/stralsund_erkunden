@@ -61,3 +61,4 @@ calcDistance(EventA, EventB, Distance) :-
 	PotY is TempY * TempY,
 	AddBoth is PotX + PotY,
 	Distance is sqrt(AddBoth).
+	
