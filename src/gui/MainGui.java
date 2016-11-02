@@ -24,6 +24,8 @@ import java.awt.Color;
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
 import java.awt.CardLayout;
+import javax.swing.JTextPane;
+import java.awt.SystemColor;
 
 public class MainGui {
 
@@ -103,9 +105,20 @@ public class MainGui {
 		GridBagLayout gbl_summarypanel = new GridBagLayout();
 		gbl_summarypanel.columnWidths = new int[]{63, 0};
 		gbl_summarypanel.rowHeights = new int[]{23, 0, 0};
-		gbl_summarypanel.columnWeights = new double[]{0.0, Double.MIN_VALUE};
-		gbl_summarypanel.rowWeights = new double[]{0.0, 0.0, Double.MIN_VALUE};
+		gbl_summarypanel.columnWeights = new double[]{1.0, Double.MIN_VALUE};
+		gbl_summarypanel.rowWeights = new double[]{1.0, 0.0, Double.MIN_VALUE};
 		summarypanel.setLayout(gbl_summarypanel);
+		
+		JTextPane txtpnSummary = new JTextPane();
+		txtpnSummary.setForeground(SystemColor.controlDkShadow);
+		txtpnSummary.setBackground(SystemColor.menu);
+		txtpnSummary.setText("summaryTextPane");
+		GridBagConstraints gbc_txtpnSummary = new GridBagConstraints();
+		gbc_txtpnSummary.insets = new Insets(0, 0, 5, 0);
+		gbc_txtpnSummary.fill = GridBagConstraints.BOTH;
+		gbc_txtpnSummary.gridx = 0;
+		gbc_txtpnSummary.gridy = 0;
+		summarypanel.add(txtpnSummary, gbc_txtpnSummary);
 
 		mp = new MainPanel();
 		pe = new ProfileEditor(profile);

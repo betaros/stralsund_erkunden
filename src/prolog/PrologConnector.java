@@ -3,7 +3,6 @@
 package prolog;
 
 import java.util.ArrayList;
-import java.util.Hashtable;
 import java.util.Map;
 
 import org.jpl7.*;
@@ -41,6 +40,12 @@ public class PrologConnector {
 	
 	public ArrayList<String> getCategories(){
 		ArrayList<String> categories = new ArrayList<String>();
+		
+		categories.add("Schwimmen");
+		categories.add("Einkaufen");
+		categories.add("Freizeit");
+		categories.add("Fitness");
+		categories.add("Bildung");
 		
 		return categories;
 	}
