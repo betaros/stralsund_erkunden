@@ -6,15 +6,15 @@ import java.awt.GridBagConstraints;
 import java.awt.Insets;
 import javax.swing.JLabel;
 import javax.swing.JTextField;
+import javax.swing.DefaultListModel;
 import javax.swing.JButton;
 import java.awt.event.ActionListener;
-import java.util.ArrayList;
 import java.awt.event.ActionEvent;
 
 import src.Profile;
 import javax.swing.border.TitledBorder;
-import java.awt.GridLayout;
 import javax.swing.JCheckBox;
+import java.awt.SystemColor;
 
 public class ProfileEditor extends JPanel {
 
@@ -144,8 +144,8 @@ public class ProfileEditor extends JPanel {
 		
 		textFieldBudget = new JTextField();
 		GridBagConstraints gbc_textFieldBudget = new GridBagConstraints();
+		gbc_textFieldBudget.anchor = GridBagConstraints.WEST;
 		gbc_textFieldBudget.insets = new Insets(0, 0, 5, 0);
-		gbc_textFieldBudget.fill = GridBagConstraints.HORIZONTAL;
 		gbc_textFieldBudget.gridx = 1;
 		gbc_textFieldBudget.gridy = 1;
 		panel.add(textFieldBudget, gbc_textFieldBudget);
@@ -208,14 +208,22 @@ public class ProfileEditor extends JPanel {
 		gbc_lblCategories.gridy = 3;
 		panel.add(lblCategories, gbc_lblCategories);
 		
-		JPanel panelCategories = new JPanel();
-		GridBagConstraints gbc_panelCategories = new GridBagConstraints();
-		gbc_panelCategories.anchor = GridBagConstraints.NORTH;
-		gbc_panelCategories.fill = GridBagConstraints.HORIZONTAL;
-		gbc_panelCategories.gridx = 1;
-		gbc_panelCategories.gridy = 3;
-		panel.add(panelCategories, gbc_panelCategories);
-		panelCategories.setLayout(new GridLayout(0, 1, 0, 0));
+		// Hole Kategorien aus dem Profil und generiere eine Liste daraus
+		DefaultListModel<JCheckBox> model = new DefaultListModel<JCheckBox>();
+		for(String s:profile.getCategories()){
+			model.addElement(new JCheckBox(s));
+		}
+		//model.addElement(new JCheckBox("Kategorie 1"));
+		//model.addElement(new JCheckBox("Kategorie 2"));
+		//model.addElement(new JCheckBox("Kategorie 3"));
+		
+		JCheckBoxList checkBoxList = new JCheckBoxList(model);
+		checkBoxList.setBackground(SystemColor.menu);
+		GridBagConstraints gbc_list = new GridBagConstraints();
+		gbc_list.fill = GridBagConstraints.BOTH;
+		gbc_list.gridx = 1;
+		gbc_list.gridy = 3;
+		panel.add(checkBoxList, gbc_list);
 		
 		/***********************************************************************************/
 		// Profil laden
@@ -234,9 +242,7 @@ public class ProfileEditor extends JPanel {
 		
 		/***********************************************************************************/
 		// Funktionen
-		
-		ArrayList<JPanel> categoryList = new ArrayList<JPanel>();
-		
+				
 		/**
 		 * Erwachsenen hinzufügen
 		 */
@@ -252,7 +258,6 @@ public class ProfileEditor extends JPanel {
 		 */
 		buttonAddChild.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				categoryList.add(generateCategoryPanel(true));
 				childCounter++;
 				lblChildCounter.setText(String.valueOf(childCounter));
 			}
@@ -264,7 +269,6 @@ public class ProfileEditor extends JPanel {
 		buttonRemoveAdult.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				if(adultCounter>0){
-					//categoryList.remove(categoryList.size()-1);
 					adultCounter--;
 					lblAdultCounter.setText(String.valueOf(adultCounter));
 				}
@@ -277,7 +281,6 @@ public class ProfileEditor extends JPanel {
 		buttonRemoveChild.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				if(childCounter>0){
-					//categoryList.remove(categoryList.size()-1);
 					childCounter--;
 					lblChildCounter.setText(String.valueOf(childCounter));
 				}
@@ -307,17 +310,6 @@ public class ProfileEditor extends JPanel {
 		});
 	}
 
-	private JPanel generateCategoryPanel(boolean adult){
-		JPanel panel = new JPanel();
-		
-		for(String s:profile.getCategories()){
-			JCheckBox chckbx = new JCheckBox(s);
-			panel.add(chckbx);
-		}
-		
-		return panel;
-	}
-	
 	public Profile getProfile(){
 		return profile;
 	}
