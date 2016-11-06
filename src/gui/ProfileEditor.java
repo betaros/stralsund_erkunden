@@ -213,9 +213,6 @@ public class ProfileEditor extends JPanel {
 		for(String s:profile.getCategories()){
 			model.addElement(new JCheckBox(s));
 		}
-		//model.addElement(new JCheckBox("Kategorie 1"));
-		//model.addElement(new JCheckBox("Kategorie 2"));
-		//model.addElement(new JCheckBox("Kategorie 3"));
 		
 		JCheckBoxList checkBoxList = new JCheckBoxList(model);
 		checkBoxList.setBackground(SystemColor.menu);

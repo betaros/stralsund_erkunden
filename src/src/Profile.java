@@ -11,6 +11,7 @@ public class Profile {
 	private int adultCounter;
 	private int childCounter;
 	private ArrayList<String> categories;
+	private ArrayList<String> selectedCategories;
 	
 	private PrologConnector pc;
 	
@@ -79,5 +80,19 @@ public class Profile {
 	 */
 	public ArrayList<String> getCategories() {
 		return categories;
+	}
+	
+	/**
+	 * @return the selectedCategories
+	 */
+	public ArrayList<String> getSelectedCategories() {
+		return selectedCategories;
+	}
+
+	/**
+	 * @param selectedCategories the selectedCategories to set
+	 */
+	public void setSelectedCategories(ArrayList<String> selectedCategories) {
+		this.selectedCategories = selectedCategories;
 	}
 }
