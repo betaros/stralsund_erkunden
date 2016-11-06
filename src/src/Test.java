@@ -14,6 +14,7 @@ public class Test {
 		// TODO Auto-generated method stub
 		PrologConnector plc = new PrologConnector();
 		plc.calcDistance("Citti", "Hansedom");
+		plc.getCategoriesByProlog();
 
 		// Starte GUI
 		EventQueue.invokeLater(new Runnable() {
