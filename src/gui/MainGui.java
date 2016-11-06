@@ -53,7 +53,7 @@ public class MainGui {
 		frmStralsundErkunden.setTitle("Stralsund erkunden");
 		frmStralsundErkunden.setBounds(100, 100, 969, 635);
 		frmStralsundErkunden.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
- 
+
 		profile = new Profile(2, 20000, 2, 1); 
 		profileVisible = false;
 		GridBagLayout gridBagLayout = new GridBagLayout();
@@ -78,14 +78,14 @@ public class MainGui {
 		gbl_profilpanel.columnWeights = new double[]{1.0, Double.MIN_VALUE};
 		gbl_profilpanel.rowWeights = new double[]{0.0, 0.0, 1.0, Double.MIN_VALUE};
 		profilpanel.setLayout(gbl_profilpanel);
-		
-				JButton btnSuchen = new JButton("Suchen");
-				GridBagConstraints gbc_btnSuchen = new GridBagConstraints();
-				gbc_btnSuchen.insets = new Insets(0, 0, 5, 0);
-				gbc_btnSuchen.fill = GridBagConstraints.HORIZONTAL;
-				gbc_btnSuchen.gridx = 0;
-				gbc_btnSuchen.gridy = 0;
-				profilpanel.add(btnSuchen, gbc_btnSuchen);
+
+		JButton btnSuchen = new JButton("Suchen");
+		GridBagConstraints gbc_btnSuchen = new GridBagConstraints();
+		gbc_btnSuchen.insets = new Insets(0, 0, 5, 0);
+		gbc_btnSuchen.fill = GridBagConstraints.HORIZONTAL;
+		gbc_btnSuchen.gridx = 0;
+		gbc_btnSuchen.gridy = 0;
+		profilpanel.add(btnSuchen, gbc_btnSuchen);
 
 		JButton profileButton = new JButton("Profil bearbeiten");
 		GridBagConstraints gbc_profileButton = new GridBagConstraints();
@@ -104,17 +104,16 @@ public class MainGui {
 		profilpanel.add(summarypanel, gbc_summarypanel);
 		GridBagLayout gbl_summarypanel = new GridBagLayout();
 		gbl_summarypanel.columnWidths = new int[]{63, 0};
-		gbl_summarypanel.rowHeights = new int[]{23, 0, 0};
+		gbl_summarypanel.rowHeights = new int[]{23, 0};
 		gbl_summarypanel.columnWeights = new double[]{1.0, Double.MIN_VALUE};
-		gbl_summarypanel.rowWeights = new double[]{1.0, 0.0, Double.MIN_VALUE};
+		gbl_summarypanel.rowWeights = new double[]{1.0, Double.MIN_VALUE};
 		summarypanel.setLayout(gbl_summarypanel);
-		
+
 		JTextPane txtpnSummary = new JTextPane();
 		txtpnSummary.setForeground(SystemColor.controlDkShadow);
 		txtpnSummary.setBackground(SystemColor.menu);
 		txtpnSummary.setText("summaryTextPane");
 		GridBagConstraints gbc_txtpnSummary = new GridBagConstraints();
-		gbc_txtpnSummary.insets = new Insets(0, 0, 5, 0);
 		gbc_txtpnSummary.fill = GridBagConstraints.BOTH;
 		gbc_txtpnSummary.gridx = 0;
 		gbc_txtpnSummary.gridy = 0;
@@ -148,6 +147,7 @@ public class MainGui {
 					profileVisible = false;
 
 					profile = pe.getProfile();
+					txtpnSummary.setText(generateSummary());
 
 					cl.show(content, "mainpanel");
 				} else {
@@ -158,6 +158,44 @@ public class MainGui {
 				}
 			}
 		});
+	}
+
+	private String generateSummary(){
+		StringBuilder summaryText = new StringBuilder();
+
+		if(profile.getAdultCounter() > 0) {
+			summaryText.append(String.valueOf(profile.getAdultCounter()));
+			if(profile.getAdultCounter() == 1){
+				summaryText.append(" Erwachsener");
+			} else {
+				summaryText.append(" Erwachsene");
+			}
+			summaryText.append("\n");
+		}
+
+		if(profile.getChildCounter() > 0) {
+			summaryText.append(String.valueOf(profile.getChildCounter()));
+			if(profile.getChildCounter() == 1){
+				summaryText.append(" Kind");
+			} else {
+				summaryText.append(" Kinder");
+			}
+			summaryText.append("\n");
+		}
+
+		summaryText.append("\n");
+		summaryText.append("Kategorien:");
+		summaryText.append("\n");
+		if(profile.getCategories().isEmpty()){
+			summaryText.append("keine");
+		} else {
+			for(String s:profile.getCategories()){
+				summaryText.append(s);
+				summaryText.append("\n");
+			}
+		}
+
+		return summaryText.toString();
 	}
 
 	/**
