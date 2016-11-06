@@ -31,17 +31,33 @@ findEvent([Category|Residual], Result) :-
 /*
 * Sucht alle Events
 */
-findAllEvents(Events) :-
-	event(E, _, _, _),
-	append([E], Events).
+findAllEvents(E):-
+	event(E).
 
 /*
 * Sucht alle Kategorien
 */
-findAllCategories(Categories) :-
-	findAllEvents(E),
-	events(E, _, _, C),
-	Categories = C.
+findAllCategories(Categories):-
+	findall(X, event(_,_,_,X), L),
+	appendCategories(C1,L),
+	nl,
+	write(C1),
+	nl,
+	Categories = C1.
+
+appendCategories(C1,[R|[]]):-
+		C1 = R.
+	
+appendCategories(C,[R|L]):-
+	appendCategories(C1,L),
+	write(C1),
+	nl,
+	append(C1,R,X),
+	C = X.
+
+append([],L,L).
+append([H|T],L2,[H|L3]):-  
+	append(T,L2,L3). 
 
 /*
 * Berechnet die Entfernung zwischen zwei Veranstaltungen

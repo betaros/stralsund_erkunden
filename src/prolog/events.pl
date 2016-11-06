@@ -27,6 +27,7 @@ category('Kneipe').
 * 
 * event(Name des Events, Latitude, Longitude, Liste an Kategorien).
 */
+
 event(	'Hansedom', 
 	54.320021,
 	13.043840,

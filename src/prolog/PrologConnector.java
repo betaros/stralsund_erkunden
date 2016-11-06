@@ -43,6 +43,7 @@ public class PrologConnector {
 		ArrayList<String> categories = new ArrayList<String>();
 		
 		Variable X = new Variable("X");
+		/*
 		
 		Query q4 =
 		    new Query(
@@ -53,10 +54,24 @@ public class PrologConnector {
 		Map<String, Term>[] solutions = q4.allSolutions();
 
 	    for ( int i=0 ; i<solutions.length ; i++ ) {
-	        //System.out.println( "X = " + solutions[i].get("X"));
+	        System.out.println( "X = " + solutions[i].get("X"));
 	        categories.add(solutions[i].get("X").toString());
 	    }
 	    
+	    */
+		Query q4 =
+			    new Query(
+			        "findAllCategories",
+			        new Term[] {X}
+			    );
+
+		Map<String, Term>[] solutions = q4.allSolutions();
+
+	    for ( int i=0 ; i<solutions.length ; i++ ) {
+	        System.out.println( "X = " + solutions[i].get("X"));
+	        categories.add(solutions[i].get("X").toString());
+	    }
+		        
 	    return categories;
 	}
 }
