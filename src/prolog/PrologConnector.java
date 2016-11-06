@@ -30,23 +30,33 @@ public class PrologConnector {
 					);
 		
 		@SuppressWarnings("rawtypes")
-		java.util.Hashtable solution;
+		
 		Map ergebnis = distanceQuery.oneSolution();
 		
 		System.out.println("Entfernung zwischen " + placeA + " und " + placeB + ": " + ergebnis.get("X"));
 	
 
 	}
+
 	
-	public ArrayList<String> getCategories(){
+	public ArrayList<String> getCategoriesByProlog(){
 		ArrayList<String> categories = new ArrayList<String>();
 		
-		categories.add("Schwimmen");
-		categories.add("Einkaufen");
-		categories.add("Freizeit");
-		categories.add("Fitness");
-		categories.add("Bildung");
+		Variable X = new Variable("X");
 		
-		return categories;
+		Query q4 =
+		    new Query(
+		        "category",
+		        new Term[] {X}
+		    );
+
+		Map<String, Term>[] solutions = q4.allSolutions();
+
+	    for ( int i=0 ; i<solutions.length ; i++ ) {
+	        //System.out.println( "X = " + solutions[i].get("X"));
+	        categories.add(solutions[i].get("X").toString());
+	    }
+	    
+	    return categories;
 	}
 }

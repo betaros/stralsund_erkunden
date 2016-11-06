@@ -1,8 +1,27 @@
-:- module('events', [event/4]).
+:- module('events', [event/4,category/1]).
 
 /*
 * Wissensdatenbank
 */
+
+/*
+Kategorien
+*/
+
+category('Sport').
+category('Einkaufen').
+category('Hotel').
+category('Schwimmen').
+category('Sauna').
+category('Grosshandel').
+category('Freizeit').
+category('Bildung').
+category('Tiere').
+category('Museum').
+category('Studium').
+category('Unterhaltung').
+category('Bar').
+category('Kneipe').
 
 /*
 * 

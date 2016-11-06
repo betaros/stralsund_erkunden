@@ -24,7 +24,7 @@ public class Profile {
 		this.budgetInCent = budgetInCent;
 		this.adultCounter = adultCounter;
 		this.childCounter = childCounter;
-		this.categories = pc.getCategories();
+		this.categories = pc.getCategoriesByProlog();
 	}
 	
 	/**

@@ -1,6 +1,9 @@
 package gui;
 
 import javax.swing.JFrame;
+
+import prolog.PrologConnector;
+
 import javax.swing.JButton;
 import java.awt.BorderLayout;
 import java.awt.event.ActionListener;
@@ -28,7 +31,6 @@ public class TestGui {
 		JButton btnNewButton = new JButton("New button");
 		btnNewButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				
 			}
 		});
 		testFrame.getContentPane().add(btnNewButton, BorderLayout.WEST);
