@@ -308,7 +308,8 @@ public class ProfileEditor extends JPanel {
 	}
 
 	public Profile getProfile(){
-		return profile;
+		Profile tempProfile = new Profile(days, budgetInCent, adultCounter, childCounter);
+		return tempProfile;
 	}
 	
 }
