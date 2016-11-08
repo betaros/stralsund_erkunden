@@ -31,47 +31,57 @@ category('Kneipe').
 event(	'Hansedom', 
 	54.320021,
 	13.043840,
-	[sport,hotel,schwimmen,sauna]).
+	['Sport','Hotel','Schwimmen','Sauna']).
+	
 event(	'Strelapark',
 	54.320678,
 	13.046984,
-	[einkaufen]).
+	['Einkaufen']).
+	
 event(	'Citti', 
 	54.320071,
 	13.047413, 
-	[einkaufen,grosshandel]). 
+	['Einkaufen','Grosshandel']). 
+	
 event(	'Ozeaneum',
 	54.315509,
 	13.097494,
-	[freizeit,museum,bildung,tiere]).
+	['Freizeit','Museum','Bildung','Tiere']).
+	
 event(	'Meeresmuseum',
 	54.3123021,
 	13.0845551,
-	[freizeit,museum,bildung]).
+	['Freizeit','Museum','Bildung']).
+	
 event(	'Nautineum',
 	54.305252,
 	13.118912,
-	[freizeit,museum,bildung]).
+	['Freizeit','Museum','Bildung']).
+	
 event(	'Marinemuseum',
 	54.309746,
 	13.119041,
-	[freizeit,museum,bildung]).
+	['Freizeit','Museum','Bildung']).
+	
 event(	'Fachhochschule Stralsund',
 	54.339149,
 	13.076232,
-	[bildung,studium]).
+	['Bildung','Studium']).
+	
 event(	'Zoo',
 	54.319651,
 	13.051815,
-	[tiere]).
+	['Tiere']).
+	
 event(	'Cinestar',
 	54.311055,
 	13.090076,
-	[freizeit,unterhaltung]).
+	['Freizeit','Unterhaltung']).
+	
 event(	'Haus 8',
 	54.340094,
 	13.076638,
-	[bar,kneipe]).
+	['Bar','Kneipe']).
 	
 businesshours(	'Hansedom',
 		[

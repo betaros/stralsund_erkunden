@@ -4,6 +4,7 @@ package prolog;
 
 import java.util.ArrayList;
 import java.util.Map;
+import java.util.StringTokenizer;
 
 import org.jpl7.*;
 
@@ -43,6 +44,8 @@ public class PrologConnector {
 		ArrayList<String> categories = new ArrayList<String>();
 		
 		Variable X = new Variable("X");
+		
+		// Geht, Category muss als Liste per Hand in Wissensdatenbank geflegt werden
 		/*
 		
 		Query q4 =
@@ -59,19 +62,33 @@ public class PrologConnector {
 	    }
 	    
 	    */
+		
 		Query q4 =
 			    new Query(
 			        "findAllCategories",
 			        new Term[] {X}
 			    );
 
+		/*
 		Map<String, Term>[] solutions = q4.allSolutions();
 
 	    for ( int i=0 ; i<solutions.length ; i++ ) {
 	        System.out.println( "X = " + solutions[i].get("X"));
 	        categories.add(solutions[i].get("X").toString());
 	    }
-		        
+		*/
+		
+		Map<String, Term> solution = q4.oneSolution();
+	   
+	    String[] array = solution.get("X").toString().split(" ");
+	    for(int i = 0; i<array.length-1; i++){
+	    	array[i] = array[i].replace("'[|]'(", "").replace(",","").replace("'","");
+	    	System.out.println(array[i]);
+	    	if (!categories.contains(array[i])) {
+	    	    categories.add(array[i]);
+	    	}
+	    }
+	    
 	    return categories;
 	}
 }
