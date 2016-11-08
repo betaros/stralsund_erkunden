@@ -16,8 +16,27 @@ public class PrologConnector {
 	
 	}
 	
-	public void findEvent(){
-		//Query suchQuery = new Query(text, arg);
+	public ArrayList<String> findEvents(){
+		ArrayList<String> events = new ArrayList<String>();
+		Variable X = new Variable("X");
+		Variable Y = new Variable("Y");
+		Variable Z = new Variable("Z");
+		Variable V = new Variable("V");
+		
+		Query q4 =
+		    new Query(
+		        "event",
+		        new Term[] {X,Y,Z,V}
+		    );
+
+		Map<String, Term>[] solutions = q4.allSolutions();
+
+	    for ( int i=0 ; i<solutions.length ; i++ ) {
+	        System.out.println( "X = " + solutions[i].get("X"));
+	        events.add(solutions[i].get("X").toString().replace("'", ""));
+	    }
+	    
+	    return events;
 	}
 	
 	public void calcDistance(String placeA, String placeB){
@@ -91,4 +110,5 @@ public class PrologConnector {
 	    
 	    return categories;
 	}
+
 }

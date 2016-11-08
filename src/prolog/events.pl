@@ -1,4 +1,4 @@
-:- module('events', [event/4,category/1]).
+:- module('events', [event/4,category/1,event/1]).
 
 /*
 * Wissensdatenbank
@@ -27,6 +27,8 @@ category('Kneipe').
 * 
 * event(Name des Events, Latitude, Longitude, Liste an Kategorien).
 */
+
+event('Bla').
 
 event(	'Hansedom', 
 	54.320021,
