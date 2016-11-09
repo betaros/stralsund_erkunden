@@ -3,17 +3,14 @@ package gui;
 import javax.swing.JFrame;
 
 import prolog.PrologConnector;
-import src.Profile;
 
 import javax.swing.DefaultListModel;
-import javax.swing.JButton;
 import javax.swing.JCheckBox;
 
 import java.awt.BorderLayout;
-import java.awt.event.ActionListener;
-import java.awt.event.ActionEvent;
 import javax.swing.ListModel;
 import java.awt.SystemColor;
+import javax.swing.JPanel;
 
 public class TestGui {
 
@@ -40,9 +37,16 @@ public class TestGui {
 		for(String s:pc.findEvents()){
 			model.addElement(new JCheckBox(s));
 		}
-		JCheckBoxList checkBoxList = new JCheckBoxList((ListModel) model);
+		JCheckBoxList checkBoxList = new JCheckBoxList((ListModel<JCheckBox>) model);
 		checkBoxList.setBackground(SystemColor.menu);
 		testFrame.getContentPane().add(checkBoxList, BorderLayout.CENTER);
+		
+		// Events anzeigen
+		JPanel panel = new JPanel();
+		testFrame.getContentPane().add(panel, BorderLayout.SOUTH);
+		
+		Result result = new Result();
+		panel.add(result);
 	}
 
 }
