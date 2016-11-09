@@ -74,33 +74,41 @@ public class MainGui {
 		profilpanel.setBorder(new TitledBorder(null, "Profil", TitledBorder.LEADING, TitledBorder.TOP, null, null));
 		GridBagLayout gbl_profilpanel = new GridBagLayout();
 		gbl_profilpanel.columnWidths = new int[]{161, 0};
-		gbl_profilpanel.rowHeights = new int[]{0, 0, 0, 0};
+		gbl_profilpanel.rowHeights = new int[]{0, 0, 0, 0, 0};
 		gbl_profilpanel.columnWeights = new double[]{1.0, Double.MIN_VALUE};
-		gbl_profilpanel.rowWeights = new double[]{0.0, 0.0, 1.0, Double.MIN_VALUE};
+		gbl_profilpanel.rowWeights = new double[]{0.0, 0.0, 0.0, 1.0, Double.MIN_VALUE};
 		profilpanel.setLayout(gbl_profilpanel);
-
-		JButton btnSuchen = new JButton("Suchen");
-		GridBagConstraints gbc_btnSuchen = new GridBagConstraints();
-		gbc_btnSuchen.insets = new Insets(0, 0, 5, 0);
-		gbc_btnSuchen.fill = GridBagConstraints.HORIZONTAL;
-		gbc_btnSuchen.gridx = 0;
-		gbc_btnSuchen.gridy = 0;
-		profilpanel.add(btnSuchen, gbc_btnSuchen);
 
 		JButton profileButton = new JButton("Profil bearbeiten");
 		GridBagConstraints gbc_profileButton = new GridBagConstraints();
 		gbc_profileButton.fill = GridBagConstraints.HORIZONTAL;
 		gbc_profileButton.insets = new Insets(0, 0, 5, 0);
 		gbc_profileButton.gridx = 0;
-		gbc_profileButton.gridy = 1;
+		gbc_profileButton.gridy = 0;
 		profilpanel.add(profileButton, gbc_profileButton);
+
+		JButton btnSuchen = new JButton("Suchen");
+		GridBagConstraints gbc_btnSuchen = new GridBagConstraints();
+		gbc_btnSuchen.insets = new Insets(0, 0, 5, 0);
+		gbc_btnSuchen.fill = GridBagConstraints.HORIZONTAL;
+		gbc_btnSuchen.gridx = 0;
+		gbc_btnSuchen.gridy = 1;
+		profilpanel.add(btnSuchen, gbc_btnSuchen);
+
+		JButton btnSort = new JButton("Sortieren");
+		GridBagConstraints gbc_btnSort = new GridBagConstraints();
+		gbc_btnSort.fill = GridBagConstraints.HORIZONTAL;
+		gbc_btnSort.insets = new Insets(0, 0, 5, 0);
+		gbc_btnSort.gridx = 0;
+		gbc_btnSort.gridy = 2;
+		profilpanel.add(btnSort, gbc_btnSort);
 
 		JPanel summarypanel = new JPanel();
 		summarypanel.setBorder(new TitledBorder(UIManager.getBorder("TitledBorder.border"), "Zusammenfassung", TitledBorder.LEADING, TitledBorder.TOP, null, new Color(0, 0, 0)));
 		GridBagConstraints gbc_summarypanel = new GridBagConstraints();
 		gbc_summarypanel.fill = GridBagConstraints.BOTH;
 		gbc_summarypanel.gridx = 0;
-		gbc_summarypanel.gridy = 2;
+		gbc_summarypanel.gridy = 3;
 		profilpanel.add(summarypanel, gbc_summarypanel);
 		GridBagLayout gbl_summarypanel = new GridBagLayout();
 		gbl_summarypanel.columnWidths = new int[]{63, 0};
@@ -112,7 +120,7 @@ public class MainGui {
 		JTextPane txtpnSummary = new JTextPane();
 		txtpnSummary.setForeground(SystemColor.controlDkShadow);
 		txtpnSummary.setBackground(SystemColor.menu);
-		txtpnSummary.setText("summaryTextPane");
+		txtpnSummary.setText(generateSummary());
 		GridBagConstraints gbc_txtpnSummary = new GridBagConstraints();
 		gbc_txtpnSummary.fill = GridBagConstraints.BOTH;
 		gbc_txtpnSummary.gridx = 0;
@@ -137,7 +145,6 @@ public class MainGui {
 
 		/**********************************************************************************************/
 		/* Funktionen */
-
 		// Profil Manager starten
 		profileButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
@@ -158,6 +165,7 @@ public class MainGui {
 				}
 			}
 		});
+
 	}
 
 	private String generateSummary(){
@@ -184,12 +192,17 @@ public class MainGui {
 		}
 
 		summaryText.append("\n");
+		summaryText.append("Budget: ");
+		summaryText.append(new Double(profile.getBudgetInCent() / 100.0) + " \u20AC");
+		summaryText.append("\n");
+		
+		summaryText.append("\n");
 		summaryText.append("Kategorien:");
 		summaryText.append("\n");
-		if(profile.getCategories().isEmpty()){
+		if(profile.getSelectedCategories().isEmpty()){
 			summaryText.append("keine");
 		} else {
-			for(String s:profile.getCategories()){
+			for(String s:profile.getSelectedCategories()){
 				summaryText.append(s);
 				summaryText.append("\n");
 			}
@@ -203,6 +216,7 @@ public class MainGui {
 	 * 
 	 * @param eventList
 	 */
+	/*
 	private ArrayList<JPanel> generateResultPanels(ArrayList<Event> eventList){
 		ArrayList<JPanel> resultlist = new ArrayList<JPanel>();
 
@@ -235,4 +249,5 @@ public class MainGui {
 
 		return resultlist;
 	}
+	 */
 }

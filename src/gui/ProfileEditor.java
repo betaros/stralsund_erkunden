@@ -9,6 +9,7 @@ import javax.swing.JTextField;
 import javax.swing.DefaultListModel;
 import javax.swing.JButton;
 import java.awt.event.ActionListener;
+import java.util.ArrayList;
 import java.awt.event.ActionEvent;
 
 import src.Profile;
@@ -27,12 +28,15 @@ public class ProfileEditor extends JPanel {
 	private JTextField textFieldBudget;
 	
 	private Profile profile;
+	private ArrayList<String> selectedCategories;
+	private DefaultListModel<JCheckBox> model;
 
 	/**
 	 * Create the panel.
 	 */
 	public ProfileEditor(Profile _profile) {
 		this.profile = _profile;
+		selectedCategories = new ArrayList<String>();
 		
 		setBorder(new TitledBorder(null, "Profil Editor", TitledBorder.LEADING, TitledBorder.TOP, null, null));
 		GridBagLayout gridBagLayout = new GridBagLayout();
@@ -209,7 +213,7 @@ public class ProfileEditor extends JPanel {
 		panel.add(lblCategories, gbc_lblCategories);
 		
 		// Hole Kategorien aus dem Profil und generiere eine Liste daraus
-		DefaultListModel<JCheckBox> model = new DefaultListModel<JCheckBox>();
+		model = new DefaultListModel<JCheckBox>();
 		for(String s:profile.getCategories()){
 			model.addElement(new JCheckBox(s));
 		}
@@ -309,6 +313,16 @@ public class ProfileEditor extends JPanel {
 
 	public Profile getProfile(){
 		Profile tempProfile = new Profile(days, budgetInCent, adultCounter, childCounter);
+		selectedCategories.removeAll(selectedCategories);
+		
+		for(int i = 0; i < model.getSize(); i++){
+			if(model.get(i).isSelected()){
+				selectedCategories.add(model.get(i).getText());
+			}
+		}
+		
+		tempProfile.setSelectedCategories(selectedCategories);
+		
 		return tempProfile;
 	}
 	

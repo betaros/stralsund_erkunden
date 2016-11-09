@@ -14,12 +14,24 @@ public class Event {
 	// Unsicher
 	private int open = 900;
 	private int closed = 2200;
-	private int priceInCent = 2000;
-	
-	public Event(String _name, double _lat, double _lon, ArrayList<String> _cat){
+	private int priceInCentAdult = 2000;
+	private int priceInCentChild = 2000;
+
+	/**
+	 * 
+	 * @param _name
+	 * @param _lat
+	 * @param _lon
+	 * @param _priceAdult
+	 * @param _priceChild
+	 * @param _cat
+	 */
+	public Event(String _name, double _lat, double _lon, double _priceAdult, double _priceChild, ArrayList<String> _cat){
 		this.name = _name;
 		this.latitude = _lat;
 		this.longitude = _lon;
+		this.priceInCentChild = (int)_priceChild * 100;
+		this.priceInCentAdult = (int)_priceAdult * 100;
 		this.categories = _cat;
 		
 		this.geoPos = new GeoPosition(_lat, _lon);
@@ -92,14 +104,28 @@ public class Event {
 	/**
 	 * @return the priceInCent
 	 */
-	public int getPriceInCent() {
-		return priceInCent;
+	public int getPriceInCentAdult() {
+		return priceInCentAdult;
 	}
 
 	/**
 	 * @param priceInCent the priceInCent to set
 	 */
-	public void setPriceInCent(int priceInCent) {
-		this.priceInCent = priceInCent;
+	public void setPriceInCentAdult(int priceInCent) {
+		this.priceInCentAdult = priceInCent;
+	}
+	
+	/**
+	 * @return the priceInCentChild
+	 */
+	public int getPriceInCentChild() {
+		return priceInCentChild;
+	}
+
+	/**
+	 * @param priceInCentChild the priceInCentChild to set
+	 */
+	public void setPriceInCentChild(int priceInCent) {
+		this.priceInCentChild = priceInCent;
 	}
 }

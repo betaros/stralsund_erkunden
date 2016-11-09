@@ -25,6 +25,7 @@ public class Profile {
 		this.adultCounter = adultCounter;
 		this.childCounter = childCounter;
 		this.categories = pc.getCategoriesByProlog();
+		this.selectedCategories = new ArrayList<String>();
 	}
 	
 	/**

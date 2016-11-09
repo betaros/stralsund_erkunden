@@ -3,6 +3,8 @@ package gui;
 import javax.swing.JFrame;
 
 import prolog.PrologConnector;
+import src.Event;
+import src.Profile;
 
 import javax.swing.DefaultListModel;
 import javax.swing.JCheckBox;
@@ -10,6 +12,8 @@ import javax.swing.JCheckBox;
 import java.awt.BorderLayout;
 import javax.swing.ListModel;
 import java.awt.SystemColor;
+import java.util.ArrayList;
+
 import javax.swing.JPanel;
 
 public class TestGui {
@@ -45,7 +49,13 @@ public class TestGui {
 		JPanel panel = new JPanel();
 		testFrame.getContentPane().add(panel, BorderLayout.SOUTH);
 		
-		Result result = new Result();
+		ArrayList<String> categories = new ArrayList<String>();
+		categories.add("Shopping");
+		categories.add("Schwimmen");
+		Event e = new Event("Hansedom", 52.1, 19.1, 2.5, 3.5, categories);
+		Profile p = new Profile(2, 20000, 2, 1);
+		
+		Result result = new Result(e, p);
 		panel.add(result);
 	}
 
