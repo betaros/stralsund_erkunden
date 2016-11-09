@@ -1,4 +1,5 @@
 :- use_module(events).
+:- use_module(library(lists)).
 
 /*
 * Konstanten fuer die Berechnungen
@@ -55,9 +56,6 @@ appendCategories(C,[R|L]):-
 	append(C1,R,X),
 	C = X.
 
-append([],L,L).
-append([H|T],L2,[H|L3]):-  
-	append(T,L2,L3). 
 
 /*
 * Berechnet die Entfernung zwischen zwei Veranstaltungen
@@ -77,4 +75,46 @@ calcDistance(EventA, EventB, Distance) :-
 	PotY is TempY * TempY,
 	AddBoth is PotX + PotY,
 	Distance is sqrt(AddBoth).
+
+
+/*
+* Gibt die möglichen events zurück, wenn events leer
+*/
+getEventsForProfile(Persons,Budget,Categories,Events):-
+	searchEventsOnCategory(Categories,Events).
+	
+searchEventsOnCategory(Categories,Events):-
+	findall([X,V], event(X,_,_,V), List),
+	write(List),
+	nl,
+	write(Categories),
+	nl,
+	compareCategories(List,Categories,Events1),
+	Events = Events1.
+
+compareCategories([E|L],Categories,Events1):-
+	(compareCategories(L,Categories,Events2),
+	write(E),
+	nl,
+	E = [X,Y],
+	write(Y),
+	nl,
+	write(Categories),
+	nl,
+	compare_list(Y,Categories),
+	append([X],Events2,Events3),
+	Events1 = Events3)
+	;
+	true.
+	
+compareCategories([],_,Events1):-
+	Events1 = [].
+
+compare_list([],[]).
+compare_list([],_).
+compare_list([L1Head|L1Tail], List2):-
+    (member(L1Head, List2),
+     true,!)
+     ;
+     compare_list(L1Tail, List2).	
 	
