@@ -11,7 +11,7 @@
 * event(Name des Events, Latitude, Longitude, Liste an Kategorien).
 */
 
-/*
+
 event(	'Hansedom', 
 	54.320021,
 	13.043840,
@@ -51,7 +51,6 @@ event(	'Fachhochschule Stralsund',
 	54.339149,
 	13.076232,
 	['Bildung','Studium']).
-*/
 	
 event(	'Zoo',
 	54.319651,

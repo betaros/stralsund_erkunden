@@ -98,19 +98,26 @@ compareCategories([E|L],Categories,Events1):-
 	(  compare_list(Y,Categories)
 	-> (
 		append([X],Events2,Events3),
-	   	Events1 = Events3
+	   	Events1 = Events3,
+	   	write("Gefunden")
+	   )
+	   ;
+	   (
+	   	Events1 = Events2,
+	   	write("Nicht gefunden")
 	   )	
 	).
 	
 compareCategories([],_,Events1):-
 	Events1 = [].
 
-compare_list([],[]).
-compare_list([],_).
+compare_list([],[]):-false.
+compare_list([],_):-false.
 compare_list([L1Head|L1Tail], List2):-
-    member(L1Head,List2),
+    (member(L1Head,List2),
     write(L1Head + List2),
-    nl
+    nl)
     ;
-    compare_list(L1Tail,List2).
+    (compare_list(L1Tail,List2),
+    write("Keine Übereinstimmung")).
 	
