@@ -94,19 +94,13 @@ searchEventsOnCategory(Categories,Events):-
 
 compareCategories([E|L],Categories,Events1):-
 	compareCategories(L,Categories,Events2),
-	(
-		(
-			E = [X,Y],
-			compare_list(Y,Categories),
-			append([X],Events2,Events3),
-			Events1 = Events3
-		)
-	;
-		Events1 = Events2
-	),
-	write(Events3),
-	nl
-	.
+	E = [X,Y],
+	(  compare_list(Y,Categories)
+	-> (
+		append([X],Events2,Events3),
+	   	Events1 = Events3
+	   )	
+	).
 	
 compareCategories([],_,Events1):-
 	Events1 = [].

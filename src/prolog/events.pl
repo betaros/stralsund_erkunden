@@ -61,8 +61,8 @@ event(	'Zoo',
 event(	'Cinestar',
 	54.311055,
 	13.090076,
-	%['Freizeit','Unterhaltung']).
-['Bar','Kneipe']).
+	['Freizeit','Unterhaltung']).
+	%['Bar','Kneipe']).
 	
 event(	'Haus 8',
 	54.340094,
