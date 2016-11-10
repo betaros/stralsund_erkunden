@@ -1,13 +1,13 @@
 # Stralsund erkunden
 # Noch in Entwicklung !!!
 
-Erkunde Stralsund mit diesem hilfrreichen Tool. Es stellt dir für deinen Aufenthalt alles notwendige zur Verfügung. Gebe ein was dich interessiert und schon zeigt es dir, was du hier erleben kannst!
+Erkunde Stralsund mit diesem hilfreichen Tool. Es stellt dir für deinen Aufenthalt alles notwendige zur Verfügung. Gebe ein was dich interessiert und schon zeigt es dir, was du hier erleben kannst!
 
 Worauf wartest du noch? Auf nach Stralsund und erlebe einen unvergesslichen Urlaub.
 
 ## Entwicklung
 
-Wenn du an dem Tool mit entwickeln möchtest, dann benötigst du dafür folgendes:
+Das Programm wird mit den folgenden Werkzeugen entwickelt:
 
 - [Eclipse Neon](https://www.eclipse.org)
 - [Eclipse WindowBuilder](https://eclipse.org/windowbuilder/)
