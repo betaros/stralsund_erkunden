@@ -13,6 +13,9 @@ import org.jxmapviewer.JXMapViewer;
 import org.jxmapviewer.viewer.GeoPosition;
 
 import map.Map;
+import src.Event;
+import src.Profile;
+
 import javax.swing.UIManager;
 import java.awt.Color;
 import javax.swing.JScrollPane;
@@ -21,6 +24,9 @@ import java.awt.Insets;
 public class MainPanel extends JPanel {
 
 	private static final long serialVersionUID = -8438576029794021570L;
+	
+	private JPanel mainList;
+	private ArrayList<GeoPosition> waypoints;
 
 	/**
 	 * Create the panel.
@@ -58,19 +64,27 @@ public class MainPanel extends JPanel {
 		splitPane_1.setLeftComponent(resultpanel);
 		GridBagLayout gbl_resultpanel = new GridBagLayout();
 		gbl_resultpanel.columnWidths = new int[]{2, 0};
-		gbl_resultpanel.rowHeights = new int[]{2, 0, 0};
+		gbl_resultpanel.rowHeights = new int[]{2, 0};
 		gbl_resultpanel.columnWeights = new double[]{1.0, Double.MIN_VALUE};
-		gbl_resultpanel.rowWeights = new double[]{1.0, 0.0, Double.MIN_VALUE};
+		gbl_resultpanel.rowWeights = new double[]{1.0, Double.MIN_VALUE};
 		resultpanel.setLayout(gbl_resultpanel);
 		
-		JScrollPane scrollPane = new JScrollPane();
+		GridBagLayout gbl_mainList = new GridBagLayout();
+		gbl_mainList.rowWeights = new double[]{1.0};
+		mainList = new JPanel(gbl_mainList);
+        GridBagConstraints gbc = new GridBagConstraints();
+        gbc.fill = GridBagConstraints.VERTICAL;
+        gbc.gridwidth = GridBagConstraints.REMAINDER;
+        gbc.weightx = 1;
+        gbc.weighty = 1;
+        mainList.add(new JPanel(), gbc);
+		
+		JScrollPane resultScrollPane = new JScrollPane(mainList);
 		GridBagConstraints gbc_scrollPane = new GridBagConstraints();
-		gbc_scrollPane.insets = new Insets(0, 0, 5, 0);
-		gbc_scrollPane.fill = GridBagConstraints.HORIZONTAL;
-		gbc_scrollPane.anchor = GridBagConstraints.NORTH;
+		gbc_scrollPane.fill = GridBagConstraints.BOTH;
 		gbc_scrollPane.gridx = 0;
 		gbc_scrollPane.gridy = 0;
-		resultpanel.add(scrollPane, gbc_scrollPane);
+		resultpanel.add(resultScrollPane, gbc_scrollPane);
 		
 		JSplitPane splitPane = new JSplitPane();
 		splitPane.setOrientation(JSplitPane.VERTICAL_SPLIT);
@@ -103,7 +117,7 @@ public class MainPanel extends JPanel {
 		mappanel.setLayout(gbl_mappanel);
 		
 		Map map = new Map();
-		ArrayList<GeoPosition> waypoints = new ArrayList<GeoPosition>();
+		waypoints = new ArrayList<GeoPosition>();
 		waypoints.add(new GeoPosition(54.3199026, 13.0416835));
 		waypoints.add(new GeoPosition(54.3200465, 13.0446653));
 		waypoints.add(new GeoPosition(54.315509,13.0949513));
@@ -117,6 +131,24 @@ public class MainPanel extends JPanel {
 		gbc_mapViewer.gridx = 0;
 		gbc_mapViewer.gridy = 0;
 		mappanel.add(mapViewer, gbc_mapViewer);
+	}
+	
+	public void showSearchResults(){
+		ArrayList<String> categories = new ArrayList<String>();
+		categories.add("Shopping");
+		categories.add("Schwimmen");
+    	Event event = new Event("Hansedom", 52.1, 19.1, 2.5, 3.5, categories);
+		Profile profile = new Profile(2, 20000, 2, 1);
+		
+		Result r = new Result(event, profile);
+        GridBagConstraints gbc = new GridBagConstraints();
+        gbc.gridwidth = GridBagConstraints.REMAINDER;
+        gbc.weightx = 1;
+        gbc.fill = GridBagConstraints.HORIZONTAL;
+        mainList.add(r, gbc, 0);
+
+        validate();
+        repaint();
 	}
 
 }

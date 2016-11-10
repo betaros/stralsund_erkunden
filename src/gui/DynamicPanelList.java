@@ -60,7 +60,9 @@ public class DynamicPanelList {
             gbc.weighty = 1;
             mainList.add(new JPanel(), gbc);
 
-            add(new JScrollPane(mainList));
+            JScrollPane jsp = new JScrollPane(mainList); 
+            
+            add(jsp);
 
             JButton add = new JButton("Add");
             add.addActionListener(new ActionListener() {

@@ -87,13 +87,13 @@ public class MainGui {
 		gbc_profileButton.gridy = 0;
 		profilpanel.add(profileButton, gbc_profileButton);
 
-		JButton btnSuchen = new JButton("Suchen");
+		JButton btnSearch = new JButton("Suchen");
 		GridBagConstraints gbc_btnSuchen = new GridBagConstraints();
 		gbc_btnSuchen.insets = new Insets(0, 0, 5, 0);
 		gbc_btnSuchen.fill = GridBagConstraints.HORIZONTAL;
 		gbc_btnSuchen.gridx = 0;
 		gbc_btnSuchen.gridy = 1;
-		profilpanel.add(btnSuchen, gbc_btnSuchen);
+		profilpanel.add(btnSearch, gbc_btnSuchen);
 
 		JButton btnSort = new JButton("Sortieren");
 		GridBagConstraints gbc_btnSort = new GridBagConstraints();
@@ -166,6 +166,11 @@ public class MainGui {
 			}
 		});
 
+		btnSearch.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				mp.showSearchResults();
+			}
+		});
 	}
 
 	private String generateSummary(){
