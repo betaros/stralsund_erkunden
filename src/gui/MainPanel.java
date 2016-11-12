@@ -19,13 +19,14 @@ import src.Profile;
 import javax.swing.UIManager;
 import java.awt.Color;
 import javax.swing.JScrollPane;
-import java.awt.Insets;
 
 public class MainPanel extends JPanel {
 
 	private static final long serialVersionUID = -8438576029794021570L;
 	
 	private JPanel mainList;
+	private JPanel planList;
+	private JXMapViewer mapViewer;
 	private ArrayList<GeoPosition> waypoints;
 
 	/**
@@ -63,21 +64,23 @@ public class MainPanel extends JPanel {
 		JPanel resultpanel = new JPanel();
 		splitPane_1.setLeftComponent(resultpanel);
 		GridBagLayout gbl_resultpanel = new GridBagLayout();
-		gbl_resultpanel.columnWidths = new int[]{2, 0};
+		gbl_resultpanel.columnWidths = new int[] {350, 0};
 		gbl_resultpanel.rowHeights = new int[]{2, 0};
 		gbl_resultpanel.columnWeights = new double[]{1.0, Double.MIN_VALUE};
 		gbl_resultpanel.rowWeights = new double[]{1.0, Double.MIN_VALUE};
 		resultpanel.setLayout(gbl_resultpanel);
 		
 		GridBagLayout gbl_mainList = new GridBagLayout();
+		gbl_mainList.columnWeights = new double[]{1.0};
 		gbl_mainList.rowWeights = new double[]{1.0};
+		
 		mainList = new JPanel(gbl_mainList);
-        GridBagConstraints gbc = new GridBagConstraints();
-        gbc.fill = GridBagConstraints.VERTICAL;
-        gbc.gridwidth = GridBagConstraints.REMAINDER;
-        gbc.weightx = 1;
-        gbc.weighty = 1;
-        mainList.add(new JPanel(), gbc);
+        GridBagConstraints gbc_mainlist = new GridBagConstraints();
+        gbc_mainlist.fill = GridBagConstraints.VERTICAL;
+        gbc_mainlist.gridwidth = GridBagConstraints.REMAINDER;
+        gbc_mainlist.weightx = 1;
+        gbc_mainlist.weighty = 1;
+        mainList.add(new JPanel(), gbc_mainlist);
 		
 		JScrollPane resultScrollPane = new JScrollPane(mainList);
 		GridBagConstraints gbc_scrollPane = new GridBagConstraints();
@@ -99,18 +102,29 @@ public class MainPanel extends JPanel {
 		gbl_routingpanel.rowWeights = new double[]{1.0, Double.MIN_VALUE};
 		routingpanel.setLayout(gbl_routingpanel);
 		
-		JScrollPane scrollPane_1 = new JScrollPane();
-		GridBagConstraints gbc_scrollPane_1 = new GridBagConstraints();
-		gbc_scrollPane_1.fill = GridBagConstraints.HORIZONTAL;
-		gbc_scrollPane_1.anchor = GridBagConstraints.NORTH;
-		gbc_scrollPane_1.gridx = 0;
-		gbc_scrollPane_1.gridy = 0;
-		routingpanel.add(scrollPane_1, gbc_scrollPane_1);
+		GridBagLayout gbl_planList = new GridBagLayout();
+		gbl_planList.rowWeights = new double[]{1.0};
+		
+		planList = new JPanel();
+		GridBagConstraints gbc_planlist = new GridBagConstraints();
+        gbc_planlist.fill = GridBagConstraints.VERTICAL;
+        gbc_planlist.gridwidth = GridBagConstraints.REMAINDER;
+        gbc_planlist.weightx = 1;
+        gbc_planlist.weighty = 1;
+        planList.add(new JPanel(), gbc_planlist);
+		
+		JScrollPane planListScrollPane = new JScrollPane(planList);
+		GridBagConstraints gbc_planListScrollPane = new GridBagConstraints();
+		gbc_planListScrollPane.fill = GridBagConstraints.HORIZONTAL;
+		gbc_planListScrollPane.anchor = GridBagConstraints.NORTH;
+		gbc_planListScrollPane.gridx = 0;
+		gbc_planListScrollPane.gridy = 0;
+		routingpanel.add(planListScrollPane, gbc_planListScrollPane);
 		
 		JPanel mappanel = new JPanel();
 		splitPane.setRightComponent(mappanel);
 		GridBagLayout gbl_mappanel = new GridBagLayout();
-		gbl_mappanel.columnWidths = new int[]{876, 0};
+		gbl_mappanel.columnWidths = new int[] {400, 0};
 		gbl_mappanel.rowHeights = new int[]{118, 0};
 		gbl_mappanel.columnWeights = new double[]{1.0, Double.MIN_VALUE};
 		gbl_mappanel.rowWeights = new double[]{1.0, Double.MIN_VALUE};
@@ -122,7 +136,7 @@ public class MainPanel extends JPanel {
 		waypoints.add(new GeoPosition(54.3200465, 13.0446653));
 		waypoints.add(new GeoPosition(54.315509,13.0949513));
 		waypoints.add(new GeoPosition(54.311055, 13.090076));
-		JXMapViewer mapViewer = map.getMap(waypoints);
+		mapViewer = map.getMap(waypoints);
 		
 		mapViewer.setLayout(new FlowLayout(FlowLayout.CENTER, 5, 5));
 		
@@ -146,9 +160,27 @@ public class MainPanel extends JPanel {
         gbc.weightx = 1;
         gbc.fill = GridBagConstraints.HORIZONTAL;
         mainList.add(r, gbc, 0);
-
+        
         validate();
         repaint();
 	}
 
+	public void showTimePlan(){
+		ArrayList<String> categories = new ArrayList<String>();
+		categories.add("Shopping");
+		categories.add("Schwimmen");
+    	Event event = new Event("Hansedom", 52.1, 19.1, 2.5, 3.5, categories);
+		Profile profile = new Profile(2, 20000, 2, 1);
+		
+		Result r = new Result(event, profile);
+        GridBagConstraints gbc = new GridBagConstraints();
+        gbc.gridwidth = GridBagConstraints.REMAINDER;
+        gbc.weightx = 1;
+        gbc.fill = GridBagConstraints.HORIZONTAL;
+        planList.add(r, gbc, 0);
+
+        validate();
+        repaint();
+	}
+	
 }
