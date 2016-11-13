@@ -5,7 +5,6 @@ package prolog;
 import java.util.ArrayList;
 import java.util.Map;
 import java.util.StringTokenizer;
-
 import org.jpl7.*;
 
 public class PrologConnector {
@@ -57,7 +56,33 @@ public class PrologConnector {
 	
 
 	}
-
+	public ArrayList<String> getEventsByPrologWithCategories(ArrayList<String> Categories){
+		ArrayList<String> events = new ArrayList<String>();
+		
+		//(Persons,Budget,Categories,Events)
+		Variable X = new Variable("X");
+		Atom V = new Atom("['Bar']");
+		 
+		Query q4 =
+			    new Query(
+			        "searchEventsOnCategory",
+			        new Term[] {V,X}
+			    );
+	
+		Map<String, Term> solution = q4.oneSolution();
+	    String[] array = solution.get("X").toString().split(" ");
+	    
+	    for(int i = 0; i<array.length-1; i++){
+	    	array[i] = array[i].replace("'[|]'(", "").replace(",","").replace("'","");
+	    	System.out.println(array[i]);
+	    	if (!events.contains(array[i])) {
+	    	    events.add(array[i]);
+	    	}
+	    }
+	    
+	    return events;
+		
+	}
 	
 	public ArrayList<String> getCategoriesByProlog(){
 		ArrayList<String> categories = new ArrayList<String>();

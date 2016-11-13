@@ -80,8 +80,10 @@ calcDistance(EventA, EventB, Distance) :-
 /*
 * Gibt die möglichen events zurück, wenn events leer
 */
+
+
 getEventsForProfile(Persons,Budget,Categories,Events):-
-	searchEventsOnCategory(Categories,Events).
+	searchEventsOnCategory(Categories,Events2).
 	
 searchEventsOnCategory(Categories,Events):-
 	findall([X,V], event(X,_,_,V), List),
@@ -115,9 +117,12 @@ compare_list([],[]):-false.
 compare_list([],_):-false.
 compare_list([L1Head|L1Tail], List2):-
     (member(L1Head,List2),
-    write(L1Head + List2),
+    write("Übereinstimmung: "),
+    write(L1Head+List2),
     nl)
     ;
     (compare_list(L1Tail,List2),
-    write("Keine Übereinstimmung")).
+    write("Keine Übereinstimmung: "),
+    write(L1Head+List2),
+    nl).
 	

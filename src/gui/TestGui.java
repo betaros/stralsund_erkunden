@@ -15,6 +15,7 @@ import java.awt.SystemColor;
 import java.util.ArrayList;
 
 import javax.swing.JPanel;
+import javax.swing.JCheckBoxMenuItem;
 
 public class TestGui {
 
@@ -38,7 +39,9 @@ public class TestGui {
 		// Hole Kategorien aus dem Profil und generiere eine Liste daraus
 		DefaultListModel<JCheckBox> model = new DefaultListModel<JCheckBox>();
 		PrologConnector pc = new PrologConnector();
-		for(String s:pc.findEvents()){
+		ArrayList<String> a = new ArrayList<String>();
+		a.add("Bar");
+		for(String s:pc.getEventsByPrologWithCategories(a)){
 			model.addElement(new JCheckBox(s));
 		}
 		JCheckBoxList checkBoxList = new JCheckBoxList((ListModel<JCheckBox>) model);
