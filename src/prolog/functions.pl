@@ -87,10 +87,10 @@ getEventsForProfile(Persons,Budget,Categories,Events):-
 	
 searchEventsOnCategory(Categories,Events):-
 	findall([X,V], event(X,_,_,V), List),
-	write(List),
-	nl,
-	write(Categories),
-	nl,
+%	write(List),
+%	nl,
+%	write(Categories),
+%	nl,
 	compareCategories(List,Categories,Events1),
 	Events = Events1.
 
@@ -100,13 +100,13 @@ compareCategories([E|L],Categories,Events1):-
 	(  compare_list(Y,Categories)
 	-> (
 		append([X],Events2,Events3),
-	   	Events1 = Events3,
-	   	write("Gefunden")
+	   	Events1 = Events3
+%	   	write("Gefunden")
 	   )
 	   ;
 	   (
-	   	Events1 = Events2,
-	   	write("Nicht gefunden")
+	   	Events1 = Events2
+%	   	write("Nicht gefunden")
 	   )	
 	).
 	
@@ -116,13 +116,15 @@ compareCategories([],_,Events1):-
 compare_list([],[]):-false.
 compare_list([],_):-false.
 compare_list([L1Head|L1Tail], List2):-
-    (member(L1Head,List2),
-    write("Übereinstimmung: "),
-    write(L1Head+List2),
-    nl)
+    (member(L1Head,List2)
+%    write("Übereinstimmung: "),
+%    write(L1Head+List2),
+%    nl
+    )
     ;
-    (compare_list(L1Tail,List2),
-    write("Keine Übereinstimmung: "),
-    write(L1Head+List2),
-    nl).
+    (compare_list(L1Tail,List2)
+%    write("Keine Übereinstimmung: "),
+%    write(L1Head+List2),
+%    nl
+    ).
 	

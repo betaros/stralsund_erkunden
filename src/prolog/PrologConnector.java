@@ -61,12 +61,13 @@ public class PrologConnector {
 		
 		//(Persons,Budget,Categories,Events)
 		Variable X = new Variable("X");
-		Atom V = new Atom("['Bar']");
 		 
+		Term t = Util.textToTerm("[Bar]");
+		
 		Query q4 =
 			    new Query(
 			        "searchEventsOnCategory",
-			        new Term[] {V,X}
+			        new Term[] {t,X}
 			    );
 	
 		Map<String, Term> solution = q4.oneSolution();
