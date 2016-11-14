@@ -18,32 +18,11 @@ lonInKm(X, Res) :-
 */
 
 /*
-* Sucht nach Veranstaltung mit passender Kategorie
-* findEvent(Liste an Kategorien, Liste an Ergebnissen)
-*
-* TODO: Logik ausdenken...
-*/
-findEvent(_, []).
-findEvent([Category|Residual], Result) :- 
-	findEvent(Residual, Temp),
-	member(Category,Temp),
-	categorie(Category, Result).
-
-/*
-* Sucht alle Events
-*/
-findAllEvents(E):-
-	event(E).
-
-/*
 * Sucht alle Kategorien
 */
 findAllCategories(Categories):-
-	findall(X, event(_,_,_,X), L),
+	findall(X, event(_,_,_,X,_), L),
 	appendCategories(C1,L),
-	nl,
-	write(C1),
-	nl,
 	Categories = C1.
 
 appendCategories(C1,[R|[]]):-
@@ -51,11 +30,10 @@ appendCategories(C1,[R|[]]):-
 	
 appendCategories(C,[R|L]):-
 	appendCategories(C1,L),
-	write(C1),
-	nl,
 	append(C1,R,X),
 	C = X.
 
+/*----------------------------------------------------------------------------------------------*/
 
 /*
 * Berechnet die Entfernung zwischen zwei Veranstaltungen
@@ -63,8 +41,8 @@ appendCategories(C,[R|L]):-
 * calcDistance(Name Veranstaltung A, Name Veranstaltung B, Entfernung
 */	
 calcDistance(EventA, EventB, Distance) :-
-	event(EventA, XA, YA, _),
-	event(EventB, XB, YB, _),
+	event(EventA, XA, YA, _, _),
+	event(EventB, XB, YB, _, _),
 	latInKm(XA, XAinKm),
 	latInKm(XB, XBinKm),
 	lonInKm(YA, YAinKm),
@@ -76,21 +54,13 @@ calcDistance(EventA, EventB, Distance) :-
 	AddBoth is PotX + PotY,
 	Distance is sqrt(AddBoth).
 
+/*----------------------------------------------------------------------------------------------*/
 
 /*
-* Gibt die möglichen events zurück, wenn events leer
+* Gibt die möglichen Events zu den Kategorien zurück, wenn Events leer
 */
-
-
-getEventsForProfile(Persons,Budget,Categories,Events):-
-	searchEventsOnCategory(Categories,Events2).
-	
 searchEventsOnCategory(Categories,Events):-
-	findall([X,V], event(X,_,_,V), List),
-%	write(List),
-%	nl,
-%	write(Categories),
-%	nl,
+	findall([X,V], event(X,_,_,V,_), List),
 	compareCategories(List,Categories,Events1),
 	Events = Events1.
 
@@ -101,30 +71,53 @@ compareCategories([E|L],Categories,Events1):-
 	-> (
 		append([X],Events2,Events3),
 	   	Events1 = Events3
-%	   	write("Gefunden")
 	   )
 	   ;
 	   (
 	   	Events1 = Events2
-%	   	write("Nicht gefunden")
 	   )	
 	).
 	
 compareCategories([],_,Events1):-
 	Events1 = [].
 
+
+/*----------------------------------------------------------------------------------------------*/
+/*
+*Prüft für alle Events der Liste ob sie einzeln nicht zu teuer sind und gibt die zurück die 
+*Preislich in das Budget nicht übersteigen
+*/
+checkEventsForBudget(Persons,Budget,MyEvents,ValidEvents):-
+	checkEventForBudget(Persons,Budget,MyEvents,ValidEvents1),
+	ValidEvents = ValidEvents1.
+
+checkEventForBudget(_,_,[],ValidEvents):-
+	ValidEvents = [].
+	
+checkEventForBudget(Persons,Budget,[Event|MyEvents],ValidEvents):-
+	checkEventForBudget(Persons,Budget,MyEvents,ValidEvents1),
+	((
+		event(Event,_,_,_,[AdultPrice,ReducedPrice]),
+		[AdultCount|ReducedCount] = Persons,
+		Price is (AdultCount*AdultPrice)+(ReducedCount*ReducedPrice),
+		Budget >= Price,		
+		append([Event],ValidEvents1,ValidEvents2),
+		ValidEvents = ValidEvents2
+	)
+	;
+	(
+		ValidEvents = ValidEvents1
+	)).
+
+/*
+* compare_list vergleicht ob mindestens ein Member einer Liste in der anderen Liste ist
+*/
 compare_list([],[]):-false.
 compare_list([],_):-false.
 compare_list([L1Head|L1Tail], List2):-
     (member(L1Head,List2)
-%    write("Übereinstimmung: "),
-%    write(L1Head+List2),
-%    nl
     )
     ;
     (compare_list(L1Tail,List2)
-%    write("Keine Übereinstimmung: "),
-%    write(L1Head+List2),
-%    nl
     ).
 	
