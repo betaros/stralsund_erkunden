@@ -1,6 +1,6 @@
 :- use_module(events).
 :- use_module(library(lists)).
-
+ 
 /*
 * Konstanten fuer die Berechnungen
 */
@@ -21,7 +21,7 @@ lonInKm(X, Res) :-
 * Sucht alle Kategorien
 */
 findAllCategories(Categories):-
-	findall(X, event(_,_,_,X,_), L),
+	findall(X, event(_,_,X,_), L),
 	appendCategories(C1,L),
 	Categories = C1.
 
@@ -41,8 +41,8 @@ appendCategories(C,[R|L]):-
 * calcDistance(Name Veranstaltung A, Name Veranstaltung B, Entfernung
 */	
 calcDistance(EventA, EventB, Distance) :-
-	event(EventA, XA, YA, _, _),
-	event(EventB, XB, YB, _, _),
+	event(EventA, [XA, YA], _, _),
+	event(EventB, [XB, YB], _, _),
 	latInKm(XA, XAinKm),
 	latInKm(XB, XBinKm),
 	lonInKm(YA, YAinKm),
@@ -60,7 +60,7 @@ calcDistance(EventA, EventB, Distance) :-
 * Gibt die möglichen Events zu den Kategorien zurück, wenn Events leer
 */
 searchEventsOnCategory(Categories,Events):-
-	findall([X,V], event(X,_,_,V,_), List),
+	findall([X,V], event(X,_,V,_), List),
 	compareCategories(List,Categories,Events1),
 	Events = Events1.
 
@@ -86,6 +86,10 @@ compareCategories([],_,Events1):-
 /*
 *Prüft für alle Events der Liste ob sie einzeln nicht zu teuer sind und gibt die zurück die 
 *Preislich in das Budget nicht übersteigen
+*Persons = [Count of Adult, Count of Reduced]
+*Budget = Price in cent
+*MyEvents = ['EventA', 'EventB' ..]
+*ValidEvents = empty Atom -> becomes List of valid events
 */
 checkEventsForBudget(Persons,Budget,MyEvents,ValidEvents):-
 	checkEventForBudget(Persons,Budget,MyEvents,ValidEvents1),
@@ -97,7 +101,7 @@ checkEventForBudget(_,_,[],ValidEvents):-
 checkEventForBudget(Persons,Budget,[Event|MyEvents],ValidEvents):-
 	checkEventForBudget(Persons,Budget,MyEvents,ValidEvents1),
 	((
-		event(Event,_,_,_,[AdultPrice,ReducedPrice]),
+		event(Event,_,_,[AdultPrice,ReducedPrice]),
 		[AdultCount|ReducedCount] = Persons,
 		Price is (AdultCount*AdultPrice)+(ReducedCount*ReducedPrice),
 		Budget >= Price,		
