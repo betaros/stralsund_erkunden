@@ -13,6 +13,7 @@ import org.jxmapviewer.JXMapViewer;
 import org.jxmapviewer.viewer.GeoPosition;
 
 import map.Map;
+import prolog.PrologConnector;
 import src.Event;
 import src.Profile;
 
@@ -28,11 +29,15 @@ public class MainPanel extends JPanel {
 	private JPanel planList;
 	private JXMapViewer mapViewer;
 	private ArrayList<GeoPosition> waypoints;
+	
+	private PrologConnector prologConnector;
 
 	/**
 	 * Create the panel.
 	 */
 	public MainPanel() {
+		prologConnector = new PrologConnector();
+		
 		setBorder(new TitledBorder(UIManager.getBorder("TitledBorder.border"), "Ergebnisse", TitledBorder.LEADING, TitledBorder.TOP, null, new Color(0, 0, 0)));
 		GridBagLayout gridBagLayout = new GridBagLayout();
 		gridBagLayout.columnWidths = new int[]{0, 0};
@@ -153,6 +158,12 @@ public class MainPanel extends JPanel {
 		categories.add("Schwimmen");
     	Event event = new Event("Hansedom", 52.1, 19.1, 2.5, 3.5, categories);
 		Profile profile = new Profile(2, 20000, 2, 1);
+		
+		ArrayList<String> eventNames = prologConnector.getEventsByPrologWithCategories(profile.getCategories());
+		ArrayList<Result> results = new ArrayList<Result>();
+		for(String eventName:eventNames){
+			//results.add(new Result(prologConnector.findEvent(eventName),profile));
+		}
 		
 		Result r = new Result(event, profile);
         GridBagConstraints gbc = new GridBagConstraints();
