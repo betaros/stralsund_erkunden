@@ -48,12 +48,14 @@ public class PrologConnector {
 		System.out.println("Entfernung zwischen " + placeA + " und " + placeB + ": " + ergebnis.get("X"));
 	}
 	
-	public ArrayList<String> getEventsByPrologWithCategories(ArrayList<String> Categories){
+	public ArrayList<String> getEventsByPrologWithCategories(ArrayList<String> categories){
 		ArrayList<String> events = new ArrayList<String>();
 
 		Variable X = new Variable("X");
-		Term termCategories = Util.textToTerm("[Bar]");
+		Term termCategories = Util.textToTerm(prologListGenerator(categories));
 
+		System.out.println("Debug: " + termCategories.toString());
+		
 		Query query =
 			new Query(
 				"searchEventsOnCategory",
@@ -61,11 +63,11 @@ public class PrologConnector {
 			);
 
 		Map<String, Term> solution = query.oneSolution();
-		String[] array = solution.get("X").toString().split(" ");
+		String[] array = solution.get("X").toString().split(",");
 
 		for(int i = 0; i<array.length-1; i++){
-			array[i] = array[i].replace("'[|]'(", "").replace(",","").replace("'","");
-			System.out.println(array[i]);
+			array[i] = array[i].replaceAll("[^A-Za-z0-9 ]", "");
+			System.out.println("getEventsByPrologWithCategories: " + array[i]);
 			if (!events.contains(array[i])) {
 				events.add(array[i]);
 			}
@@ -77,7 +79,6 @@ public class PrologConnector {
 
 	public ArrayList<String> getCategoriesByProlog(){
 		ArrayList<String> categories = new ArrayList<String>();
-
 		Variable X = new Variable("X");
 
 		Query query =
@@ -90,8 +91,8 @@ public class PrologConnector {
 		String[] array = solution.get("X").toString().split(" ");
 		
 		for(int i = 0; i<array.length-1; i++){
-			array[i] = array[i].replace("'[|]'(", "").replace(",","").replace("'","");
-			System.out.println(array[i]);
+			array[i] = array[i].replaceAll("[^A-Za-z0-9 ]", "");
+			System.out.println("getCategoriesByProlog: " + array[i]);
 			if (!categories.contains(array[i])) {
 				categories.add(array[i]);
 			}
@@ -100,4 +101,18 @@ public class PrologConnector {
 		return categories;
 	}
 	
+	private String prologListGenerator(ArrayList<String> list){
+		StringBuilder sb = new StringBuilder();
+		sb.append("[");
+		for(String listelement:list){
+			sb.append("'");
+			sb.append(listelement);
+			sb.append("'");
+			sb.append(",");
+		}
+		sb.deleteCharAt(sb.length()-1);
+		sb.append("]");
+		
+		return sb.toString();
+	}
 }

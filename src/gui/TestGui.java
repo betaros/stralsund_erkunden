@@ -15,7 +15,6 @@ import java.awt.SystemColor;
 import java.util.ArrayList;
 
 import javax.swing.JPanel;
-import javax.swing.JCheckBoxMenuItem;
 
 public class TestGui {
 
