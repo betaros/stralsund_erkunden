@@ -57,7 +57,7 @@ public class TestGui {
 		Event e = new Event("Hansedom", 52.1, 19.1, 2.5, 3.5, categories);
 		Profile p = new Profile(2, 20000, 2, 1);
 		
-		Result result = new Result(e, p);
+		Result result = new Result(e, p, pc, false);
 		panel.add(result);
 	}
 

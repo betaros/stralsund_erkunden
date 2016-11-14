@@ -38,7 +38,7 @@ public class MainPanel extends JPanel {
 	public MainPanel() {
 		prologConnector = new PrologConnector();
 		
-		setBorder(new TitledBorder(UIManager.getBorder("TitledBorder.border"), "Ergebnisse", TitledBorder.LEADING, TitledBorder.TOP, null, new Color(0, 0, 0)));
+		setBorder(null);
 		GridBagLayout gridBagLayout = new GridBagLayout();
 		gridBagLayout.columnWidths = new int[]{0, 0};
 		gridBagLayout.rowHeights = new int[]{0, 0};
@@ -67,6 +67,7 @@ public class MainPanel extends JPanel {
 		panel.add(splitPane_1, gbc_splitPane_1);
 		
 		JPanel resultpanel = new JPanel();
+		resultpanel.setBorder(new TitledBorder(UIManager.getBorder("TitledBorder.border"), "Interessante Events", TitledBorder.LEADING, TitledBorder.TOP, null, new Color(0, 0, 0)));
 		splitPane_1.setLeftComponent(resultpanel);
 		GridBagLayout gbl_resultpanel = new GridBagLayout();
 		gbl_resultpanel.columnWidths = new int[] {350, 0};
@@ -99,6 +100,7 @@ public class MainPanel extends JPanel {
 		splitPane_1.setRightComponent(splitPane);
 		
 		JPanel routingpanel = new JPanel();
+		routingpanel.setBorder(new TitledBorder(null, "Zeitablauf", TitledBorder.LEADING, TitledBorder.TOP, null, null));
 		splitPane.setLeftComponent(routingpanel);
 		GridBagLayout gbl_routingpanel = new GridBagLayout();
 		gbl_routingpanel.columnWidths = new int[]{2, 0};
@@ -152,6 +154,9 @@ public class MainPanel extends JPanel {
 		mappanel.add(mapViewer, gbc_mapViewer);
 	}
 	
+	/**
+	 * Zeige Eventliste an
+	 */
 	public void showSearchResults(){
 		ArrayList<String> categories = new ArrayList<String>();
 		categories.add("Shopping");
@@ -162,10 +167,12 @@ public class MainPanel extends JPanel {
 		ArrayList<String> eventNames = prologConnector.getEventsByPrologWithCategories(profile.getCategories());
 		ArrayList<Result> results = new ArrayList<Result>();
 		for(String eventName:eventNames){
-			//results.add(new Result(prologConnector.findEvent(eventName),profile));
+			Event e = prologConnector.findEvent(eventName);
+			Result result = new Result(e, profile, prologConnector,true);
+			results.add(result);
 		}
 		
-		Result r = new Result(event, profile);
+		Result r = new Result(event, profile, prologConnector, false);
         GridBagConstraints gbc = new GridBagConstraints();
         gbc.gridwidth = GridBagConstraints.REMAINDER;
         gbc.weightx = 1;
@@ -176,6 +183,9 @@ public class MainPanel extends JPanel {
         repaint();
 	}
 
+	/**
+	 * Zeige Zeitplan an
+	 */
 	public void showTimePlan(){
 		ArrayList<String> categories = new ArrayList<String>();
 		categories.add("Shopping");
@@ -183,7 +193,7 @@ public class MainPanel extends JPanel {
     	Event event = new Event("Hansedom", 52.1, 19.1, 2.5, 3.5, categories);
 		Profile profile = new Profile(2, 20000, 2, 1);
 		
-		Result r = new Result(event, profile);
+		Result r = new Result(event, profile, prologConnector, true);
         GridBagConstraints gbc = new GridBagConstraints();
         gbc.gridwidth = GridBagConstraints.REMAINDER;
         gbc.weightx = 1;

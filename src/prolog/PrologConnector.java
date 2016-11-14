@@ -6,6 +6,8 @@ import java.util.ArrayList;
 import java.util.Map;
 import org.jpl7.*;
 
+import src.Event;
+
 public class PrologConnector {
 
 	/**
@@ -19,7 +21,7 @@ public class PrologConnector {
 	 * Finde Event
 	 * @return
 	 */
-	public ArrayList<String> findEvent(String event){
+	public Event findEvent(String event){
 		ArrayList<String> events = new ArrayList<String>();
 		Atom E = new Atom(event);
 		Variable X = new Variable("X");
@@ -37,7 +39,9 @@ public class PrologConnector {
 			events.add(solutions[i].get("X").toString().replace("'", ""));
 		}
 
-		return events;
+		Event result = new Event("Hansedom", 53.1, 19.1, 3.2, 1.2, new ArrayList<String>());
+		
+		return result;
 	}
 
 	/**
