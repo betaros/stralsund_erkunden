@@ -4,6 +4,7 @@ import java.awt.FlowLayout;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.util.ArrayList;
+import java.util.Collections;
 
 import javax.swing.JPanel;
 import javax.swing.JSplitPane;
@@ -18,6 +19,7 @@ import src.Event;
 import src.Profile;
 
 import javax.swing.UIManager;
+
 import java.awt.Color;
 import javax.swing.JScrollPane;
 
@@ -27,10 +29,12 @@ public class MainPanel extends JPanel {
 	
 	private JPanel mainList;
 	private JPanel planList;
+	private Map map;
 	private JXMapViewer mapViewer;
 	private ArrayList<GeoPosition> waypoints;
 	
 	private PrologConnector prologConnector;
+	private Profile profile;
 
 	/**
 	 * Create the panel.
@@ -137,12 +141,9 @@ public class MainPanel extends JPanel {
 		gbl_mappanel.rowWeights = new double[]{1.0, Double.MIN_VALUE};
 		mappanel.setLayout(gbl_mappanel);
 		
-		Map map = new Map();
+		map = new Map();
 		waypoints = new ArrayList<GeoPosition>();
-		waypoints.add(new GeoPosition(54.3199026, 13.0416835));
-		waypoints.add(new GeoPosition(54.3200465, 13.0446653));
-		waypoints.add(new GeoPosition(54.315509,13.0949513));
-		waypoints.add(new GeoPosition(54.311055, 13.090076));
+		
 		mapViewer = map.getMap(waypoints);
 		
 		mapViewer.setLayout(new FlowLayout(FlowLayout.CENTER, 5, 5));
@@ -157,30 +158,41 @@ public class MainPanel extends JPanel {
 	/**
 	 * Zeige Eventliste an
 	 */
-	public void showSearchResults(){
-		ArrayList<String> categories = new ArrayList<String>();
-		categories.add("Shopping");
-		categories.add("Schwimmen");
-    	Event event = new Event("Hansedom", 52.1, 19.1, 250, 350, categories);
-		Profile profile = new Profile(2, 20000, 2, 1);
-		
-		ArrayList<String> eventNames = prologConnector.getEventsByPrologWithCategories(profile.getCategories());
-		ArrayList<Result> results = new ArrayList<Result>();
-		for(String eventName:eventNames){
-			Event e = prologConnector.findEvent(eventName);
-			Result result = new Result(e, profile, prologConnector,true);
-			results.add(result);
+	public boolean showSearchResults(Profile _p){
+		profile = _p;
+		ArrayList<String> categoryList = profile.getSelectedCategories();
+		if(categoryList.isEmpty()){
+			return false;
 		}
 		
-		Result r = new Result(event, profile, prologConnector, false);
-        GridBagConstraints gbc = new GridBagConstraints();
-        gbc.gridwidth = GridBagConstraints.REMAINDER;
-        gbc.weightx = 1;
-        gbc.fill = GridBagConstraints.HORIZONTAL;
-        mainList.add(r, gbc, 0);
-        
+		ArrayList<String> eventStringList = prologConnector.getEventsByPrologWithCategories(categoryList); 
+		eventStringList.removeAll(Collections.singleton(null));
+		
+		ArrayList<Event> eventList = new ArrayList<Event>();
+		for(String s:eventStringList){
+			eventList.add(prologConnector.findEvent(s));
+		}
+		
+		eventList.removeAll(Collections.singleton(null));
+		mainList.removeAll();
+		waypoints.removeAll(waypoints);
+		
+		for(Event e:eventList){
+			waypoints.add(new GeoPosition(e.getLatitude(), e.getLongitude()));
+			
+			Result result = new Result(e, profile, false);
+			GridBagConstraints gbc = new GridBagConstraints();
+	        gbc.gridwidth = GridBagConstraints.REMAINDER;
+	        gbc.weightx = 1;
+	        gbc.fill = GridBagConstraints.HORIZONTAL;
+	        mainList.add(result, gbc, 0);
+		}
+		
+		mapViewer = map.getMap(waypoints);
         validate();
         repaint();
+        
+        return true;
 	}
 
 	/**
@@ -193,7 +205,7 @@ public class MainPanel extends JPanel {
     	Event event = new Event("Hansedom", 52.1, 19.1, 250, 350, categories);
 		Profile profile = new Profile(2, 20000, 2, 1);
 		
-		Result r = new Result(event, profile, prologConnector, true);
+		Result r = new Result(event, profile, true);
         GridBagConstraints gbc = new GridBagConstraints();
         gbc.gridwidth = GridBagConstraints.REMAINDER;
         gbc.weightx = 1;

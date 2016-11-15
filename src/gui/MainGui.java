@@ -163,7 +163,9 @@ public class MainGui {
 
 		btnSearch.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
-				mp.showSearchResults();
+				if(!(mp.showSearchResults(profile))){
+					txtpnSummary.setText("Bitte Profil bearbeiten!");
+				}
 			}
 		});
 	}
@@ -193,7 +195,7 @@ public class MainGui {
 
 		summaryText.append("\n");
 		summaryText.append("Budget: ");
-		summaryText.append(new Double(profile.getBudgetInCent() / 100.0) + " \u20AC");
+		summaryText.append(String.format( "%.2f", new Double(profile.getBudgetInCent() / 100.0) ) + " \u20AC");
 		summaryText.append("\n");
 		
 		summaryText.append("\n");
@@ -210,44 +212,4 @@ public class MainGui {
 
 		return summaryText.toString();
 	}
-
-	/**
-	 * Erstellt eine Ergebnisliste
-	 * 
-	 * @param eventList
-	 */
-	/*
-	private ArrayList<JPanel> generateResultPanels(ArrayList<Event> eventList){
-		ArrayList<JPanel> resultlist = new ArrayList<JPanel>();
-
-		for(Event e:eventList){
-			JPanel panel = new JPanel();
-
-			JLabel eventTitle = new JLabel(e.getName());
-			panel.add(eventTitle);
-
-			String open = String.valueOf(e.getOpen());
-			open = new StringBuilder(open).insert(open.length()-2, ".").toString();
-			JLabel eventOpen = new JLabel(open);
-			panel.add(eventOpen);
-
-			String closed = String.valueOf(e.getClosed());
-			closed = new StringBuilder(closed).insert(closed.length()-2, ".").toString();
-			JLabel eventClose = new JLabel(closed);
-			panel.add(eventClose);
-
-			String priceInCent = String.valueOf(e.getPriceInCent());
-			priceInCent = new StringBuilder(priceInCent).insert(priceInCent.length()-2, ".").toString();
-			JLabel eventPrice = new JLabel(String.valueOf(e.getClosed()));
-			panel.add(eventPrice);
-
-			JButton addEventToListButton = new JButton();
-			addEventToListButton.setText("+");
-
-			resultlist.add(panel);
-		}
-
-		return resultlist;
-	}
-	 */
 }
