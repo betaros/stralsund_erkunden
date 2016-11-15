@@ -8,10 +8,8 @@
 
 /*
 * 
-* event(Name des Events, Latitude, Longitude, Liste an Kategorien).
+* event(Name des Events, [Latitude, Longitude], Liste an Kategorien, Preisliste).
 */
-
-
 event(	'Hansedom', 
 	[54.320021,13.043840],
 	['Sport','Hotel','Schwimmen','Sauna'],
@@ -77,3 +75,18 @@ businesshours(	'Hansedom',
 			[sat, 930, 2200],
 			[sun, 930, 2100]
 		]).
+
+/*Hotels
+* Unterkunft für die Nacht, immer ab 18 bis 8 Uhr
+* hotel('Name',[Long,Lat],Preis pro Doppelzimmer in Cent pro Nacht).
+*/
+
+hotel('Hansedom',[54.320021,13.043840],3000).
+		
+/*
+* vehicle (Name, Festpreis [Normal, Ermäßigt], Geschwindigkeit in km/Stunde)
+*/
+vehicle('Car', [100, 100], 35).
+vehicle('Bus', [180, 120], 25).
+vehicle('Bike', [0,0], 15).
+vehicle('Foot', [0,0], 6).

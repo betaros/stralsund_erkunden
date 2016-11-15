@@ -104,6 +104,7 @@ checkEventForBudget(Persons,Budget,[Event|MyEvents],ValidEvents):-
 		event(Event,_,_,[AdultPrice,ReducedPrice]),
 		[AdultCount|ReducedCount] = Persons,
 		Price is (AdultCount*AdultPrice)+(ReducedCount*ReducedPrice),
+		write(Price), nl,
 		Budget >= Price,		
 		append([Event],ValidEvents1,ValidEvents2),
 		ValidEvents = ValidEvents2
@@ -124,4 +125,25 @@ compare_list([L1Head|L1Tail], List2):-
     ;
     (compare_list(L1Tail,List2)
     ).
+
+/*
+*Check Timeline
+*Persons = [Count of Adult, Count of Reduced]
+*Budget = Price in cent
+*Events = [['eventname', day, starttime in minutes, eventtime in minutes, vehicle], ...]
+*daystart = time of start of the day  
+*/
+checkTimeline(Persons,Budget,Events,Daystart,Hotel):-
+	checkEventsOnTime(Events,Daystart,Hotel),
+	nl.
+
+checkEventsOnTime(Events,Daystart,Hotel):-
+	nl.
 	
+/*
+*calcArrivelForEvent
+*Berechnet die Anfahrt zum Event
+*Wenn EventStart leer, dann wird Hotel genommen.
+*/
+calcArrivelForEvent(EventStart, EventEnd, Hotel, Vehicle):-
+	nl.
