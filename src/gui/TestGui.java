@@ -35,9 +35,14 @@ public class TestGui {
 		testFrame.setBounds(100, 100, 450, 300);
 		testFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		
+		
+		
 		// Hole Kategorien aus dem Profil und generiere eine Liste daraus
 		DefaultListModel<JCheckBox> model = new DefaultListModel<JCheckBox>();
 		PrologConnector pc = new PrologConnector();
+		
+		pc.findEvent("Haus 8");
+		
 		ArrayList<String> a = new ArrayList<String>();
 		a.add("Bar");
 		for(String s:pc.getEventsByPrologWithCategories(a)){

@@ -146,12 +146,11 @@ compare_list([L1Head|L1Tail], List2):-
 *daystart = time of start of the day  
 */
 checkTimeline(Persons,Budget,Events,Daystart,Hotel):-
-	checkEventsOnTime(Events,Daystart,Hotel),
+	checkEventsOnTime(_, Events, Daystart),
 	nl.
 
-checkEventsOnTime(Events,Daystart,Hotel):-
+checkEventsOnTime(_,[[Event,Day,Starttime,Eventtime,Vehicle]|EventsTail],Daystart):-
 	nl.
-	
 /*
 *calcApproachlForEvent
 *Berechnet die Anfahrt zum Event

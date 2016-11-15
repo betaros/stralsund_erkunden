@@ -24,9 +24,9 @@ public class PrologConnector {
 	 */
 	public Event findEvent(String title){
 		Atom Name = new Atom(title);
-		Term Position = null;
-		Term Categories = null;
-		Term Price = null;
+		Variable Position = new Variable("Position");
+		Variable Categories = new Variable("Categories");
+		Variable Price = new Variable("Price");
 
 		Query query =
 				new Query(
@@ -38,10 +38,13 @@ public class PrologConnector {
 		
 		if(query.hasSolution()){
 			Map<String, Term> solution = query.oneSolution();
-			String[] arrayPosition = solution.get("Position").toString().split(",");
-			String[] arrayCategories = solution.get("Categories").toString().split(",");
-			String[] arrayPrice = solution.get("Price").toString().split(",");
+			String arrayPosition = solution.get("Position").toString();
+			String arrayCategories = solution.get("Categories").toString();
+			String arrayPrice = solution.get("Price").toString();
 
+			System.out.println("Bis Hier");
+			System.out.println(arrayPosition+arrayCategories+arrayPrice);
+			/*
 			double lat = Double.parseDouble(arrayPosition[0]);
 			double lon = Double.parseDouble(arrayPosition[1]);
 			int priceAdult = java.lang.Integer.parseInt(arrayPrice[0]);
@@ -53,6 +56,7 @@ public class PrologConnector {
 			}
 
 			e = new Event(title, lat, lon, priceAdult, priceReduced, categoryList);
+			*/
 		}
 
 		return e;
