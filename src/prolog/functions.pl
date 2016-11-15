@@ -115,6 +115,14 @@ checkEventForBudget(Persons,Budget,[Event|MyEvents],ValidEvents):-
 	)).
 
 /*
+*searchUsefulEvents
+*/
+searchUsefulEvents(Persons, Budget, Categories, UsefulEvents):-
+	searchEventsOnCategory(Categories, Events1),
+	checkEventsForBudget(Persons,Budget,Events1,ValidEvents),
+	UsefulEvents = ValidEvents.
+
+/*
 * compare_list vergleicht ob mindestens ein Member einer Liste in der anderen Liste ist
 */
 compare_list([],[]):-false.
