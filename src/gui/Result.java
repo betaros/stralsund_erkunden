@@ -12,7 +12,6 @@ import javax.swing.DefaultComboBoxModel;
 import javax.swing.JSlider;
 import javax.swing.event.ChangeListener;
 
-import prolog.PrologConnector;
 import src.Event;
 import src.Profile;
 
@@ -26,28 +25,19 @@ public class Result extends JPanel {
 	private int starttime = 0;
 
 	private double duration = 0.0d;
-	private int children;
-	private double childrenPrice;
-	private int adults;
-	private double adultPrice;
 	private Event event;
 	private Profile profile;
-	private PrologConnector prologConnector;
 
 	/**
 	 * Create the panel.
 	 */
-	public Result(Event _event, Profile _profile, PrologConnector _pc, boolean _resultlist) {
+	public Result(Event _event, Profile _profile, boolean _resultlist) {
 
 		event = _event;
 		profile = _profile;
-		prologConnector = _pc;
 
-		children = profile.getChildCounter();
-		childrenPrice = event.getPriceInCentChild() * children;
-
-		adults = profile.getAdultCounter();
-		adultPrice = event.getPriceInCentAdult() * adults;
+		double reducedPrice = (double)(event.getPriceInCentChild() * profile.getChildCounter()) / 100.0;
+		double adultPrice = (double)(event.getPriceInCentAdult() * profile.getAdultCounter()) / 100.0;
 
 		GridBagLayout gridBagLayout = new GridBagLayout();
 		gridBagLayout.columnWidths = new int[]{0, 0};
@@ -91,20 +81,20 @@ public class Result extends JPanel {
 		gbc_lblKinder.gridy = 0;
 		panel_1.add(lblKinder, gbc_lblKinder);
 
-		JLabel lblChildren = new JLabel(String.valueOf(children));
+		JLabel lblChildren = new JLabel(String.valueOf(profile.getChildCounter()));
 		GridBagConstraints gbc_lblChildren = new GridBagConstraints();
 		gbc_lblChildren.insets = new Insets(0, 0, 5, 5);
 		gbc_lblChildren.gridx = 1;
 		gbc_lblChildren.gridy = 0;
 		panel_1.add(lblChildren, gbc_lblChildren);
 
-		JLabel lblChildrenPrice = new JLabel(String.valueOf(childrenPrice / 100) + " \u20AC");
-		GridBagConstraints gbc_lblChildrenPrice = new GridBagConstraints();
-		gbc_lblChildrenPrice.anchor = GridBagConstraints.WEST;
-		gbc_lblChildrenPrice.insets = new Insets(0, 0, 5, 5);
-		gbc_lblChildrenPrice.gridx = 3;
-		gbc_lblChildrenPrice.gridy = 0;
-		panel_1.add(lblChildrenPrice, gbc_lblChildrenPrice);
+		JLabel lblReducedPrice = new JLabel(String.format( "%.2f", reducedPrice ) + " \u20AC");
+		GridBagConstraints gbc_lblReducedPrice = new GridBagConstraints();
+		gbc_lblReducedPrice.anchor = GridBagConstraints.WEST;
+		gbc_lblReducedPrice.insets = new Insets(0, 0, 5, 5);
+		gbc_lblReducedPrice.gridx = 3;
+		gbc_lblReducedPrice.gridy = 0;
+		panel_1.add(lblReducedPrice, gbc_lblReducedPrice);
 
 		JLabel lblOpeningHours = new JLabel("\u00D6ffnungszeiten");
 		GridBagConstraints gbc_lblOpeningHours = new GridBagConstraints();
@@ -121,16 +111,16 @@ public class Result extends JPanel {
 		gbc_lblErwachsene.gridy = 1;
 		panel_1.add(lblErwachsene, gbc_lblErwachsene);
 
-		JLabel lblAdult = new JLabel(String.valueOf(adults));
+		JLabel lblAdult = new JLabel(String.valueOf(profile.getAdultCounter()));
 		GridBagConstraints gbc_lblAdult = new GridBagConstraints();
 		gbc_lblAdult.insets = new Insets(0, 0, 0, 5);
 		gbc_lblAdult.gridx = 1;
 		gbc_lblAdult.gridy = 1;
 		panel_1.add(lblAdult, gbc_lblAdult);
 
-		JLabel lblAdultPrice = new JLabel(String.valueOf(adultPrice / 100) + " \u20AC");
+		JLabel lblAdultPrice = new JLabel(String.format( "%.2f", adultPrice ) + " \u20AC");
 		GridBagConstraints gbc_lblAdultPrice = new GridBagConstraints();
-		gbc_lblAdultPrice.anchor = GridBagConstraints.EAST;
+		gbc_lblAdultPrice.anchor = GridBagConstraints.WEST;
 		gbc_lblAdultPrice.insets = new Insets(0, 0, 0, 5);
 		gbc_lblAdultPrice.gridx = 3;
 		gbc_lblAdultPrice.gridy = 1;

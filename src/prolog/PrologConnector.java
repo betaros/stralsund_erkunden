@@ -3,6 +3,7 @@
 package prolog;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Map;
 
 import org.jpl7.*;
@@ -38,13 +39,29 @@ public class PrologConnector {
 		
 		if(query.hasSolution()){
 			Map<String, Term> solution = query.oneSolution();
-			String arrayPosition = solution.get("Position").toString();
-			String arrayCategories = solution.get("Categories").toString();
-			String arrayPrice = solution.get("Price").toString();
+			String arrayPosition[]   = solution.get("Position").toString().split(",");
+			String arrayCategories[] = solution.get("Categories").toString().split(",");
+			String arrayPrice[]      = solution.get("Price").toString().split(",");
 
-			System.out.println("Bis Hier");
-			System.out.println(arrayPosition+arrayCategories+arrayPrice);
-			/*
+			for(int i = 0; i<arrayPosition.length; i++){
+				arrayPosition[i] = arrayPosition[i].replaceAll("[^A-Za-z0-9.]", "");
+				System.out.println("findEvent: Position:   " + arrayPosition[i]);
+			}
+			
+			for(int i = 0; i<arrayCategories.length; i++){
+				arrayCategories[i] = arrayCategories[i].replaceAll("[^A-Za-z0-9.]", "");
+				System.out.println("findEvent: Categories: " + arrayCategories[i]);
+			}
+			
+			for(int i = 0; i<arrayPrice.length; i++){
+				arrayPrice[i] = arrayPrice[i].replaceAll("[^A-Za-z0-9.]", "");
+				System.out.println("findEvent: Price:      " + arrayPrice[i]);
+			}
+			
+			arrayPosition = Arrays.copyOf(arrayPosition, arrayPosition.length-1);
+			arrayCategories = Arrays.copyOf(arrayCategories, arrayCategories.length-1);
+			arrayPrice = Arrays.copyOf(arrayPrice, arrayPrice.length-1);
+			
 			double lat = Double.parseDouble(arrayPosition[0]);
 			double lon = Double.parseDouble(arrayPosition[1]);
 			int priceAdult = java.lang.Integer.parseInt(arrayPrice[0]);
@@ -56,7 +73,6 @@ public class PrologConnector {
 			}
 
 			e = new Event(title, lat, lon, priceAdult, priceReduced, categoryList);
-			*/
 		}
 
 		return e;
@@ -107,6 +123,7 @@ public class PrologConnector {
 
 			for(int i = 0; i<array.length-1; i++){
 				array[i] = array[i].replaceAll("[^A-Za-z0-9 ]", "");
+				array[i] = array[i].trim();
 				System.out.println("getEventsByPrologWithCategories: " + array[i]);
 				if (!events.contains(array[i])) {
 					events.add(array[i]);
@@ -129,6 +146,7 @@ public class PrologConnector {
 		ArrayList<String> persons = new ArrayList<String>();
 		persons.add(String.valueOf(adult));
 		persons.add(String.valueOf(reduced));
+		
 		Term termPersons = Util.textToTerm(prologListGenerator(persons));
 		Atom Budget = new Atom(String.valueOf(budget));
 		Term termEvents = Util.textToTerm(prologListGenerator(eventslist));

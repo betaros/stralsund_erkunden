@@ -13,6 +13,7 @@ import java.awt.BorderLayout;
 import javax.swing.ListModel;
 import java.awt.SystemColor;
 import java.util.ArrayList;
+import java.util.Collections;
 
 import javax.swing.JPanel;
 
@@ -41,13 +42,22 @@ public class TestGui {
 		DefaultListModel<JCheckBox> model = new DefaultListModel<JCheckBox>();
 		PrologConnector pc = new PrologConnector();
 		
-		pc.findEvent("Haus 8");
-		
+		ArrayList<String> eventStringList = new ArrayList<String>();
 		ArrayList<String> a = new ArrayList<String>();
-		a.add("Bar");
+		a.add("Freizeit");
+		a.removeAll(Collections.singleton(null));
 		for(String s:pc.getEventsByPrologWithCategories(a)){
 			model.addElement(new JCheckBox(s));
+			eventStringList.add(s);
 		}
+		
+		ArrayList<Event> eventList = new ArrayList<Event>();
+		for(String s:eventStringList){
+			eventList.add(pc.findEvent(s));
+		}
+		
+		eventList.removeAll(Collections.singleton(null));
+		
 		JCheckBoxList checkBoxList = new JCheckBoxList((ListModel<JCheckBox>) model);
 		checkBoxList.setBackground(SystemColor.menu);
 		testFrame.getContentPane().add(checkBoxList, BorderLayout.CENTER);
@@ -56,15 +66,13 @@ public class TestGui {
 		JPanel panel = new JPanel();
 		testFrame.getContentPane().add(panel, BorderLayout.SOUTH);
 		
-		ArrayList<String> categories = new ArrayList<String>();
-		categories.add("Freizeit");
-		Event e = new Event("Hansedom", 52.1, 19.1, 250, 350, categories);
 		Profile p = new Profile(2, 20000, 2, 1);
 		
-		Result result = new Result(e, p, pc, false);
-		panel.add(result);
+		for(Event e:eventList){
+			Result result = new Result(e, p, false);
+			panel.add(result);
+		}
 		
-		ArrayList<Event> eventList = pc.searchUsefulEvents(1, 2, 200000, categories);
 		for(Event e1:eventList){
 			System.out.println("Test EventList: " + e1.getName());
 		}
