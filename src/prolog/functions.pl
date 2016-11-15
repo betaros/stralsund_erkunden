@@ -262,3 +262,4 @@ calcFullPrice([AdultCount,ReducedCount], Price1, Price2, Event, Price):-
 	write("Berechne Preis für "+Event), nl,
 	event(Event,_,_,[AdultPrice,ReducedPrice]),
 	Price is (AdultCount*AdultPrice) + (ReducedCount*ReducedPrice) + Price1 + Price2. 
+	
