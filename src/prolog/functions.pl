@@ -153,7 +153,7 @@ checkEventsOnTime(Events,Daystart,Hotel):-
 	nl.
 	
 /*
-*calcArrivelForEvent
+*calcApproachlForEvent
 *Berechnet die Anfahrt zum Event
 Previousvent = vorheriges Event
 ThisEvent = Event zu dem die Anfahrt berechnet wird
@@ -164,7 +164,7 @@ Arrivel wird zurückgegeben (Arrival = ('Anfahrt', Vehicle, Zeit in Minuten, Star
 *Wenn PreviousEvent (vorheriges Event) leer, dann wird Hotel genommen.
 *Beispiel: calcArrivalForEvent('Cinestar', 'Haus 8', 'Hansedom', 'Car', 800, Arrival).
 */
-calcArrivalForEvent(PreviousEvent, ThisEvent, Hotel, Vehicle, EventTime, Arrival):-
+calcApproachForEvent(PreviousEvent, ThisEvent, Hotel, Vehicle, EventTime, Approach):-
 	((
 		nonvar(PreviousEvent),
 		write('Kalkuliere PrevEvent zu ThisEvent'),
@@ -181,4 +181,4 @@ calcArrivalForEvent(PreviousEvent, ThisEvent, Hotel, Vehicle, EventTime, Arrival
 	ArrivalTime is ceiling(Distance/Speed*60),
 	write(ArrivalTime), nl,
 	StartTime is EventTime - ArrivalTime,
-	Arrival = ('Anfahrt', Vehicle, ArrivalTime, StartTime).
+	Approach = ('Anfahrt', Vehicle, ArrivalTime, StartTime).
