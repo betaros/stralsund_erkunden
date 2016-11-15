@@ -160,7 +160,7 @@ Beispiel negativ an 2 Tagen:
 checkEventsOnTime([1,2],_,[['Haus 8',1,830,100,'Car'],['Haus 8',2,830,100,'Car'],['Zoo',2,930,100,'Car']],800, 'Hansedom', Return, Price).
 Beispiel negativ an 2 Tagen weil zu früh begonnen:
 checkEventsOnTime([1,2],_,[['Haus 8',1,830,100,'Car'],['Haus 8',2,830,100,'Car'],['Zoo',2,930,100,'Car']],830, 'Hansedom', Return, Price).
-*/
+*/ 
 checkEventsOnTime(Persons, X,[EventHead|EventsTail],DayStart, Hotel, Return, Price):-
 	var(X),
 	((
