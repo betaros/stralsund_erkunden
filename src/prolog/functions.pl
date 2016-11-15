@@ -41,7 +41,11 @@ appendCategories(C,[R|L]):-
 * calcDistance(Name Veranstaltung A, Name Veranstaltung B, Entfernung
 */	
 calcDistance(EventA, EventB, Distance) :-
-	event(EventA, [XA, YA], _, _),
+	(
+		event(EventA, [XA, YA], _, _)
+		;
+		hotel(EventA, [XA, YA], _)	
+	),
 	event(EventB, [XB, YB], _, _),
 	latInKm(XA, XAinKm),
 	latInKm(XB, XBinKm),
@@ -151,7 +155,30 @@ checkEventsOnTime(Events,Daystart,Hotel):-
 /*
 *calcArrivelForEvent
 *Berechnet die Anfahrt zum Event
-*Wenn EventStart leer, dann wird Hotel genommen.
+Previousvent = vorheriges Event
+ThisEvent = Event zu dem die Anfahrt berechnet wird
+Hotel = Das Hotel des Nutzers
+Vehicle = Fahrzeug 
+EventTime = Startzeit des ThisEvent
+Arrivel wird zurückgegeben (Arrival = ('Anfahrt', Vehicle, Zeit in Minuten, Startzeit)
+*Wenn PreviousEvent (vorheriges Event) leer, dann wird Hotel genommen.
+*Beispiel: calcArrivalForEvent('Cinestar', 'Haus 8', 'Hansedom', 'Car', 800, Arrival).
 */
-calcArrivelForEvent(EventStart, EventEnd, Hotel, Vehicle):-
-	nl.
+calcArrivalForEvent(PreviousEvent, ThisEvent, Hotel, Vehicle, EventTime, Arrival):-
+	((
+		nonvar(PreviousEvent),
+		write('Kalkuliere PrevEvent zu ThisEvent'),
+		calcDistance(PreviousEvent, ThisEvent, Distance), nl
+	)
+	;
+	(
+		var(PreviousEvent),
+		write('Kalkuliere Hotel zu ThisEvent'),
+		calcDistance(Hotel, ThisEvent, Distance), nl
+	)),
+	write(Distance), nl,
+	vehicle(Vehicle, [AdultPrice,ReducedPrice], Speed),
+	ArrivalTime is ceiling(Distance/Speed*60),
+	write(ArrivalTime), nl,
+	StartTime is EventTime - ArrivalTime,
+	Arrival = ('Anfahrt', Vehicle, ArrivalTime, StartTime).
