@@ -1,4 +1,4 @@
-:- module('events', [event/4]).
+:- module('events', [event/4,hotel/3,vehicle/3]).
 
 /*
 * Wissensdatenbank
