@@ -52,13 +52,17 @@ public class TestGui {
 		testFrame.getContentPane().add(panel, BorderLayout.SOUTH);
 		
 		ArrayList<String> categories = new ArrayList<String>();
-		categories.add("Shopping");
-		categories.add("Schwimmen");
-		Event e = new Event("Hansedom", 52.1, 19.1, 2.5, 3.5, categories);
+		categories.add("Freizeit");
+		Event e = new Event("Hansedom", 52.1, 19.1, 250, 350, categories);
 		Profile p = new Profile(2, 20000, 2, 1);
 		
 		Result result = new Result(e, p, pc, false);
 		panel.add(result);
+		
+		ArrayList<Event> eventList = pc.searchUsefulEvents(1, 2, 200000, categories);
+		for(Event e1:eventList){
+			System.out.println("Test EventList: " + e1.getName());
+		}
 	}
 
 }

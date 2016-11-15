@@ -4,6 +4,7 @@ package prolog;
 
 import java.util.ArrayList;
 import java.util.Map;
+
 import org.jpl7.*;
 
 import src.Event;
@@ -21,27 +22,40 @@ public class PrologConnector {
 	 * Finde Event
 	 * @return
 	 */
-	public Event findEvent(String event){
-		ArrayList<String> events = new ArrayList<String>();
-		Atom E = new Atom(event);
-		Variable X = new Variable("X");
+	public Event findEvent(String title){
+		Atom Name = new Atom(title);
+		Term Position = null;
+		Term Categories = null;
+		Term Price = null;
 
 		Query query =
-			new Query(
-				"event",
-				new Term[] {E,X}
-			);
+				new Query(
+						"event",
+						new Term[] {Name, Position, Categories, Price}
+						);
 
-		Map<String, Term>[] solutions = query.allSolutions();
+		Event e = null;
+		
+		if(query.hasSolution()){
+			Map<String, Term> solution = query.oneSolution();
+			String[] arrayPosition = solution.get("Position").toString().split(",");
+			String[] arrayCategories = solution.get("Categories").toString().split(",");
+			String[] arrayPrice = solution.get("Price").toString().split(",");
 
-		for ( int i=0 ; i<solutions.length ; i++ ) {
-			System.out.println( "X = " + solutions[i].get("X"));
-			events.add(solutions[i].get("X").toString().replace("'", ""));
+			double lat = Double.parseDouble(arrayPosition[0]);
+			double lon = Double.parseDouble(arrayPosition[1]);
+			int priceAdult = java.lang.Integer.parseInt(arrayPrice[0]);
+			int priceReduced = java.lang.Integer.parseInt(arrayPrice[1]);
+			ArrayList<String> categoryList = new ArrayList<String>();
+
+			for(String category:arrayCategories){
+				categoryList.add(category);
+			}
+
+			e = new Event(title, lat, lon, priceAdult, priceReduced, categoryList);
 		}
 
-		Event result = new Event("Hansedom", 53.1, 19.1, 3.2, 1.2, new ArrayList<String>());
-		
-		return result;
+		return e;
 	}
 
 	/**
@@ -50,18 +64,20 @@ public class PrologConnector {
 	 * @param placeB
 	 */
 	public void calcDistance(String placeA, String placeB){
-		Query distanceQuery = 
-			new Query(
-				new Compound(
-					"calcDistance",
-					new Term[] {new Atom(placeA), new Atom(placeB), new Variable("X")}
-				)
-			);
+		Query query = 
+				new Query(
+						new Compound(
+								"calcDistance",
+								new Term[] {new Atom(placeA), new Atom(placeB), new Variable("X")}
+								)
+						);
 
-		Map<String, Term> ergebnis = distanceQuery.oneSolution();
-		System.out.println("Entfernung zwischen " + placeA + " und " + placeB + ": " + ergebnis.get("X"));
+		if(query.hasSolution()){
+			Map<String, Term> ergebnis = query.oneSolution();
+			System.out.println("Entfernung zwischen " + placeA + " und " + placeB + ": " + ergebnis.get("X"));
+		}
 	}
-	
+
 	/**
 	 * Gibt passende Events zu den Kategorien aus
 	 * @param categories
@@ -74,21 +90,23 @@ public class PrologConnector {
 		Term termCategories = Util.textToTerm(prologListGenerator(categories));
 
 		System.out.println("Debug: " + termCategories.toString());
-		
+
 		Query query =
-			new Query(
-				"searchEventsOnCategory",
-				new Term[] {termCategories,X}
-			);
+				new Query(
+						"searchEventsOnCategory",
+						new Term[] {termCategories,X}
+						);
 
-		Map<String, Term> solution = query.oneSolution();
-		String[] array = solution.get("X").toString().split(",");
+		if(query.hasSolution()){
+			Map<String, Term> solution = query.oneSolution();
+			String[] array = solution.get("X").toString().split(",");
 
-		for(int i = 0; i<array.length-1; i++){
-			array[i] = array[i].replaceAll("[^A-Za-z0-9 ]", "");
-			System.out.println("getEventsByPrologWithCategories: " + array[i]);
-			if (!events.contains(array[i])) {
-				events.add(array[i]);
+			for(int i = 0; i<array.length-1; i++){
+				array[i] = array[i].replaceAll("[^A-Za-z0-9 ]", "");
+				System.out.println("getEventsByPrologWithCategories: " + array[i]);
+				if (!events.contains(array[i])) {
+					events.add(array[i]);
+				}
 			}
 		}
 
@@ -111,26 +129,81 @@ public class PrologConnector {
 		Atom Budget = new Atom(String.valueOf(budget));
 		Term termEvents = Util.textToTerm(prologListGenerator(eventslist));
 		Variable X = new Variable("X");
-		
-		Query query =
-			new Query(
-				"checkEventForBudget",
-				new Term[] {termPersons,Budget,termEvents,X}
-			);
 
-		Map<String, Term> solution = query.oneSolution();
-		String[] array = solution.get("X").toString().split(",");
+		Query query =
+				new Query(
+						"checkEventForBudget",
+						new Term[] {termPersons,Budget,termEvents,X}
+						);
 
 		ArrayList<String> events = new ArrayList<String>();
-		for(int i = 0; i<array.length-1; i++){
-			array[i] = array[i].replaceAll("[^A-Za-z0-9 ]", "");
-			System.out.println("getEventsByPrologWithCategories: " + array[i]);
-			if (!events.contains(array[i])) {
-				events.add(array[i]);
+		if(query.hasSolution()){
+			Map<String, Term> solution = query.oneSolution();
+			String[] array = solution.get("X").toString().split(",");
+
+			for(int i = 0; i<array.length-1; i++){
+				array[i] = array[i].replaceAll("[^A-Za-z0-9 ]", "");
+				System.out.println("getEventsByPrologWithCategories: " + array[i]);
+				if (!events.contains(array[i])) {
+					events.add(array[i]);
+				}
 			}
 		}
 
 		return events;
+	}
+
+	/**
+	 * http://stackoverflow.com/questions/16046192/prolog-find-minimum-in-list-error
+	 * 
+	 * @param adultCount
+	 * @param reducedCount
+	 * @param budget
+	 * @param categories
+	 * @return
+	 */
+	public ArrayList<Event> searchUsefulEvents(int adultCount, int reducedCount, int budget, ArrayList<String> categories){
+		ArrayList<Event> eventList = new ArrayList<>();
+
+		ArrayList<String> peopleList = new ArrayList<String>();
+		peopleList.add(String.valueOf(adultCount));
+		peopleList.add(String.valueOf(reducedCount));
+		Term People = Util.textToTerm(prologListGenerator(peopleList));
+		Atom Budget = new Atom(String.valueOf(budget));
+		Term CategoryList = Util.textToTerm(prologListGenerator(categories));
+		Variable X = new Variable();
+
+		Term arg[] = {People, Budget, CategoryList, X};
+		
+		Query query =
+				new Query(
+						"searchUsefulEvents",
+						arg
+						);
+
+		if(query.hasSolution()){
+			Map<String, Term> solution = query.oneSolution();
+			String[] array = solution.get("X").toString().split(" ");
+
+			for(int i = 0; i<array.length-1; i++){
+				array[i] = array[i].replaceAll("[^A-Za-z0-9 ]", "");
+				System.out.println("getCategoriesByProlog: " + array[i]);
+				if (!eventList.contains(array[i])) {
+					//eventList.add(array[i]);
+				}
+			}
+		}
+
+		return eventList;
+	}
+
+	/**
+	 * Liste sortieren
+	 * Events senden
+	 * Event als Liste mit Namen, Beginn, usw schicken
+	 */
+	public void calcApproachForEvent(){
+		
 	}
 	
 	/**
@@ -142,25 +215,27 @@ public class PrologConnector {
 		Variable X = new Variable("X");
 
 		Query query =
-			new Query(
-				"findAllCategories",
-				new Term[] {X}
-			);
+				new Query(
+						"findAllCategories",
+						new Term[] {X}
+						);
 
-		Map<String, Term> solution = query.oneSolution();
-		String[] array = solution.get("X").toString().split(" ");
-		
-		for(int i = 0; i<array.length-1; i++){
-			array[i] = array[i].replaceAll("[^A-Za-z0-9 ]", "");
-			System.out.println("getCategoriesByProlog: " + array[i]);
-			if (!categories.contains(array[i])) {
-				categories.add(array[i]);
+		if(query.hasSolution()){
+			Map<String, Term> solution = query.oneSolution();
+			String[] array = solution.get("X").toString().split(" ");
+
+			for(int i = 0; i<array.length-1; i++){
+				array[i] = array[i].replaceAll("[^A-Za-z0-9 ]", "");
+				System.out.println("getCategoriesByProlog: " + array[i]);
+				if (!categories.contains(array[i])) {
+					categories.add(array[i]);
+				}
 			}
 		}
 
 		return categories;
 	}
-	
+
 	/**
 	 * Erstellt eine Prolog Liste aus einer String Arrayliste
 	 * @param list
@@ -177,7 +252,7 @@ public class PrologConnector {
 		}
 		sb.deleteCharAt(sb.length()-1);
 		sb.append("]");
-		
+
 		return sb.toString();
 	}
 }

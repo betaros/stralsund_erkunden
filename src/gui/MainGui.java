@@ -8,14 +8,11 @@ import javax.swing.JPanel;
 import javax.swing.border.TitledBorder;
 
 import prolog.PrologConnector;
-import src.Event;
 import src.Profile;
 
-import javax.swing.JLabel;
 import java.awt.GridBagLayout;
 import java.awt.GridBagConstraints;
 import java.awt.Insets;
-import java.util.ArrayList;
 
 import javax.swing.JButton;
 import java.awt.Toolkit;
@@ -35,12 +32,10 @@ public class MainGui {
 	private ProfileEditor pe;
 	private boolean profileVisible;
 
-	private PrologConnector pc;
 	/**
 	 * Create the application.
 	 */
 	public MainGui(PrologConnector _pc) {
-		this.pc = _pc;
 		initialize();
 	}
 
@@ -95,13 +90,13 @@ public class MainGui {
 		gbc_btnSuchen.gridy = 1;
 		profilpanel.add(btnSearch, gbc_btnSuchen);
 
-		JButton btnSort = new JButton("Sortieren");
-		GridBagConstraints gbc_btnSort = new GridBagConstraints();
-		gbc_btnSort.fill = GridBagConstraints.HORIZONTAL;
-		gbc_btnSort.insets = new Insets(0, 0, 5, 0);
-		gbc_btnSort.gridx = 0;
-		gbc_btnSort.gridy = 2;
-		profilpanel.add(btnSort, gbc_btnSort);
+		JButton btnGenerateTimeline = new JButton("Generiere Ablauf");
+		GridBagConstraints gbc_btnGenerateTimeline = new GridBagConstraints();
+		gbc_btnGenerateTimeline.fill = GridBagConstraints.HORIZONTAL;
+		gbc_btnGenerateTimeline.insets = new Insets(0, 0, 5, 0);
+		gbc_btnGenerateTimeline.gridx = 0;
+		gbc_btnGenerateTimeline.gridy = 2;
+		profilpanel.add(btnGenerateTimeline, gbc_btnGenerateTimeline);
 
 		JPanel summarypanel = new JPanel();
 		summarypanel.setBorder(new TitledBorder(UIManager.getBorder("TitledBorder.border"), "Zusammenfassung", TitledBorder.LEADING, TitledBorder.TOP, null, new Color(0, 0, 0)));

@@ -12,10 +12,8 @@ public class Event {
 	private GeoPosition geoPos;
 	
 	// Unsicher
-	private int open = 900;
-	private int closed = 2200;
-	private int priceInCentAdult = 2000;
-	private int priceInCentChild = 2000;
+	private int priceInCentAdult;
+	private int priceInCentChild;
 
 	/**
 	 * 
@@ -26,12 +24,12 @@ public class Event {
 	 * @param _priceChild
 	 * @param _cat
 	 */
-	public Event(String _name, double _lat, double _lon, double _priceAdult, double _priceChild, ArrayList<String> _cat){
+	public Event(String _name, double _lat, double _lon, int _priceAdult, int _priceChild, ArrayList<String> _cat){
 		this.name = _name;
 		this.latitude = _lat;
 		this.longitude = _lon;
-		this.priceInCentChild = (int)_priceChild * 100;
-		this.priceInCentAdult = (int)_priceAdult * 100;
+		this.priceInCentChild = _priceChild * 100;
+		this.priceInCentAdult = _priceAdult * 100;
 		this.categories = _cat;
 		
 		this.geoPos = new GeoPosition(_lat, _lon);
@@ -70,35 +68,6 @@ public class Event {
 	 */
 	public GeoPosition getGeoPos() {
 		return geoPos;
-	}
-
-	// Unsicher
-	/**
-	 * @return the open
-	 */
-	public int getOpen() {
-		return open;
-	}
-
-	/**
-	 * @param open the open to set
-	 */
-	public void setOpen(int open) {
-		this.open = open;
-	}
-
-	/**
-	 * @return the closed
-	 */
-	public int getClosed() {
-		return closed;
-	}
-
-	/**
-	 * @param closed the closed to set
-	 */
-	public void setClosed(int closed) {
-		this.closed = closed;
 	}
 
 	/**
