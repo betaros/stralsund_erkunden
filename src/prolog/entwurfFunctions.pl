@@ -17,6 +17,18 @@ busticketReduced :- 120.
 generateSchedule([Adult, Reduced], Budget, Events, Schedule).
 generateSchedule([Adult|TailReduced], Budget, [Event|TailEvents], Schedule) :-
   generateSchedule(TailReduced, Budget, ),
+  /*
+  * Eigene Liste fuer jeden Tag
+  * Hole Event
+  * berechne in Abhaengigkeit zur verbleibenden Zeit und verbleibenden Budget, ob Event moeglich ist
+  * fuege Event zur Liste hinzu
+  * dichtestes Hotel zu den Events finden
+  * Hotel hinzufuegen, nicht in Zeitplan einbeziehen, da es bereits in sleep enthalten ist
+  * Ankuftzeit von Tag abziehen
+  * wenn Tag 1 vorbei kein weiteres Event fuer den Tag zulassen
+  * Tag 2 zu beginn sleep abziehen
+  * Tag 2 fuellen
+  */
   event(),
   BudgetLeft is Budget,
   Timeleft is day.
