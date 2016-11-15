@@ -178,7 +178,7 @@ checkEventsOnTime(X,[EventHead|EventsTail],DayStart, Hotel, Return):-
 	;
 	(
 		write("Event ungültig"), nl,
-		Return = false
+		Return = false,!
 	)).
 
 checkEventsOnTime(PrevEventInput,[EventHead|EventsTail],DayStart, Hotel, Return):-
@@ -211,7 +211,7 @@ checkEventsOnTime(PrevEventInput,[EventHead|EventsTail],DayStart, Hotel, Return)
 	;
 	(
 		write("Event ungültig"), nl,
-		Return = false
+		Return = false,!
 	)).
 
 checkEventsOnTime(_,[],_,_,Return):-
