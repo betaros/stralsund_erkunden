@@ -146,34 +146,37 @@ compare_list([L1Head|L1Tail], List2):-
 *daystart = time of start of the day  
 */
 checkTimeline(Persons,Budget,Events,Daystart,Hotel):-
-	checkEventsOnTime(Persons, _, Events, Daystart, Hotel),
+	checkEventsOnTime(Persons, _, Events, Daystart, Hotel, Return, Price),
 	nl.
 
 /*
 Beispiel positiv an einem Tag:
-checkEventsOnTime([1,2], _,[['Haus 8',1,830,100,'Car'],['Zoo',1,1030,100,'Car']],800, 'Hansedom', Return).
+checkEventsOnTime([1,2], _,[['Haus 8',1,830,100,'Car'],['Zoo',1,1030,100,'Car']],800, 'Hansedom', Return, Price).
 Beispiel negativ an einem Tag:
-checkEventsOnTime([1,2],_,[['Haus 8',1,830,100,'Car'],['Zoo',1,930,100,'Car']],800, 'Hansedom', Return).
+checkEventsOnTime([1,2],_,[['Haus 8',1,830,100,'Car'],['Zoo',1,930,100,'Car']],800, 'Hansedom', Return, Price).
 Beispiel positiv an 2 Tagen:
-checkEventsOnTime([1,2],_,[['Haus 8',1,830,100,'Car'],['Zoo',2,1030,100,'Car']],800, 'Hansedom', Return).
+checkEventsOnTime([1,2],_,[['Haus 8',1,830,100,'Car'],['Zoo',2,1030,100,'Car']],800, 'Hansedom', Return, Price).
 Beispiel negativ an 2 Tagen:
-checkEventsOnTime([1,2],_,[['Haus 8',1,830,100,'Car'],['Haus 8',2,830,100,'Car'],['Zoo',2,930,100,'Car']],800, 'Hansedom', Return).
+checkEventsOnTime([1,2],_,[['Haus 8',1,830,100,'Car'],['Haus 8',2,830,100,'Car'],['Zoo',2,930,100,'Car']],800, 'Hansedom', Return, Price).
 Beispiel negativ an 2 Tagen weil zu früh begonnen:
-checkEventsOnTime([1,2],_,[['Haus 8',1,830,100,'Car'],['Haus 8',2,830,100,'Car'],['Zoo',2,930,100,'Car']],830, 'Hansedom', Return).
+checkEventsOnTime([1,2],_,[['Haus 8',1,830,100,'Car'],['Haus 8',2,830,100,'Car'],['Zoo',2,930,100,'Car']],830, 'Hansedom', Return, Price).
 */
-checkEventsOnTime(Persons, X,[EventHead|EventsTail],DayStart, Hotel, Return):-
+checkEventsOnTime(Persons, X,[EventHead|EventsTail],DayStart, Hotel, Return, Price):-
 	var(X),
 	((
 		write('Prüfe Event ohne Vorgänger'), nl,
 		[ThisEvent,_,EventStartTime,_,Vehicle] = EventHead,
 		write(Hotel + "zu" + ThisEvent), nl,
-		calcApproachForEvent(Persons, _, ThisEvent, Hotel, Vehicle, EventStartTime, [_,_,_,RealStartTime,_]),
+		calcApproachForEvent(Persons, _, ThisEvent, Hotel, Vehicle, EventStartTime, [_,_,_,RealStartTime,Price1]),
 		write("Startzeit des Tages: "+DayStart), nl,
 		write("Startzeit: "+RealStartTime), nl,
 		RealStartTime >= DayStart,
 		write("Event gültig"), nl,
-		checkEventsOnTime(Persons, EventHead,EventsTail,DayStart,Hotel, Return1),
-		Return = Return1
+		checkEventsOnTime(Persons, EventHead,EventsTail,DayStart,Hotel, Return1, Price2),
+		Return = Return1,
+		calcFullPrice(Persons, Price1, Price2, ThisEvent, Price3),
+		Price = Price3,
+		write("Gesamtpreis: "+Price), nl
 	)
 	;
 	(
@@ -181,7 +184,7 @@ checkEventsOnTime(Persons, X,[EventHead|EventsTail],DayStart, Hotel, Return):-
 		Return = false,!
 	)).
 
-checkEventsOnTime(Persons, PrevEventInput,[EventHead|EventsTail],DayStart, Hotel, Return):-
+checkEventsOnTime(Persons, PrevEventInput,[EventHead|EventsTail],DayStart, Hotel, Return, Price):-
 	nonvar(PrevEventInput),
 	((
 		write('Prüfe Event mit Vorgänger'), nl,
@@ -190,7 +193,7 @@ checkEventsOnTime(Persons, PrevEventInput,[EventHead|EventsTail],DayStart, Hotel
 		((
 			PrevDay \= Day,
 			write("Unterschiedliche Tage"), nl,
-			calcApproachForEvent(Persons, _, ThisEvent, Hotel, Vehicle, EventStartTime, [_,_,_,RealStartTime,_]),
+			calcApproachForEvent(Persons, _, ThisEvent, Hotel, Vehicle, EventStartTime, [_,_,_,RealStartTime,Price1]),
 			write("Startzeit des Tages: "+DayStart), nl,
 			write("Startzeit: "+RealStartTime), nl,
 			RealStartTime >= DayStart			
@@ -198,15 +201,18 @@ checkEventsOnTime(Persons, PrevEventInput,[EventHead|EventsTail],DayStart, Hotel
 		;
 		(
 			write(PrevEvent + "zu" + ThisEvent), nl,
-			calcApproachForEvent(Persons, PrevEvent, ThisEvent, Hotel, Vehicle, EventStartTime, [_,_,_,RealStartTime,_]),
+			calcApproachForEvent(Persons, PrevEvent, ThisEvent, Hotel, Vehicle, EventStartTime, [_,_,_,RealStartTime,Price1]),
 			PrevEventEndTime is PrevEventStartTime+PrevEventTime,
 			write("Ende des letzten Events: "+PrevEventEndTime), nl,
 			write("Startzeit: "+RealStartTime), nl,
 			RealStartTime >= PrevEventEndTime		
 		)),
 		write("Event gültig"), nl,
-		checkEventsOnTime(Persons, EventHead, EventsTail, DayStart, Hotel, Return1),
-		Return = Return1
+		checkEventsOnTime(Persons, EventHead, EventsTail, DayStart, Hotel, Return1, Price2),
+		Return = Return1,
+		calcFullPrice(Persons, Price1, Price2, ThisEvent, Price3),
+		Price = Price3,
+		write("Gesamtpreis  bis hier: "+Price), nl
 	)
 	;
 	(
@@ -214,7 +220,7 @@ checkEventsOnTime(Persons, PrevEventInput,[EventHead|EventsTail],DayStart, Hotel
 		Return = false,!
 	)).
 
-checkEventsOnTime(_,_,[],_,_,Return):-
+checkEventsOnTime(_,_,[],_,_,Return,0):-
 	Return = true.
 	
 /*
@@ -248,3 +254,11 @@ calcApproachForEvent([AdultCount,ReducedCount], PreviousEvent, ThisEvent, Hotel,
 	Price is (AdultCount*AdultPrice)+(ReducedCount*ReducedPrice),
 	write("Preis für Fahrt: "+Price), nl,
 	Approach = ['Anfahrt', Vehicle, ArrivalTime, StartTime, Price].
+
+/*CalcFullPrice
+calcFullPrice(Persons, Price1, Price2, Event, Price),
+*/
+calcFullPrice([AdultCount,ReducedCount], Price1, Price2, Event, Price):-
+	write("Berechne Preis für "+Event), nl,
+	event(Event,_,_,[AdultPrice,ReducedPrice]),
+	Price is (AdultCount*AdultPrice) + (ReducedCount*ReducedPrice) + Price1 + Price2. 
