@@ -259,6 +259,99 @@ public class PrologConnector {
 	}
 
 	/**
+	 * Ueberprueft, ob ein Event zeitlich passt (einzelnes Event)
+	 * 
+	 * @param reducedCount
+	 * @param adultCount
+	 * @param eventList
+	 * @param dayStart
+	 * @param hotel
+	 * @param budget
+	 * @param returnValue
+	 * @param price
+	 * @return
+	 */
+	public boolean checkEventsOnTime(int reducedCount, int adultCount, ArrayList<String> eventList, int dayStart, String hotel, int budget, int returnValue, int price){
+		ArrayList<String> peopleList = new ArrayList<String>();
+		peopleList.add(String.valueOf(adultCount));
+		peopleList.add(String.valueOf(reducedCount));
+		Term People = Util.textToTerm(prologListGenerator(peopleList));
+		Term EventList = Util.textToTerm(prologListGenerator(eventList));
+		Atom DayStart = new Atom(String.valueOf(dayStart));
+		Atom Hotel = new Atom(hotel);
+		Atom Budget = new Atom(String.valueOf(budget));
+		Atom Price = new Atom(String.valueOf(price));
+		Atom ReturnValue = new Atom(String.valueOf(returnValue));
+		
+		Variable X = new Variable();
+		
+		Query query =
+				new Query(
+					"checkEventsOnTime",
+					new Term[]{People, X, EventList, DayStart, Hotel, Budget, ReturnValue, Price}
+				);
+		
+		boolean result = false;
+		
+		if(query.hasSolution()){
+			Map<String,Term> solution = query.oneSolution();
+			String array = solution.get("X").toString();
+			if(array.contains("true")){
+				result = true;
+			}
+		}
+		
+		return result;
+	}
+	
+	/**
+	 * Ueberprueft, ob ein Event zeitlich passt (zwei Events)
+	 * 
+	 * @param reducedCount
+	 * @param adultCount
+	 * @param eventList
+	 * @param dayStart
+	 * @param hotel
+	 * @param budget
+	 * @param returnValue
+	 * @param price
+	 * @return
+	 */
+	public boolean checkEventsOnTime(int reducedCount, int adultCount, String prevEvent, ArrayList<String> eventList, int dayStart, String hotel, int budget, int returnValue, int price){
+		ArrayList<String> peopleList = new ArrayList<String>();
+		peopleList.add(String.valueOf(adultCount));
+		peopleList.add(String.valueOf(reducedCount));
+		Term People = Util.textToTerm(prologListGenerator(peopleList));
+		Atom PrevEvent = new Atom(prevEvent);
+		Term EventList = Util.textToTerm(prologListGenerator(eventList));
+		Atom DayStart = new Atom(String.valueOf(dayStart));
+		Atom Hotel = new Atom(hotel);
+		Atom Budget = new Atom(String.valueOf(budget));
+		Atom Price = new Atom(String.valueOf(price));
+		Atom ReturnValue = new Atom(String.valueOf(returnValue));
+		
+		Variable X = new Variable();
+		
+		Query query =
+				new Query(
+					"checkEventsOnTime",
+					new Term[]{People, PrevEvent, X, EventList, DayStart, Hotel, Budget, ReturnValue, Price}
+				);
+		
+		boolean result = false;
+		
+		if(query.hasSolution()){
+			Map<String,Term> solution = query.oneSolution();
+			String array = solution.get("X").toString();
+			if(array.contains("true")){
+				result = true;
+			}
+		}
+		
+		return result;
+	}
+	
+	/**
 	 * Erstellt eine Prolog Liste aus einer String Arrayliste
 	 * @param list
 	 * @return
