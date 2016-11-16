@@ -36,11 +36,15 @@ public class MainPanel extends JPanel {
 	private PrologConnector prologConnector;
 	private Profile profile;
 
+	private ArrayList<Event> resultArrayList;
+	private ArrayList<Event> timelineArrayList;
+	
 	/**
 	 * Create the panel.
 	 */
 	public MainPanel() {
 		prologConnector = new PrologConnector();
+		resultArrayList = new ArrayList<Event>();
 		
 		setBorder(null);
 		GridBagLayout gridBagLayout = new GridBagLayout();
@@ -166,19 +170,19 @@ public class MainPanel extends JPanel {
 		ArrayList<String> eventStringList = prologConnector.getEventsByPrologWithCategories(categoryList); 
 		eventStringList.removeAll(Collections.singleton(null));
 		
-		ArrayList<Event> eventList = new ArrayList<Event>();
+		resultArrayList.removeAll(resultArrayList);
 		for(String s:eventStringList){
-			eventList.add(prologConnector.findEvent(s));
+			resultArrayList.add(prologConnector.findEvent(s));
 		}
 		
-		eventList.removeAll(Collections.singleton(null));
+		resultArrayList.removeAll(Collections.singleton(null));
 		mainList.removeAll();
 		waypoints.removeAll(waypoints);
 		
-		for(Event e:eventList){
+		for(Event e:resultArrayList){
 			waypoints.add(new GeoPosition(e.getLatitude(), e.getLongitude()));
 			
-			Result result = new Result(e, profile, true);
+			Result result = new Result(e, profile, false);
 			GridBagConstraints gbc = new GridBagConstraints();
 	        gbc.gridwidth = GridBagConstraints.REMAINDER;
 	        gbc.weightx = 1;
@@ -203,7 +207,7 @@ public class MainPanel extends JPanel {
     	Event event = new Event("Hansedom", 52.1, 19.1, 250, 350, categories);
 		Profile profile = new Profile(2, 20000, 2, 1);
 		
-		Result r = new Result(event, profile, true);
+		Result r = new Result(event, profile, false);
         GridBagConstraints gbc = new GridBagConstraints();
         gbc.gridwidth = GridBagConstraints.REMAINDER;
         gbc.weightx = 1;
