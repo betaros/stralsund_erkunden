@@ -71,10 +71,10 @@ public class MainPanel extends JPanel {
 		panel.add(splitPane_1, gbc_splitPane_1);
 		
 		JPanel resultpanel = new JPanel();
-		resultpanel.setBorder(new TitledBorder(UIManager.getBorder("TitledBorder.border"), "Interessante Events", TitledBorder.LEADING, TitledBorder.TOP, null, new Color(0, 0, 0)));
+		resultpanel.setBorder(new TitledBorder(UIManager.getBorder("TitledBorder.border"), "M\u00F6gliche Events", TitledBorder.LEADING, TitledBorder.TOP, null, new Color(0, 0, 0)));
 		splitPane_1.setLeftComponent(resultpanel);
 		GridBagLayout gbl_resultpanel = new GridBagLayout();
-		gbl_resultpanel.columnWidths = new int[] {350, 0};
+		gbl_resultpanel.columnWidths = new int[] {300, 0};
 		gbl_resultpanel.rowHeights = new int[]{2, 0};
 		gbl_resultpanel.columnWeights = new double[]{1.0, Double.MIN_VALUE};
 		gbl_resultpanel.rowWeights = new double[]{1.0, Double.MIN_VALUE};
@@ -100,14 +100,13 @@ public class MainPanel extends JPanel {
 		resultpanel.add(resultScrollPane, gbc_scrollPane);
 		
 		JSplitPane splitPane = new JSplitPane();
-		splitPane.setOrientation(JSplitPane.VERTICAL_SPLIT);
 		splitPane_1.setRightComponent(splitPane);
 		
 		JPanel routingpanel = new JPanel();
 		routingpanel.setBorder(new TitledBorder(null, "Zeitablauf", TitledBorder.LEADING, TitledBorder.TOP, null, null));
 		splitPane.setLeftComponent(routingpanel);
 		GridBagLayout gbl_routingpanel = new GridBagLayout();
-		gbl_routingpanel.columnWidths = new int[]{2, 0};
+		gbl_routingpanel.columnWidths = new int[] {300, 0};
 		gbl_routingpanel.rowHeights = new int[]{2, 0};
 		gbl_routingpanel.columnWeights = new double[]{1.0, Double.MIN_VALUE};
 		gbl_routingpanel.rowWeights = new double[]{1.0, Double.MIN_VALUE};
@@ -126,8 +125,7 @@ public class MainPanel extends JPanel {
 		
 		JScrollPane planListScrollPane = new JScrollPane(planList);
 		GridBagConstraints gbc_planListScrollPane = new GridBagConstraints();
-		gbc_planListScrollPane.fill = GridBagConstraints.HORIZONTAL;
-		gbc_planListScrollPane.anchor = GridBagConstraints.NORTH;
+		gbc_planListScrollPane.fill = GridBagConstraints.BOTH;
 		gbc_planListScrollPane.gridx = 0;
 		gbc_planListScrollPane.gridy = 0;
 		routingpanel.add(planListScrollPane, gbc_planListScrollPane);
@@ -180,7 +178,7 @@ public class MainPanel extends JPanel {
 		for(Event e:eventList){
 			waypoints.add(new GeoPosition(e.getLatitude(), e.getLongitude()));
 			
-			Result result = new Result(e, profile, false);
+			Result result = new Result(e, profile, true);
 			GridBagConstraints gbc = new GridBagConstraints();
 	        gbc.gridwidth = GridBagConstraints.REMAINDER;
 	        gbc.weightx = 1;

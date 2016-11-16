@@ -46,14 +46,14 @@ public class MainGui {
 		frmStralsundErkunden = new JFrame();
 		frmStralsundErkunden.setIconImage(Toolkit.getDefaultToolkit().getImage(MainGui.class.getResource("/gui/icon.ico")));
 		frmStralsundErkunden.setTitle("Stralsund erkunden");
-		frmStralsundErkunden.setBounds(100, 100, 969, 635);
+		frmStralsundErkunden.setBounds(100, 100, 1100, 635);
 		frmStralsundErkunden.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
 		profile = new Profile(2, 20000, 2, 1); 
-		profileVisible = false;
+		profileVisible = true;
 		GridBagLayout gridBagLayout = new GridBagLayout();
-		gridBagLayout.columnWidths = new int[]{173, 780, 0};
-		gridBagLayout.rowHeights = new int[]{596, 0};
+		gridBagLayout.columnWidths = new int[] {173, 1000, 0};
+		gridBagLayout.rowHeights = new int[] {800, 0};
 		gridBagLayout.columnWeights = new double[]{0.0, 1.0, Double.MIN_VALUE};
 		gridBagLayout.rowWeights = new double[]{1.0, Double.MIN_VALUE};
 		frmStralsundErkunden.getContentPane().setLayout(gridBagLayout);
@@ -69,9 +69,9 @@ public class MainGui {
 		profilpanel.setBorder(new TitledBorder(null, "Profil", TitledBorder.LEADING, TitledBorder.TOP, null, null));
 		GridBagLayout gbl_profilpanel = new GridBagLayout();
 		gbl_profilpanel.columnWidths = new int[]{161, 0};
-		gbl_profilpanel.rowHeights = new int[]{0, 0, 0, 0, 0};
+		gbl_profilpanel.rowHeights = new int[]{0, 0, 0, 0};
 		gbl_profilpanel.columnWeights = new double[]{1.0, Double.MIN_VALUE};
-		gbl_profilpanel.rowWeights = new double[]{0.0, 0.0, 0.0, 1.0, Double.MIN_VALUE};
+		gbl_profilpanel.rowWeights = new double[]{0.0, 0.0, 1.0, Double.MIN_VALUE};
 		profilpanel.setLayout(gbl_profilpanel);
 
 		JButton profileButton = new JButton("Profil bearbeiten");
@@ -81,29 +81,21 @@ public class MainGui {
 		gbc_profileButton.gridx = 0;
 		gbc_profileButton.gridy = 0;
 		profilpanel.add(profileButton, gbc_profileButton);
-
-		JButton btnSearch = new JButton("Suchen");
-		GridBagConstraints gbc_btnSuchen = new GridBagConstraints();
-		gbc_btnSuchen.insets = new Insets(0, 0, 5, 0);
-		gbc_btnSuchen.fill = GridBagConstraints.HORIZONTAL;
-		gbc_btnSuchen.gridx = 0;
-		gbc_btnSuchen.gridy = 1;
-		profilpanel.add(btnSearch, gbc_btnSuchen);
-
-		JButton btnGenerateTimeline = new JButton("Generiere Ablauf");
-		GridBagConstraints gbc_btnGenerateTimeline = new GridBagConstraints();
-		gbc_btnGenerateTimeline.fill = GridBagConstraints.HORIZONTAL;
-		gbc_btnGenerateTimeline.insets = new Insets(0, 0, 5, 0);
-		gbc_btnGenerateTimeline.gridx = 0;
-		gbc_btnGenerateTimeline.gridy = 2;
-		profilpanel.add(btnGenerateTimeline, gbc_btnGenerateTimeline);
+		
+				JButton btnGenerateTimeline = new JButton("F\u00FClle Timeline");
+				GridBagConstraints gbc_btnGenerateTimeline = new GridBagConstraints();
+				gbc_btnGenerateTimeline.fill = GridBagConstraints.HORIZONTAL;
+				gbc_btnGenerateTimeline.insets = new Insets(0, 0, 5, 0);
+				gbc_btnGenerateTimeline.gridx = 0;
+				gbc_btnGenerateTimeline.gridy = 1;
+				profilpanel.add(btnGenerateTimeline, gbc_btnGenerateTimeline);
 
 		JPanel summarypanel = new JPanel();
 		summarypanel.setBorder(new TitledBorder(UIManager.getBorder("TitledBorder.border"), "Zusammenfassung", TitledBorder.LEADING, TitledBorder.TOP, null, new Color(0, 0, 0)));
 		GridBagConstraints gbc_summarypanel = new GridBagConstraints();
 		gbc_summarypanel.fill = GridBagConstraints.BOTH;
 		gbc_summarypanel.gridx = 0;
-		gbc_summarypanel.gridy = 3;
+		gbc_summarypanel.gridy = 2;
 		profilpanel.add(summarypanel, gbc_summarypanel);
 		GridBagLayout gbl_summarypanel = new GridBagLayout();
 		gbl_summarypanel.columnWidths = new int[]{63, 0};
@@ -130,7 +122,7 @@ public class MainGui {
 		content.setLayout(cl);
 		content.add(pe, "profileeditor");
 		content.add(mp, "mainpanel");
-		cl.show(content, "mainpanel");
+		cl.show(content, "profileeditor");
 
 		GridBagConstraints gbc_content = new GridBagConstraints();
 		gbc_content.fill = GridBagConstraints.BOTH;
@@ -151,20 +143,16 @@ public class MainGui {
 					profile = pe.getProfile();
 					txtpnSummary.setText(generateSummary());
 
+					if(!(mp.showSearchResults(profile))){
+						txtpnSummary.setText("Bitte Profil bearbeiten!");
+					}
+					
 					cl.show(content, "mainpanel");
 				} else {
 					// zeige ProfileEditor
 					profileButton.setText("Ergebnisse anzeigen");
 					profileVisible = true;
 					cl.show(content, "profileeditor");
-				}
-			}
-		});
-
-		btnSearch.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent arg0) {
-				if(!(mp.showSearchResults(profile))){
-					txtpnSummary.setText("Bitte Profil bearbeiten!");
 				}
 			}
 		});
