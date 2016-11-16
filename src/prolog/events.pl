@@ -12,7 +12,7 @@
 */
 event(	'Hansedom', 
 	[54.320021,13.043840],
-	['Sport','Hotel','Schwimmen','Sauna'],
+	['Sport','Schwimmen','Sauna'],
 	[2000,1000]).
 
 event(	'Strelapark',

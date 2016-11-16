@@ -138,16 +138,8 @@ compare_list([L1Head|L1Tail], List2):-
     (compare_list(L1Tail,List2)
     ).
 
-/*
-*Check Timeline
-*Persons = [Count of Adult, Count of Reduced]
-*Budget = Price in cent
-*Events = [['eventname', day, starttime in minutes, eventtime in minutes, vehicle], ...]
-*daystart = time of start of the day  
-*/
-checkTimeline(Persons,Budget,Events,Daystart,Hotel):-
-	checkEventsOnTime(Persons, _, Events, Daystart, Hotel, Return, Price),
-	nl.
+
+
 
 /*
 Beispiel positiv an einem Tag:
@@ -163,9 +155,8 @@ checkEventsOnTime([1,2],_,[['Haus 8',1,830,100,'Car'],['Haus 8',2,830,100,'Car']
 Beispiel negativ an 2 Tagen weil Budget zu gering:
 checkEventsOnTime([1,2],_,[['Haus 8',1,830,100,'Car'],['Haus 8',2,830,100,'Car'],['Zoo',2,1030,100,'Car']],800, 'Hansedom', 4500, Return, Price).
 */ 
-checkEventsOnTime(Persons, X,[EventHead|EventsTail],DayStart, Hotel, Budget, Return, Price):-
-	var(X),
-	((
+checkEventsOnTime(Persons,[EventHead|EventsTail],DayStart, Hotel, Budget, Return, Price):-
+	(
 		write('Prüfe Event ohne Vorgänger'), nl,
 		[ThisEvent,_,EventStartTime,_,Vehicle] = EventHead,
 		write(Hotel + "zu" + ThisEvent), nl,
@@ -186,11 +177,10 @@ checkEventsOnTime(Persons, X,[EventHead|EventsTail],DayStart, Hotel, Budget, Ret
 		write("Event ungültig"), nl,
 		Price = 0,
 		Return = false,!
-	)).
+	).
 
 checkEventsOnTime(Persons, PrevEventInput,[EventHead|EventsTail],DayStart, Hotel,Budget, Return, Price):-
-	nonvar(PrevEventInput),
-	((
+	(
 		write('Prüfe Event mit Vorgänger'), nl,
 		[ThisEvent,Day,EventStartTime,_,Vehicle] = EventHead,
 		[PrevEvent,PrevDay,PrevEventStartTime,PrevEventTime,_] = PrevEventInput,
@@ -224,7 +214,7 @@ checkEventsOnTime(Persons, PrevEventInput,[EventHead|EventsTail],DayStart, Hotel
 		write("Event ungültig"), nl,
 		Price = 0,
 		Return = false,!
-	)).
+	).
 
 checkEventsOnTime(_,_,[],_,_,_,Return,0):-
 	Return = true.
