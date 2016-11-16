@@ -143,17 +143,17 @@ compare_list([L1Head|L1Tail], List2):-
 
 /*
 Beispiel positiv an einem Tag:
-checkEventsOnTime([1,2], _,[['Haus 8',1,830,100,'Car'],['Zoo',1,1030,100,'Car']],800, 'Hansedom', 10000, Return, Price).
+checkEventsOnTime([1,2], [['Haus 8',1,830,100,'Car'],['Zoo',1,1030,100,'Car']],800, 'Hansedom', 10000, Return, Price).
 Beispiel negativ an einem Tag:
-checkEventsOnTime([1,2],_,[['Haus 8',1,830,100,'Car'],['Zoo',1,930,100,'Car']],800, 'Hansedom', 10000, Return, Price).
+checkEventsOnTime([1,2],[['Haus 8',1,830,100,'Car'],['Zoo',1,930,100,'Car']],800, 'Hansedom', 10000, Return, Price).
 Beispiel positiv an 2 Tagen:
-checkEventsOnTime([1,2],_,[['Haus 8',1,830,100,'Car'],['Zoo',2,1030,100,'Car']],800, 'Hansedom', 10000, Return, Price).
+checkEventsOnTime([1,2],[['Haus 8',1,830,100,'Car'],['Zoo',2,1030,100,'Car']],800, 'Hansedom', 10000, Return, Price).
 Beispiel negativ an 2 Tagen:
-checkEventsOnTime([1,2],_,[['Haus 8',1,830,100,'Car'],['Haus 8',2,830,100,'Car'],['Zoo',2,930,100,'Car']],800, 'Hansedom', 10000, Return, Price).
+checkEventsOnTime([1,2],[['Haus 8',1,830,100,'Car'],['Haus 8',2,830,100,'Car'],['Zoo',2,930,100,'Car']],800, 'Hansedom', 10000, Return, Price).
 Beispiel negativ an 2 Tagen weil zu früh begonnen:
-checkEventsOnTime([1,2],_,[['Haus 8',1,830,100,'Car'],['Haus 8',2,830,100,'Car'],['Zoo',2,930,100,'Car']],830, 'Hansedom', 10000, Return, Price).
+checkEventsOnTime([1,2],[['Haus 8',1,830,100,'Car'],['Haus 8',2,830,100,'Car'],['Zoo',2,930,100,'Car']],830, 'Hansedom', 10000, Return, Price).
 Beispiel negativ an 2 Tagen weil Budget zu gering:
-checkEventsOnTime([1,2],_,[['Haus 8',1,830,100,'Car'],['Haus 8',2,830,100,'Car'],['Zoo',2,1030,100,'Car']],800, 'Hansedom', 4500, Return, Price).
+checkEventsOnTime([1,2],[['Haus 8',1,830,100,'Car'],['Haus 8',2,830,100,'Car'],['Zoo',2,1030,100,'Car']],800, 'Hansedom', 4500, Return, Price).
 */ 
 checkEventsOnTime(Persons,[EventHead|EventsTail],DayStart, Hotel, Budget, Return, Price):-
 	(
