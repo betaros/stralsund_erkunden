@@ -1,4 +1,4 @@
-:- module('events', [event/4,hotel/3,vehicle/3]).
+:- module('events', [event/4,hotel/4,vehicle/3]).
 
 /*
 * Wissensdatenbank
@@ -77,12 +77,17 @@ businesshours(	'Hansedom',
 		]).
 
 /*Hotels
-* Unterkunft für die Nacht, immer ab 18 bis 8 Uhr
-* hotel('Name',[Long,Lat],Preis pro Doppelzimmer in Cent pro Nacht).
+* Unterkunft für die Nacht
+* hotel('Name',[Long,Lat],Preis pro Doppelzimmer in Cent pro Nacht, Kategorie).
 */
 
-hotel('Hansedom',[54.320021,13.043840],3000).
-		
+hotel('X Sterne Hotel',[54.320021,13.043840],1000,[0]).
+hotel('1 Sterne Hotel',[54.320021,13.043840],2000,[1]).
+hotel('2 Sterne Hotel',[54.320021,13.043840],3000,[2]).
+hotel('3 Sterne Hotel',[54.320021,13.043840],4000,[3]).
+hotel('4 Sterne Hotel',[54.320021,13.043840],5000,[4]).	
+hotel('5 Sterne Hotel',[54.320021,13.043840],6000,[5]).	
+
 /*
 * vehicle (Name, Festpreis [Normal, Ermäßigt], Geschwindigkeit in km/Stunde)
 */

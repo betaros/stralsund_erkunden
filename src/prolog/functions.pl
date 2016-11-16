@@ -14,16 +14,21 @@ lonInKm(X, Res) :-
 /*----------------------------------------------------------------------------------------------*/
 
 /*
-* Funktionen
-*/
-
-/*
 * Sucht alle Kategorien
 */
 findAllCategories(Categories):-
 	findall(X, event(_,_,X,_), L),
 	appendCategories(C1,L),
 	Categories = C1.
+
+	
+/* searchHotelCategories
+*/
+findAllHotelCategories(Categories):-
+	findall(X, hotel(_,_,_,X), L),
+	appendCategories(C1,L),
+	Categories = C1.
+
 
 appendCategories(C1,[R|[]]):-
 		C1 = R.
@@ -44,7 +49,7 @@ calcDistance(EventA, EventB, Distance) :-
 	(
 		event(EventA, [XA, YA], _, _)
 		;
-		hotel(EventA, [XA, YA], _)	
+		hotel(EventA, [XA, YA], _, _)	
 	),
 	event(EventB, [XB, YB], _, _),
 	latInKm(XA, XAinKm),
@@ -139,15 +144,16 @@ compare_list([L1Head|L1Tail], List2):-
     ).
 
 
+/*----------------------------------------------------------------------------------------------*/
 
 
 /*
 Beispiel positiv an einem Tag:
-checkEventsOnTime([1,2], [['Haus 8',1,830,100,'Car'],['Zoo',1,1030,100,'Car']],800, 'Hansedom', 10000, Return, Price).
+checkEventsOnTime([1,2], [['Haus 8',1,830,100,'Car'],['Zoo',1,1030,100,'Car']],800, 'X Sterne Hotel', 10000, Return, Price).
 Beispiel negativ an einem Tag:
 checkEventsOnTime([1,2],[['Haus 8',1,830,100,'Car'],['Zoo',1,930,100,'Car']],800, 'Hansedom', 10000, Return, Price).
 Beispiel positiv an 2 Tagen:
-checkEventsOnTime([1,2],[['Haus 8',1,830,100,'Car'],['Zoo',2,1030,100,'Car']],800, 'Hansedom', 10000, Return, Price).
+checkEventsOnTime([1,2],[['Haus 8',1,830,100,'Car'],['Zoo',2,1030,100,'Car']],800, '1 Sterne Hotel', 10000, Return, Price).
 Beispiel negativ an 2 Tagen:
 checkEventsOnTime([1,2],[['Haus 8',1,830,100,'Car'],['Haus 8',2,830,100,'Car'],['Zoo',2,930,100,'Car']],800, 'Hansedom', 10000, Return, Price).
 Beispiel negativ an 2 Tagen weil zu früh begonnen:
@@ -218,6 +224,10 @@ checkEventsOnTime(Persons, PrevEventInput,[EventHead|EventsTail],DayStart, Hotel
 
 checkEventsOnTime(_,_,[],_,_,_,Return,0):-
 	Return = true.
+
+
+/*----------------------------------------------------------------------------------------------*/
+
 	
 /*
 *calcApproachlForEvent
@@ -250,6 +260,10 @@ calcApproachForEvent([AdultCount,ReducedCount], PreviousEvent, ThisEvent, Hotel,
 	Price is (AdultCount*AdultPrice)+(ReducedCount*ReducedPrice),
 	write("Preis für Fahrt: "+Price), nl,
 	Approach = ['Anfahrt', Vehicle, ArrivalTime, StartTime, Price].
+
+
+/*----------------------------------------------------------------------------------------------*/
+
 
 /*CalcFullPrice
 calcFullPrice(Persons, Price1, Price2, Event, Price),
