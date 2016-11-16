@@ -151,17 +151,19 @@ checkTimeline(Persons,Budget,Events,Daystart,Hotel):-
 
 /*
 Beispiel positiv an einem Tag:
-checkEventsOnTime([1,2], _,[['Haus 8',1,830,100,'Car'],['Zoo',1,1030,100,'Car']],800, 'Hansedom', Return, Price).
+checkEventsOnTime([1,2], _,[['Haus 8',1,830,100,'Car'],['Zoo',1,1030,100,'Car']],800, 'Hansedom', 10000, Return, Price).
 Beispiel negativ an einem Tag:
-checkEventsOnTime([1,2],_,[['Haus 8',1,830,100,'Car'],['Zoo',1,930,100,'Car']],800, 'Hansedom', Return, Price).
+checkEventsOnTime([1,2],_,[['Haus 8',1,830,100,'Car'],['Zoo',1,930,100,'Car']],800, 'Hansedom', 10000, Return, Price).
 Beispiel positiv an 2 Tagen:
-checkEventsOnTime([1,2],_,[['Haus 8',1,830,100,'Car'],['Zoo',2,1030,100,'Car']],800, 'Hansedom', Return, Price).
+checkEventsOnTime([1,2],_,[['Haus 8',1,830,100,'Car'],['Zoo',2,1030,100,'Car']],800, 'Hansedom', 10000, Return, Price).
 Beispiel negativ an 2 Tagen:
-checkEventsOnTime([1,2],_,[['Haus 8',1,830,100,'Car'],['Haus 8',2,830,100,'Car'],['Zoo',2,930,100,'Car']],800, 'Hansedom', Return, Price).
+checkEventsOnTime([1,2],_,[['Haus 8',1,830,100,'Car'],['Haus 8',2,830,100,'Car'],['Zoo',2,930,100,'Car']],800, 'Hansedom', 10000, Return, Price).
 Beispiel negativ an 2 Tagen weil zu früh begonnen:
-checkEventsOnTime([1,2],_,[['Haus 8',1,830,100,'Car'],['Haus 8',2,830,100,'Car'],['Zoo',2,930,100,'Car']],830, 'Hansedom', Return, Price).
+checkEventsOnTime([1,2],_,[['Haus 8',1,830,100,'Car'],['Haus 8',2,830,100,'Car'],['Zoo',2,930,100,'Car']],830, 'Hansedom', 10000, Return, Price).
+Beispiel negativ an 2 Tagen weil Budget zu gering:
+checkEventsOnTime([1,2],_,[['Haus 8',1,830,100,'Car'],['Haus 8',2,830,100,'Car'],['Zoo',2,1030,100,'Car']],800, 'Hansedom', 4500, Return, Price).
 */ 
-checkEventsOnTime(Persons, X,[EventHead|EventsTail],DayStart, Hotel, Return, Price):-
+checkEventsOnTime(Persons, X,[EventHead|EventsTail],DayStart, Hotel, Budget, Return, Price):-
 	var(X),
 	((
 		write('Prüfe Event ohne Vorgänger'), nl,
@@ -172,19 +174,21 @@ checkEventsOnTime(Persons, X,[EventHead|EventsTail],DayStart, Hotel, Return, Pri
 		write("Startzeit: "+RealStartTime), nl,
 		RealStartTime >= DayStart,
 		write("Event gültig"), nl,
-		checkEventsOnTime(Persons, EventHead,EventsTail,DayStart,Hotel, Return1, Price2),
+		checkEventsOnTime(Persons, EventHead,EventsTail,DayStart,Hotel,Budget, Return1, Price2),
 		Return = Return1,
 		calcFullPrice(Persons, Price1, Price2, ThisEvent, Price3),
 		Price = Price3,
-		write("Gesamtpreis: "+Price), nl
+		write("Entgültiger Gesamtpreis: "+Price),
+		Budget >= Price
 	)
 	;
 	(
 		write("Event ungültig"), nl,
+		Price = 0,
 		Return = false,!
 	)).
 
-checkEventsOnTime(Persons, PrevEventInput,[EventHead|EventsTail],DayStart, Hotel, Return, Price):-
+checkEventsOnTime(Persons, PrevEventInput,[EventHead|EventsTail],DayStart, Hotel,Budget, Return, Price):-
 	nonvar(PrevEventInput),
 	((
 		write('Prüfe Event mit Vorgänger'), nl,
@@ -208,19 +212,21 @@ checkEventsOnTime(Persons, PrevEventInput,[EventHead|EventsTail],DayStart, Hotel
 			RealStartTime >= PrevEventEndTime		
 		)),
 		write("Event gültig"), nl,
-		checkEventsOnTime(Persons, EventHead, EventsTail, DayStart, Hotel, Return1, Price2),
+		checkEventsOnTime(Persons, EventHead, EventsTail, DayStart, Hotel,Budget, Return1, Price2),
 		Return = Return1,
 		calcFullPrice(Persons, Price1, Price2, ThisEvent, Price3),
 		Price = Price3,
-		write("Gesamtpreis  bis hier: "+Price), nl
+		write("Gesamtpreis bis hier: "+Price), nl,
+		Budget >= Price
 	)
 	;
 	(
 		write("Event ungültig"), nl,
+		Price = 0,
 		Return = false,!
 	)).
 
-checkEventsOnTime(_,_,[],_,_,Return,0):-
+checkEventsOnTime(_,_,[],_,_,_,Return,0):-
 	Return = true.
 	
 /*
@@ -257,6 +263,8 @@ calcApproachForEvent([AdultCount,ReducedCount], PreviousEvent, ThisEvent, Hotel,
 
 /*CalcFullPrice
 calcFullPrice(Persons, Price1, Price2, Event, Price),
+Berechnet Preis für Event mit Anfahrt incl. 2 weiterer Preise
+Genutzt werden Price1 und Price2 für die Berechnung in der Überprüfung der Timeline
 */
 calcFullPrice([AdultCount,ReducedCount], Price1, Price2, Event, Price):-
 	write("Berechne Preis für "+Event), nl,
