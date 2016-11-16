@@ -72,23 +72,31 @@ searchEventsOnCategory(Categories,Events):-
 	findall([X,V], event(X,_,V,_), List),
 	compareCategories(List,Categories,Events1),
 	Events = Events1.
-
-compareCategories([E|L],Categories,Events1):-
-	compareCategories(L,Categories,Events2),
+	
+/*
+* Gibt mögliche Hotels zu den Kategorien zurück
+*/
+searchHotelsOnCategory(Categories,Hotels):-
+	findall([X,V], hotel(X,_,_,V), List),
+	compareCategories(List,Categories,Hotels1),
+	Hotels = Hotels1.
+	
+compareCategories([E|L],Categories,List1):-
+	compareCategories(L,Categories,List2),
 	E = [X,Y],
 	(  compare_list(Y,Categories)
 	-> (
-		append([X],Events2,Events3),
-	   	Events1 = Events3
+		append([X],List2,List3),
+	   	List1 = List3
 	   )
 	   ;
 	   (
-	   	Events1 = Events2
+	   	List1 = List2
 	   )	
 	).
 	
-compareCategories([],_,Events1):-
-	Events1 = [].
+compareCategories([],_,List1):-
+	List1 = [].
 
 
 /*----------------------------------------------------------------------------------------------*/
