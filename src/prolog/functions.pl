@@ -53,7 +53,11 @@ calcDistance(EventA, EventB, Distance) :-
 		;
 		hotel(EventA, [XA, YA], _, _)	
 	),
-	event(EventB, [XB, YB], _, _),
+		(
+		event(EventB, [XB, YB], _, _)
+		;
+		hotel(EventB, [XB, YB], _, _)	
+	),
 	latInKm(XA, XAinKm),
 	latInKm(XB, XBinKm),
 	lonInKm(YA, YAinKm),
@@ -163,15 +167,18 @@ compare_list([L1Head|L1Tail], List2):-
 Beispiel positiv an einem Tag:
 checkEventsOnTime([1,2], [['Haus 8',1,830,100,'Car'],['Zoo',1,1030,100,'Car']],800, 'X Sterne Hotel', 10000, Return, Price).
 Beispiel negativ an einem Tag:
-checkEventsOnTime([1,2],[['Haus 8',1,830,100,'Car'],['Zoo',1,930,100,'Car']],800, 'Hansedom', 10000, Return, Price).
+checkEventsOnTime([1,2],[['Haus 8',1,830,100,'Car'],['Zoo',1,930,100,'Car']],800, '1 Sterne Hotel', 10000, Return, Price).
 Beispiel positiv an 2 Tagen:
 checkEventsOnTime([1,2],[['Haus 8',1,830,100,'Car'],['Zoo',2,1030,100,'Car']],800, '1 Sterne Hotel', 10000, Return, Price).
 Beispiel negativ an 2 Tagen:
-checkEventsOnTime([1,2],[['Haus 8',1,830,100,'Car'],['Haus 8',2,830,100,'Car'],['Zoo',2,930,100,'Car']],800, 'Hansedom', 10000, Return, Price).
+checkEventsOnTime([1,2],[['Haus 8',1,830,100,'Car'],['Haus 8',2,830,100,'Car'],['Zoo',2,930,100,'Car']],800, '1 Sterne Hotel', 10000, Return, Price).
 Beispiel negativ an 2 Tagen weil zu früh begonnen:
-checkEventsOnTime([1,2],[['Haus 8',1,830,100,'Car'],['Haus 8',2,830,100,'Car'],['Zoo',2,930,100,'Car']],830, 'Hansedom', 10000, Return, Price).
+checkEventsOnTime([1,2],[['Haus 8',1,830,100,'Car'],['Haus 8',2,830,100,'Car'],['Zoo',2,930,100,'Car']],830, '1 Sterne Hotelm', 10000, Return, Price).
 Beispiel negativ an 2 Tagen weil Budget zu gering:
-checkEventsOnTime([1,2],[['Haus 8',1,830,100,'Car'],['Haus 8',2,830,100,'Car'],['Zoo',2,1030,100,'Car']],800, 'Hansedom', 4500, Return, Price).
+checkEventsOnTime([1,2],[['Haus 8',1,830,100,'Car'],['Haus 8',2,830,100,'Car'],['Zoo',2,1030,100,'Car']],800, '1 Sterne Hotel', 4500, Return, Price).
+Beispiel positiv an 2 Tagen:
+checkEventsOnTime([1,2],[['Haus 8',1,830,100,'Car'],['Meeresmuseum',2,830,100,'Car'],['Zoo',2,1030,100,'Car']], 800, '2 Sterne Hotel', 90000, Return, Price).
+
 */ 
 checkEventsOnTime(Persons,[EventHead|EventsTail],DayStart, Hotel, Budget, Return, Price):-
 	(
@@ -185,9 +192,9 @@ checkEventsOnTime(Persons,[EventHead|EventsTail],DayStart, Hotel, Budget, Return
 		write("Event gültig"), nl,
 		checkEventsOnTime(Persons, EventHead,EventsTail,DayStart,Hotel,Budget, Return1, Price2),
 		Return = Return1,
-		calcFullPrice(Persons, Price1, Price2, ThisEvent, Price3),
-		Price = Price3,
-		write("Entgültiger Gesamtpreis: "+Price),
+		calcEventPrice(Persons, ThisEvent, Price3),
+		Price is Price3 + Price2 + Price1,
+		write("Entgültiger Gesamtpreis: "+Price), nl,
 		Budget >= Price
 	)
 	;
@@ -205,7 +212,9 @@ checkEventsOnTime(Persons, PrevEventInput,[EventHead|EventsTail],DayStart, Hotel
 		((
 			PrevDay \= Day,
 			write("Unterschiedliche Tage"), nl,
-			calcApproachForEvent(Persons, _, ThisEvent, Hotel, Vehicle, EventStartTime, [_,_,_,RealStartTime,Price1]),
+			checkEventsOnTime(Persons, PrevEventInput, [], _, Hotel, _, Return, Price1a),
+			calcApproachForEvent(Persons, _, ThisEvent, Hotel, Vehicle, EventStartTime, [_,_,_,RealStartTime,Price1b]),
+			Price1 is Price1a + Price1b,
 			write("Startzeit des Tages: "+DayStart), nl,
 			write("Startzeit: "+RealStartTime), nl,
 			RealStartTime >= DayStart			
@@ -222,8 +231,8 @@ checkEventsOnTime(Persons, PrevEventInput,[EventHead|EventsTail],DayStart, Hotel
 		write("Event gültig"), nl,
 		checkEventsOnTime(Persons, EventHead, EventsTail, DayStart, Hotel,Budget, Return1, Price2),
 		Return = Return1,
-		calcFullPrice(Persons, Price1, Price2, ThisEvent, Price3),
-		Price = Price3,
+		calcEventPrice(Persons, ThisEvent, Price3),
+		Price is Price3 + Price2 + Price1,
 		write("Gesamtpreis bis hier: "+Price), nl,
 		Budget >= Price
 	)
@@ -234,7 +243,14 @@ checkEventsOnTime(Persons, PrevEventInput,[EventHead|EventsTail],DayStart, Hotel
 		Return = false,!
 	).
 
-checkEventsOnTime(_,_,[],_,_,_,Return,0):-
+checkEventsOnTime(Persons, PrevEventInput, [], _, Hotel, _, Return, Price):-
+	[PrevEvent, _, PrevEventStartTime, PrevEventTime, Vehicle] = PrevEventInput,
+	calcApproachForEvent(Persons, PrevEvent, _, Hotel, Vehicle, PrevEventStartTime, [_,_,DriveTime,_,Price1]),
+	RealEndTime is PrevEventStartTime + PrevEventTime + DriveTime,
+	write("Tagesende nach Events um: "+ RealEndTime), nl,
+	hotel(Hotel,_,HotelPrice,_),
+	write("Preis für Hotel für diese Nacht: " + HotelPrice),
+	Price is Price1 + HotelPrice,
 	Return = true.
 
 
@@ -256,15 +272,27 @@ Arrivel wird zurückgegeben (Arrival = ('Anfahrt', Vehicle, Zeit in Minuten, Star
 calcApproachForEvent([AdultCount,ReducedCount], PreviousEvent, ThisEvent, Hotel, Vehicle, EventTime, Approach):-
 	((
 		nonvar(PreviousEvent),
-		write('Kalkuliere PrevEvent zu ThisEvent'), nl,
-		calcDistance(PreviousEvent, ThisEvent, Distance)
+		Point1 = PreviousEvent,
+		write('Kalkuliere von PreviousEvent ')
 	)
 	;
 	(
 		var(PreviousEvent),
-		write('Kalkuliere Hotel zu ThisEvent'), nl,
-		calcDistance(Hotel, ThisEvent, Distance)
+		Point1 = Hotel,
+		write('Kalkuliere von Hotel ')
 	)),
+	((
+		nonvar(ThisEvent),
+		Point2 = ThisEvent,
+		write('zu ThisEvent'), nl
+	)
+	;
+	(
+		var(ThisEvent),
+		Point2 = Hotel,
+		write('zu Hotel'), nl
+	)),
+	calcDistance(Point1, Point2, Distance),
 	vehicle(Vehicle, [AdultPrice,ReducedPrice], Speed),
 	ArrivalTime is ceiling(Distance/Speed*60),
 	write("Zeit für Anfahrt: "+ ArrivalTime), nl,
@@ -282,8 +310,9 @@ calcFullPrice(Persons, Price1, Price2, Event, Price),
 Berechnet Preis für Event mit Anfahrt incl. 2 weiterer Preise
 Genutzt werden Price1 und Price2 für die Berechnung in der Überprüfung der Timeline
 */
-calcFullPrice([AdultCount,ReducedCount], Price1, Price2, Event, Price):-
+calcEventPrice([AdultCount,ReducedCount], Event, Price):-
 	write("Berechne Preis für "+Event), nl,
 	event(Event,_,_,[AdultPrice,ReducedPrice]),
-	Price is (AdultCount*AdultPrice) + (ReducedCount*ReducedPrice) + Price1 + Price2. 
+	Price is (AdultCount*AdultPrice) + (ReducedCount*ReducedPrice),
+	write("Preis für Event ist: " +Price), nl. 
 	
