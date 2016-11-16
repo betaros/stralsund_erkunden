@@ -1,4 +1,6 @@
 :- use_module(events).
+:- use_module(java_connection_functions).
+
 :- use_module(library(lists)).
  
 /*
@@ -100,6 +102,8 @@ compareCategories([],_,List1):-
 
 
 /*----------------------------------------------------------------------------------------------*/
+
+
 /*
 *Prüft für alle Events der Liste ob sie einzeln nicht zu teuer sind und gibt die zurück die 
 *Preislich in das Budget nicht übersteigen
