@@ -7,6 +7,7 @@ package src;
 
 import java.awt.EventQueue;
 
+import javax.swing.JFrame;
 import javax.swing.UIManager;
 import javax.swing.UnsupportedLookAndFeelException;
 
@@ -48,6 +49,7 @@ public class Main {
 				
 				try {
 					MainGui window = new MainGui(pc);
+					window.frmStralsundErkunden.setExtendedState(JFrame.MAXIMIZED_BOTH);
 					window.frmStralsundErkunden.setVisible(true);
 				} catch (Exception e) {
 					e.printStackTrace();

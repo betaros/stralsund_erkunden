@@ -74,21 +74,21 @@ public class MainGui {
 		gbl_profilpanel.rowWeights = new double[]{0.0, 0.0, 1.0, Double.MIN_VALUE};
 		profilpanel.setLayout(gbl_profilpanel);
 
-		JButton profileButton = new JButton("Profil bearbeiten");
+		JButton profileButton = new JButton("Ergebnisse anzeigen");
 		GridBagConstraints gbc_profileButton = new GridBagConstraints();
 		gbc_profileButton.fill = GridBagConstraints.HORIZONTAL;
 		gbc_profileButton.insets = new Insets(0, 0, 5, 0);
 		gbc_profileButton.gridx = 0;
 		gbc_profileButton.gridy = 0;
 		profilpanel.add(profileButton, gbc_profileButton);
-		
-				JButton btnGenerateTimeline = new JButton("F\u00FClle Timeline");
-				GridBagConstraints gbc_btnGenerateTimeline = new GridBagConstraints();
-				gbc_btnGenerateTimeline.fill = GridBagConstraints.HORIZONTAL;
-				gbc_btnGenerateTimeline.insets = new Insets(0, 0, 5, 0);
-				gbc_btnGenerateTimeline.gridx = 0;
-				gbc_btnGenerateTimeline.gridy = 1;
-				profilpanel.add(btnGenerateTimeline, gbc_btnGenerateTimeline);
+
+		JButton btnGenerateTimeline = new JButton("F\u00FClle Timeline");
+		GridBagConstraints gbc_btnGenerateTimeline = new GridBagConstraints();
+		gbc_btnGenerateTimeline.fill = GridBagConstraints.HORIZONTAL;
+		gbc_btnGenerateTimeline.insets = new Insets(0, 0, 5, 0);
+		gbc_btnGenerateTimeline.gridx = 0;
+		gbc_btnGenerateTimeline.gridy = 1;
+		profilpanel.add(btnGenerateTimeline, gbc_btnGenerateTimeline);
 
 		JPanel summarypanel = new JPanel();
 		summarypanel.setBorder(new TitledBorder(UIManager.getBorder("TitledBorder.border"), "Zusammenfassung", TitledBorder.LEADING, TitledBorder.TOP, null, new Color(0, 0, 0)));
@@ -146,7 +146,7 @@ public class MainGui {
 					if(!(mp.showSearchResults(profile))){
 						txtpnSummary.setText("Bitte Profil bearbeiten!");
 					}
-					
+
 					cl.show(content, "mainpanel");
 				} else {
 					// zeige ProfileEditor
@@ -185,7 +185,7 @@ public class MainGui {
 		summaryText.append("Budget: ");
 		summaryText.append(String.format( "%.2f", new Double(profile.getBudgetInCent() / 100.0) ) + " \u20AC");
 		summaryText.append("\n");
-		
+
 		summaryText.append("\n");
 		summaryText.append("Kategorien:");
 		summaryText.append("\n");
