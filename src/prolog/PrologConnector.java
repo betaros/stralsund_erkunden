@@ -271,7 +271,7 @@ public class PrologConnector {
 	 * @param price
 	 * @return
 	 */
-	public boolean checkEventsOnTime(int reducedCount, int adultCount, ArrayList<String> eventList, int dayStart, String hotel, int budget, int returnValue, int price){
+	public boolean checkEventsOnTime(int reducedCount, int adultCount, ArrayList<String> eventList, int dayStart, String hotel, int budget, int price){
 		ArrayList<String> peopleList = new ArrayList<String>();
 		peopleList.add(String.valueOf(adultCount));
 		peopleList.add(String.valueOf(reducedCount));
@@ -281,21 +281,19 @@ public class PrologConnector {
 		Atom Hotel = new Atom(hotel);
 		Atom Budget = new Atom(String.valueOf(budget));
 		Atom Price = new Atom(String.valueOf(price));
-		Atom ReturnValue = new Atom(String.valueOf(returnValue));
-		
-		Variable X = new Variable();
+		Variable ReturnValue = new Variable("ReturnValue");
 		
 		Query query =
 				new Query(
 					"checkEventsOnTime",
-					new Term[]{People, X, EventList, DayStart, Hotel, Budget, ReturnValue, Price}
+					new Term[]{People, EventList, DayStart, Hotel, Budget, ReturnValue, Price}
 				);
 		
 		boolean result = false;
 		
 		if(query.hasSolution()){
 			Map<String,Term> solution = query.oneSolution();
-			String array = solution.get("X").toString();
+			String array = solution.get("ReturnValue").toString();
 			if(array.contains("true")){
 				result = true;
 			}
@@ -317,7 +315,7 @@ public class PrologConnector {
 	 * @param price
 	 * @return
 	 */
-	public boolean checkEventsOnTime(int reducedCount, int adultCount, String prevEvent, ArrayList<String> eventList, int dayStart, String hotel, int budget, int returnValue, int price){
+	public boolean checkEventsOnTime(int reducedCount, int adultCount, String prevEvent, ArrayList<String> eventList, int dayStart, String hotel, int budget, int price){
 		ArrayList<String> peopleList = new ArrayList<String>();
 		peopleList.add(String.valueOf(adultCount));
 		peopleList.add(String.valueOf(reducedCount));
@@ -328,21 +326,19 @@ public class PrologConnector {
 		Atom Hotel = new Atom(hotel);
 		Atom Budget = new Atom(String.valueOf(budget));
 		Atom Price = new Atom(String.valueOf(price));
-		Atom ReturnValue = new Atom(String.valueOf(returnValue));
-		
-		Variable X = new Variable();
+		Variable ReturnValue = new Variable("ReturnValue");
 		
 		Query query =
 				new Query(
 					"checkEventsOnTime",
-					new Term[]{People, PrevEvent, X, EventList, DayStart, Hotel, Budget, ReturnValue, Price}
+					new Term[]{People, PrevEvent, EventList, DayStart, Hotel, Budget, ReturnValue, Price}
 				);
 		
 		boolean result = false;
 		
 		if(query.hasSolution()){
 			Map<String,Term> solution = query.oneSolution();
-			String array = solution.get("X").toString();
+			String array = solution.get("ReturnValue").toString();
 			if(array.contains("true")){
 				result = true;
 			}
