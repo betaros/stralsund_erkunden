@@ -165,7 +165,7 @@ compare_list([L1Head|L1Tail], List2):-
 
 /*
 Beispiel positiv an einem Tag:
-checkEventsOnTime([1,2], [['Haus 8',1,830,100,'Car'],['Zoo',1,1030,100,'Car']],800, 'X Sterne Hotel', 10000, Return, Price).
+checkEventsOnTime([1,2], [['Haus 8',1,830,100,'Car'],['Zoo',1,1030,100,'Car']],800, 'X Sterne Hotel', 1000000, Return, Price).
 Beispiel negativ an einem Tag:
 checkEventsOnTime([1,2],[['Haus 8',1,830,100,'Car'],['Zoo',1,930,100,'Car']],800, '1 Sterne Hotel', 10000, Return, Price).
 Beispiel positiv an 2 Tagen:
@@ -248,8 +248,7 @@ checkEventsOnTime(Persons, PrevEventInput, [], _, Hotel, _, Return, Price):-
 	calcApproachForEvent(Persons, PrevEvent, _, Hotel, Vehicle, PrevEventStartTime, [_,_,DriveTime,_,Price1]),
 	RealEndTime is PrevEventStartTime + PrevEventTime + DriveTime,
 	write("Tagesende nach Events um: "+ RealEndTime), nl,
-	hotel(Hotel,_,HotelPrice,_),
-	write("Preis für Hotel für diese Nacht: " + HotelPrice),
+	calcHotelPrice(Persons, Hotel, HotelPrice),
 	Price is Price1 + HotelPrice,
 	Return = true.
 
@@ -298,7 +297,7 @@ calcApproachForEvent([AdultCount,ReducedCount], PreviousEvent, ThisEvent, Hotel,
 	write("Zeit für Anfahrt: "+ ArrivalTime), nl,
 	StartTime is EventTime - ArrivalTime,
 	Price is (AdultCount*AdultPrice)+(ReducedCount*ReducedPrice),
-	write("Preis für Fahrt: "+Price), nl,
+	write("-> Preis für Fahrt: "+Price), nl,
 	Approach = ['Anfahrt', Vehicle, ArrivalTime, StartTime, Price].
 
 
@@ -314,5 +313,18 @@ calcEventPrice([AdultCount,ReducedCount], Event, Price):-
 	write("Berechne Preis für "+Event), nl,
 	event(Event,_,_,[AdultPrice,ReducedPrice]),
 	Price is (AdultCount*AdultPrice) + (ReducedCount*ReducedPrice),
-	write("Preis für Event ist: " +Price), nl. 
+	write("-> Preis für Event ist: " +Price), nl. 
 	
+
+/*
+Berechnet den Preis für das Hotel
+In Abhängigkeit der Personen und der benötigten Doppelzimmer
+*/
+calcHotelPrice(Persons, Hotel, Price):-
+	hotel(Hotel,_,PricePerRoom,_),
+	[Adult,Reduced] = Persons,
+	PersonsCount = Adult + Reduced,
+	Rooms is ceiling(PersonsCount/2),
+	HotelPrice is Rooms * PricePerRoom,
+	write("-> Preis für Hotel für diese Nacht: " + HotelPrice), nl,
+	Price = HotelPrice.
