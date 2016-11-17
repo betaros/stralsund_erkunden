@@ -348,6 +348,49 @@ public class PrologConnector {
 	}
 	
 	/**
+	 * Berechnet Anfahrtsdauer
+	 * 
+	 * @param adultCount
+	 * @param reducedCount
+	 * @param prevEvent
+	 * @param thisEvent
+	 * @param hotel
+	 * @param vehicle
+	 * @param eventTime
+	 * @return
+	 */
+	public int calcApproachForEvent(int adultCount, int reducedCount, String prevEvent, String thisEvent, String hotel, String vehicle, int eventTime){
+		ArrayList<String> peopleList = new ArrayList<String>();
+		peopleList.add(String.valueOf(adultCount));
+		peopleList.add(String.valueOf(reducedCount));
+		Term People = Util.textToTerm(prologListGenerator(peopleList));
+		Atom PrevEvent = new Atom(prevEvent);
+		Atom ThisEvent = new Atom(thisEvent);
+		Atom Hotel = new Atom(hotel);
+		Atom Vehicle = new Atom(vehicle);
+		Atom EventTime = new Atom(String.valueOf(eventTime));
+		
+		Variable Approach = new Variable("Approach");
+		
+		Query query =
+				new Query(
+						"calcApproachForEvent",
+						new Term[]{People, PrevEvent, ThisEvent, Hotel, Vehicle, EventTime, Approach}
+						);
+		
+		int result = 0;
+		
+		if(query.hasSolution()){
+			Map<String,Term> solution = query.oneSolution();
+			String array = solution.get("Approach").toString();
+			array = array.replaceAll("[^0-9.]", "");
+			result = java.lang.Integer.parseInt(array);
+		}
+		
+		return result;
+	}
+	
+	/**
 	 * Erstellt eine Prolog Liste aus einer String Arrayliste
 	 * @param list
 	 * @return
