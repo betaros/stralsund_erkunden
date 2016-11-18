@@ -182,7 +182,7 @@ public class MainPanel extends JPanel {
 		for(Event e:resultArrayList){
 			waypoints.add(new GeoPosition(e.getLatitude(), e.getLongitude()));
 			
-			Result result = new Result(e, profile, false);
+			Result result = new Result(e, profile, false, this);
 			GridBagConstraints gbc = new GridBagConstraints();
 	        gbc.gridwidth = GridBagConstraints.REMAINDER;
 	        gbc.weightx = 1;
@@ -197,6 +197,10 @@ public class MainPanel extends JPanel {
         return true;
 	}
 
+	public void addToTimeplan(){
+		
+	}
+	
 	/**
 	 * Zeige Zeitplan an
 	 */
@@ -207,7 +211,7 @@ public class MainPanel extends JPanel {
     	Event event = new Event("Hansedom", 52.1, 19.1, 250, 350, categories);
 		Profile profile = new Profile(2, 20000, 2, 1);
 		
-		Result r = new Result(event, profile, false);
+		Result r = new Result(event, profile, false, this);
         GridBagConstraints gbc = new GridBagConstraints();
         gbc.gridwidth = GridBagConstraints.REMAINDER;
         gbc.weightx = 1;

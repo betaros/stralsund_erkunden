@@ -29,6 +29,7 @@ public class Result extends JPanel {
 	private double duration = 0.0d;
 	private Event event;
 	private Profile profile;
+	private JPanel mainpanel;
 	
 	private JButton btnRemoveButton;
 	private JButton btnNewButton;
@@ -36,10 +37,11 @@ public class Result extends JPanel {
 	/**
 	 * Create the panel.
 	 */
-	public Result(Event _event, Profile _profile, boolean _resultlist) {
+	public Result(Event _event, Profile _profile, boolean _resultlist, JPanel _mainpanel) {
 
 		event = _event;
 		profile = _profile;
+		mainpanel = _mainpanel;
 
 		double reducedPrice = (double)(event.getPriceInCentChild() * profile.getChildCounter()) / 100.0;
 		double adultPrice = (double)(event.getPriceInCentAdult() * profile.getAdultCounter()) / 100.0;
@@ -267,7 +269,6 @@ public class Result extends JPanel {
 			btnNewButton = new JButton("+");
 			btnNewButton.addActionListener(new ActionListener() {
 				public void actionPerformed(ActionEvent arg0) {
-					
 				}
 			});
 			panel_2.add(btnNewButton);
