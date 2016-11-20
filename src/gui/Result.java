@@ -17,8 +17,6 @@ import src.Profile;
 
 import javax.swing.event.ChangeEvent;
 import java.awt.Font;
-import java.awt.event.ActionListener;
-import java.awt.event.ActionEvent;
 
 public class Result extends JPanel {
 
@@ -29,19 +27,17 @@ public class Result extends JPanel {
 	private double duration = 0.0d;
 	private Event event;
 	private Profile profile;
-	private JPanel mainpanel;
 	
-	private JButton btnRemoveButton;
-	private JButton btnNewButton;
+	public JButton btnRemoveButton;
+	public JButton btnNewButton;
 
 	/**
 	 * Create the panel.
 	 */
-	public Result(Event _event, Profile _profile, boolean _resultlist, JPanel _mainpanel) {
+	public Result(Event _event, Profile _profile, boolean _resultlist) {
 
 		event = _event;
 		profile = _profile;
-		mainpanel = _mainpanel;
 
 		double reducedPrice = (double)(event.getPriceInCentChild() * profile.getChildCounter()) / 100.0;
 		double adultPrice = (double)(event.getPriceInCentAdult() * profile.getAdultCounter()) / 100.0;
@@ -258,19 +254,10 @@ public class Result extends JPanel {
 		add(panel_2, gbc_panel_2);
 
 		btnRemoveButton = new JButton("-");
-		btnRemoveButton.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent arg0) {
-				
-			}
-		});
 		panel_2.add(btnRemoveButton);
 
 		if(_resultlist){
 			btnNewButton = new JButton("+");
-			btnNewButton.addActionListener(new ActionListener() {
-				public void actionPerformed(ActionEvent arg0) {
-				}
-			});
 			panel_2.add(btnNewButton);
 		}
 	}

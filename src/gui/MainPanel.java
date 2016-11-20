@@ -3,6 +3,8 @@ package gui;
 import java.awt.FlowLayout;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.util.ArrayList;
 import java.util.Collections;
 
@@ -45,6 +47,7 @@ public class MainPanel extends JPanel {
 	public MainPanel() {
 		prologConnector = new PrologConnector();
 		resultArrayList = new ArrayList<Event>();
+		timelineArrayList = new ArrayList<Event>();
 		
 		setBorder(null);
 		GridBagLayout gridBagLayout = new GridBagLayout();
@@ -182,12 +185,28 @@ public class MainPanel extends JPanel {
 		for(Event e:resultArrayList){
 			waypoints.add(new GeoPosition(e.getLatitude(), e.getLongitude()));
 			
-			Result result = new Result(e, profile, false, this);
+			Result result = new Result(e, profile, true);
 			GridBagConstraints gbc = new GridBagConstraints();
 	        gbc.gridwidth = GridBagConstraints.REMAINDER;
 	        gbc.weightx = 1;
 	        gbc.fill = GridBagConstraints.HORIZONTAL;
 	        mainList.add(result, gbc, 0);
+	        
+	        result.btnNewButton.addActionListener(new ActionListener() {
+				public void actionPerformed(ActionEvent arg0) {
+					addToTimeplan(result.getEvent());
+					validate();
+			        repaint();
+				}
+			});
+	        
+	        result.btnRemoveButton.addActionListener(new ActionListener() {
+				public void actionPerformed(ActionEvent arg0) {
+					mainList.remove(result);
+					validate();
+			        repaint();
+				}
+			});
 		}
 		
 		mapViewer = map.getMap(waypoints);
@@ -197,8 +216,9 @@ public class MainPanel extends JPanel {
         return true;
 	}
 
-	public void addToTimeplan(){
-		
+	public void addToTimeplan(Event _newEvent){
+		timelineArrayList.add(_newEvent);
+		System.out.println("Timeline: " + _newEvent.getName());
 	}
 	
 	/**
@@ -208,10 +228,10 @@ public class MainPanel extends JPanel {
 		ArrayList<String> categories = new ArrayList<String>();
 		categories.add("Shopping");
 		categories.add("Schwimmen");
-    	Event event = new Event("Hansedom", 52.1, 19.1, 250, 350, categories);
+    	Event event = new Event("Hansedom", 52.1, 19.1, 250, 350, categories, 0, 0, "Auto");
 		Profile profile = new Profile(2, 20000, 2, 1);
 		
-		Result r = new Result(event, profile, false, this);
+		Result r = new Result(event, profile, false);
         GridBagConstraints gbc = new GridBagConstraints();
         gbc.gridwidth = GridBagConstraints.REMAINDER;
         gbc.weightx = 1;

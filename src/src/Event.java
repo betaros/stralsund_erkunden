@@ -16,6 +16,7 @@ public class Event {
 	
 	private int startTime;
 	private int duration;
+	private String arrival;
 
 	/**
 	 * 
@@ -26,13 +27,16 @@ public class Event {
 	 * @param _priceChild
 	 * @param _cat
 	 */
-	public Event(String _name, double _lat, double _lon, int _priceAdult, int _priceChild, ArrayList<String> _cat){
+	public Event(String _name, double _lat, double _lon, int _priceAdult, int _priceChild, ArrayList<String> _cat, int _startTime, int _duration, String _arrival){
 		this.name = _name;
 		this.latitude = _lat;
 		this.longitude = _lon;
 		this.priceInCentChild = _priceChild * 100;
 		this.priceInCentAdult = _priceAdult * 100;
 		this.categories = _cat;
+		this.startTime = _startTime;
+		this.duration = _duration;
+		this.arrival = _arrival;
 		
 		this.geoPos = new GeoPosition(_lat, _lon);
 	}
@@ -126,5 +130,19 @@ public class Event {
 	 */
 	public void setDuration(int duration) {
 		this.duration = duration;
+	}
+	
+	/**
+	 * @return the arrival
+	 */
+	public String getArrival() {
+		return arrival;
+	}
+
+	/**
+	 * @param arrival the arrival to set
+	 */
+	public void setArrival(String arrival) {
+		this.arrival = arrival;
 	}
 }
