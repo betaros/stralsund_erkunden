@@ -17,14 +17,18 @@ import src.Profile;
 
 import javax.swing.event.ChangeEvent;
 import java.awt.Font;
+import java.awt.event.ActionListener;
+import java.awt.event.ActionEvent;
 
 public class Result extends JPanel {
 
 	private static final long serialVersionUID = -647953753569806672L;
 
 	private int starttime = 0;
-
+	private int day = 1;
 	private double duration = 0.0d;
+	private String arrival = "Auto";
+	
 	private Event event;
 	private Profile profile;
 	
@@ -38,10 +42,13 @@ public class Result extends JPanel {
 
 		event = _event;
 		profile = _profile;
-
-		double reducedPrice = (double)(event.getPriceInCentChild() * profile.getChildCounter()) / 100.0;
-		double adultPrice = (double)(event.getPriceInCentAdult() * profile.getAdultCounter()) / 100.0;
-
+		
+		int reducedPriceInCents = event.getPriceInCentChild() * profile.getChildCounter();
+		int adultPriceInCents = event.getPriceInCentAdult() * profile.getAdultCounter();
+		
+		double reducedPrice = (double)(reducedPriceInCents) / 100.0;
+		double adultPrice = (double)(adultPriceInCents) / 100.0;
+				
 		GridBagLayout gridBagLayout = new GridBagLayout();
 		gridBagLayout.columnWidths = new int[]{0, 0};
 		gridBagLayout.rowHeights = new int[]{0, 0, 0, 0, 0};
@@ -143,7 +150,7 @@ public class Result extends JPanel {
 		gbl_panel_3.rowWeights = new double[]{0.0, 0.0, 0.0, 0.0, 0.0, 0.0, Double.MIN_VALUE};
 		panel_3.setLayout(gbl_panel_3);
 
-		if(_resultlist){
+		//if(_resultlist){
 			JLabel lblTag = new JLabel("Tag");
 			GridBagConstraints gbc_lblTag = new GridBagConstraints();
 			gbc_lblTag.insets = new Insets(0, 0, 5, 5);
@@ -152,14 +159,14 @@ public class Result extends JPanel {
 			gbc_lblTag.gridy = 0;
 			panel_3.add(lblTag, gbc_lblTag);
 
-			JComboBox<String> comboBox = new JComboBox<String>();
-			comboBox.setModel(new DefaultComboBoxModel<String>(new String[] {"Tag 1", "Tag 2"}));
-			GridBagConstraints gbc_comboBox = new GridBagConstraints();
-			gbc_comboBox.fill = GridBagConstraints.HORIZONTAL;
-			gbc_comboBox.insets = new Insets(0, 0, 5, 0);
-			gbc_comboBox.gridx = 1;
-			gbc_comboBox.gridy = 0;
-			panel_3.add(comboBox, gbc_comboBox);
+			JComboBox<String> comboBoxDay = new JComboBox<String>();
+			comboBoxDay.setModel(new DefaultComboBoxModel<String>(new String[] {"1", "2"}));
+			GridBagConstraints gbc_comboBoxDay = new GridBagConstraints();
+			gbc_comboBoxDay.fill = GridBagConstraints.HORIZONTAL;
+			gbc_comboBoxDay.insets = new Insets(0, 0, 5, 0);
+			gbc_comboBoxDay.gridx = 1;
+			gbc_comboBoxDay.gridy = 0;
+			panel_3.add(comboBoxDay, gbc_comboBoxDay);
 
 			JLabel lblAnkunft = new JLabel("Ankunft");
 			GridBagConstraints gbc_lblAnkunft = new GridBagConstraints();
@@ -242,7 +249,19 @@ public class Result extends JPanel {
 					lblDuration.setText(String.valueOf(duration) + " h");
 				}
 			});
-		}
+			
+			comboBoxDay.addActionListener(new ActionListener() {
+				public void actionPerformed(ActionEvent arg0) {
+					day = comboBoxDay.getSelectedIndex() + 1;
+				}
+			});
+			
+			comboBoxArrival.addActionListener(new ActionListener() {
+				public void actionPerformed(ActionEvent e) {
+					arrival = comboBoxArrival.getSelectedItem().toString();
+				}
+			});
+		//}
 
 		JPanel panel_2 = new JPanel();
 		FlowLayout flowLayout = (FlowLayout) panel_2.getLayout();
@@ -294,6 +313,10 @@ public class Result extends JPanel {
 	 * @return the event
 	 */
 	public Event getEvent() {
+		event.setDay(day);
+		event.setDuration(duration);
+		event.setStartTime(starttime);
+		event.setArrival(arrival);
 		return event;
 	}
 

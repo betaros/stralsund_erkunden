@@ -323,6 +323,19 @@ public class ProfileEditor extends JPanel {
 		
 		tempProfile.setSelectedCategories(selectedCategories);
 		
+		String budget = textFieldBudget.getText();
+		budget = budget.replaceAll(",", ".");
+		budget = budget.replaceAll("[^0-9.]", "");
+		try {
+			double budgetDouble = Double.parseDouble(budget) * 100;
+			int budgetInt = (int) budgetDouble;
+			if(budgetInt >= 0){
+				tempProfile.setBudgetInCent(budgetInt);
+			}
+		} catch (Exception e) {
+			
+		}
+		
 		return tempProfile;
 	}
 	

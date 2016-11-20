@@ -21,7 +21,7 @@ public class PrologConnectorTest {
 		categories.add("Schwimmen");
 		categories.add("Sauna");
 		
-		Event toTestEvent = new Event("Hansedom", 54.320021, 13.04384, 2000, 1000, categories, 0, 0, "Auto");
+		Event toTestEvent = new Event("Hansedom", 54.320021, 13.04384, 2000, 1000, categories, 1, 0, 0, "Auto");
 		
 		StringBuilder expected = new StringBuilder();
 		expected.append(toTestEvent.getName());
@@ -177,8 +177,8 @@ public class PrologConnectorTest {
 
 	@Test
 	public void testCheckEventsOnTimeOneEvent() {
-		ArrayList<String> eventlist = new ArrayList<String>();
-		eventlist.add("Ozeaneum");
+		ArrayList<Event> eventlist = new ArrayList<Event>();
+		eventlist.add(pc.findEvent("Ozeaneum"));
 		boolean result = pc.checkEventsOnTime(2, 1, eventlist, 1, "Hansedom", 20000, 200);
 		
 		assertTrue(result);

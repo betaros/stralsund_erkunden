@@ -80,7 +80,7 @@ public class PrologConnector {
 				categoryList.add(category);
 			}
 
-			e = new Event(title, lat, lon, priceAdult, priceReduced, categoryList, 0, 0, "Auto");
+			e = new Event(title, lat, lon, priceAdult, priceReduced, categoryList, 1, 0, 0, "Auto");
 		}
 
 		return e;
@@ -276,12 +276,44 @@ public class PrologConnector {
 	 * @param price
 	 * @return
 	 */
-	public boolean checkEventsOnTime(int adultCount, int reducedCount, ArrayList<String> eventList, int dayStart, String hotel, int budget, int price){
+	public boolean checkEventsOnTime(int adultCount, int reducedCount, ArrayList<Event> eventList, int dayStart, String hotel, int budget, int price){
 		ArrayList<String> peopleList = new ArrayList<String>();
 		peopleList.add(String.valueOf(adultCount));
 		peopleList.add(String.valueOf(reducedCount));
 		Term People = Util.textToTerm(prologListGenerator(peopleList));
-		Term EventList = Util.textToTerm(prologListGenerator(eventList));
+		
+		ArrayList<String> eventStringList = new ArrayList<String>();
+		for(Event event:eventList){
+			StringBuilder eventString = new StringBuilder();
+			eventString.append("[");
+			eventString.append(event.getName());
+			eventString.append(",");
+			eventString.append(String.valueOf(event.getDay()));
+			eventString.append(",");
+			eventString.append(String.valueOf(event.getStartTime()));
+			eventString.append(",");
+			eventString.append(String.valueOf(event.getDuration()));
+			eventString.append(",");
+			
+			String arrival = event.getArrival(); 
+			switch(arrival){
+			case "Zu fuss":
+				eventString.append("Foot");
+				break;
+			case "Fahrrad":
+				eventString.append("Bike");
+				break;
+			case "Bus":
+				eventString.append("Bus");
+				break;
+			default:
+				eventString.append("Car");
+			}
+			eventString.append("]");
+			
+			eventStringList.add(eventString.toString());
+		}
+		Term EventList = Util.textToTerm(prologListGenerator(eventStringList));
 		Atom DayStart = new Atom(String.valueOf(dayStart));
 		Atom Hotel = new Atom(hotel);
 		Atom Budget = new Atom(String.valueOf(budget));
@@ -320,13 +352,46 @@ public class PrologConnector {
 	 * @param price
 	 * @return
 	 */
-	public boolean checkEventsOnTime(int adultCount, int reducedCount, String prevEvent, ArrayList<String> eventList, int dayStart, String hotel, int budget, int price){
+	public boolean checkEventsOnTime(int adultCount, int reducedCount, String prevEvent, ArrayList<Event> eventList, int dayStart, String hotel, int budget, int price){
 		ArrayList<String> peopleList = new ArrayList<String>();
 		peopleList.add(String.valueOf(adultCount));
 		peopleList.add(String.valueOf(reducedCount));
 		Term People = Util.textToTerm(prologListGenerator(peopleList));
 		Atom PrevEvent = new Atom(prevEvent);
-		Term EventList = Util.textToTerm(prologListGenerator(eventList));
+		
+		ArrayList<String> eventStringList = new ArrayList<String>();
+		for(Event event:eventList){
+			StringBuilder eventString = new StringBuilder();
+			eventString.append("[");
+			eventString.append(event.getName());
+			eventString.append(",");
+			eventString.append(String.valueOf(event.getDay()));
+			eventString.append(",");
+			eventString.append(String.valueOf(event.getStartTime()));
+			eventString.append(",");
+			eventString.append(String.valueOf(event.getDuration()));
+			eventString.append(",");
+			
+			String arrival = event.getArrival(); 
+			switch(arrival){
+			case "Zu fuss":
+				eventString.append("Foot");
+				break;
+			case "Fahrrad":
+				eventString.append("Bike");
+				break;
+			case "Bus":
+				eventString.append("Bus");
+				break;
+			default:
+				eventString.append("Car");
+			}
+			eventString.append("]");
+			
+			eventStringList.add(eventString.toString());
+		}
+		Term EventList = Util.textToTerm(prologListGenerator(eventStringList));
+		
 		Atom DayStart = new Atom(String.valueOf(dayStart));
 		Atom Hotel = new Atom(hotel);
 		Atom Budget = new Atom(String.valueOf(budget));
