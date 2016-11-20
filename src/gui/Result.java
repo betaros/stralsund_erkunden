@@ -28,10 +28,10 @@ public class Result extends JPanel {
 	private int day = 1;
 	private double duration = 0.0d;
 	private String arrival = "Auto";
-	
+
 	private Event event;
 	private Profile profile;
-	
+
 	public JButton btnRemoveButton;
 	public JButton btnNewButton;
 
@@ -42,13 +42,13 @@ public class Result extends JPanel {
 
 		event = _event;
 		profile = _profile;
-		
+
 		int reducedPriceInCents = event.getPriceInCentChild() * profile.getChildCounter();
 		int adultPriceInCents = event.getPriceInCentAdult() * profile.getAdultCounter();
-		
+
 		double reducedPrice = (double)(reducedPriceInCents) / 100.0;
 		double adultPrice = (double)(adultPriceInCents) / 100.0;
-				
+
 		GridBagLayout gridBagLayout = new GridBagLayout();
 		gridBagLayout.columnWidths = new int[]{0, 0};
 		gridBagLayout.rowHeights = new int[]{0, 0, 0, 0, 0};
@@ -150,118 +150,121 @@ public class Result extends JPanel {
 		gbl_panel_3.rowWeights = new double[]{0.0, 0.0, 0.0, 0.0, 0.0, 0.0, Double.MIN_VALUE};
 		panel_3.setLayout(gbl_panel_3);
 
-		//if(_resultlist){
-			JLabel lblTag = new JLabel("Tag");
-			GridBagConstraints gbc_lblTag = new GridBagConstraints();
-			gbc_lblTag.insets = new Insets(0, 0, 5, 5);
-			gbc_lblTag.anchor = GridBagConstraints.WEST;
-			gbc_lblTag.gridx = 0;
-			gbc_lblTag.gridy = 0;
-			panel_3.add(lblTag, gbc_lblTag);
+		JLabel lblTag = new JLabel("Tag");
+		GridBagConstraints gbc_lblTag = new GridBagConstraints();
+		gbc_lblTag.insets = new Insets(0, 0, 5, 5);
+		gbc_lblTag.anchor = GridBagConstraints.WEST;
+		gbc_lblTag.gridx = 0;
+		gbc_lblTag.gridy = 0;
+		panel_3.add(lblTag, gbc_lblTag);
 
-			JComboBox<String> comboBoxDay = new JComboBox<String>();
-			comboBoxDay.setModel(new DefaultComboBoxModel<String>(new String[] {"1", "2"}));
-			GridBagConstraints gbc_comboBoxDay = new GridBagConstraints();
-			gbc_comboBoxDay.fill = GridBagConstraints.HORIZONTAL;
-			gbc_comboBoxDay.insets = new Insets(0, 0, 5, 0);
-			gbc_comboBoxDay.gridx = 1;
-			gbc_comboBoxDay.gridy = 0;
-			panel_3.add(comboBoxDay, gbc_comboBoxDay);
+		JComboBox<String> comboBoxDay = new JComboBox<String>();
+		comboBoxDay.setEnabled(_resultlist);
+		comboBoxDay.setModel(new DefaultComboBoxModel<String>(new String[] {"1", "2"}));
+		GridBagConstraints gbc_comboBoxDay = new GridBagConstraints();
+		gbc_comboBoxDay.fill = GridBagConstraints.HORIZONTAL;
+		gbc_comboBoxDay.insets = new Insets(0, 0, 5, 0);
+		gbc_comboBoxDay.gridx = 1;
+		gbc_comboBoxDay.gridy = 0;
+		panel_3.add(comboBoxDay, gbc_comboBoxDay);
 
-			JLabel lblAnkunft = new JLabel("Ankunft");
-			GridBagConstraints gbc_lblAnkunft = new GridBagConstraints();
-			gbc_lblAnkunft.insets = new Insets(0, 0, 5, 5);
-			gbc_lblAnkunft.anchor = GridBagConstraints.WEST;
-			gbc_lblAnkunft.gridx = 0;
-			gbc_lblAnkunft.gridy = 1;
-			panel_3.add(lblAnkunft, gbc_lblAnkunft);
+		JLabel lblAnkunft = new JLabel("Ankunft");
+		GridBagConstraints gbc_lblAnkunft = new GridBagConstraints();
+		gbc_lblAnkunft.insets = new Insets(0, 0, 5, 5);
+		gbc_lblAnkunft.anchor = GridBagConstraints.WEST;
+		gbc_lblAnkunft.gridx = 0;
+		gbc_lblAnkunft.gridy = 1;
+		panel_3.add(lblAnkunft, gbc_lblAnkunft);
 
-			JComboBox<String> comboBoxArrival = new JComboBox<String>();
-			comboBoxArrival.setModel(new DefaultComboBoxModel<String>(new String[] {"Zu Fuss", "Fahrrad", "\u00D6PNV", "Auto"}));
-			GridBagConstraints gbc_comboBoxArrival = new GridBagConstraints();
-			gbc_comboBoxArrival.fill = GridBagConstraints.HORIZONTAL;
-			gbc_comboBoxArrival.insets = new Insets(0, 0, 5, 0);
-			gbc_comboBoxArrival.gridx = 1;
-			gbc_comboBoxArrival.gridy = 1;
-			panel_3.add(comboBoxArrival, gbc_comboBoxArrival);
+		JComboBox<String> comboBoxArrival = new JComboBox<String>();
+		comboBoxArrival.setEnabled(_resultlist);
+		comboBoxArrival.setModel(new DefaultComboBoxModel<String>(new String[] {"Zu Fuss", "Fahrrad", "Bus", "Auto"}));
+		GridBagConstraints gbc_comboBoxArrival = new GridBagConstraints();
+		gbc_comboBoxArrival.fill = GridBagConstraints.HORIZONTAL;
+		gbc_comboBoxArrival.insets = new Insets(0, 0, 5, 0);
+		gbc_comboBoxArrival.gridx = 1;
+		gbc_comboBoxArrival.gridy = 1;
+		panel_3.add(comboBoxArrival, gbc_comboBoxArrival);
 
-			JLabel lblBeginn = new JLabel("Beginn");
-			GridBagConstraints gbc_lblBeginn = new GridBagConstraints();
-			gbc_lblBeginn.anchor = GridBagConstraints.WEST;
-			gbc_lblBeginn.insets = new Insets(0, 0, 5, 5);
-			gbc_lblBeginn.gridx = 0;
-			gbc_lblBeginn.gridy = 2;
-			panel_3.add(lblBeginn, gbc_lblBeginn);
+		JLabel lblBeginn = new JLabel("Beginn");
+		GridBagConstraints gbc_lblBeginn = new GridBagConstraints();
+		gbc_lblBeginn.anchor = GridBagConstraints.WEST;
+		gbc_lblBeginn.insets = new Insets(0, 0, 5, 5);
+		gbc_lblBeginn.gridx = 0;
+		gbc_lblBeginn.gridy = 2;
+		panel_3.add(lblBeginn, gbc_lblBeginn);
 
-			JSlider sliderStarttime = new JSlider();
-			sliderStarttime.setValue(9);
-			sliderStarttime.setMaximum(24);
-			GridBagConstraints gbc_sliderStarttime = new GridBagConstraints();
-			gbc_sliderStarttime.insets = new Insets(0, 0, 5, 0);
-			gbc_sliderStarttime.fill = GridBagConstraints.HORIZONTAL;
-			gbc_sliderStarttime.anchor = GridBagConstraints.NORTH;
-			gbc_sliderStarttime.gridx = 1;
-			gbc_sliderStarttime.gridy = 2;
-			panel_3.add(sliderStarttime, gbc_sliderStarttime);
+		JSlider sliderStarttime = new JSlider();
+		sliderStarttime.setEnabled(_resultlist);
+		sliderStarttime.setValue(9);
+		sliderStarttime.setMaximum(24);
+		GridBagConstraints gbc_sliderStarttime = new GridBagConstraints();
+		gbc_sliderStarttime.insets = new Insets(0, 0, 5, 0);
+		gbc_sliderStarttime.fill = GridBagConstraints.HORIZONTAL;
+		gbc_sliderStarttime.anchor = GridBagConstraints.NORTH;
+		gbc_sliderStarttime.gridx = 1;
+		gbc_sliderStarttime.gridy = 2;
+		panel_3.add(sliderStarttime, gbc_sliderStarttime);
 
-			JLabel lblStarttime = new JLabel("9 Uhr");
-			GridBagConstraints gbc_lblStarttime = new GridBagConstraints();
-			gbc_lblStarttime.insets = new Insets(0, 0, 5, 0);
-			gbc_lblStarttime.gridx = 1;
-			gbc_lblStarttime.gridy = 3;
-			panel_3.add(lblStarttime, gbc_lblStarttime);
+		JLabel lblStarttime = new JLabel("9 Uhr");
+		GridBagConstraints gbc_lblStarttime = new GridBagConstraints();
+		gbc_lblStarttime.insets = new Insets(0, 0, 5, 0);
+		gbc_lblStarttime.gridx = 1;
+		gbc_lblStarttime.gridy = 3;
+		panel_3.add(lblStarttime, gbc_lblStarttime);
 
-			JLabel lblDauer = new JLabel("Dauer");
-			GridBagConstraints gbc_lblDauer = new GridBagConstraints();
-			gbc_lblDauer.anchor = GridBagConstraints.WEST;
-			gbc_lblDauer.insets = new Insets(0, 0, 5, 5);
-			gbc_lblDauer.gridx = 0;
-			gbc_lblDauer.gridy = 4;
-			panel_3.add(lblDauer, gbc_lblDauer);
+		JLabel lblDauer = new JLabel("Dauer");
+		GridBagConstraints gbc_lblDauer = new GridBagConstraints();
+		gbc_lblDauer.anchor = GridBagConstraints.WEST;
+		gbc_lblDauer.insets = new Insets(0, 0, 5, 5);
+		gbc_lblDauer.gridx = 0;
+		gbc_lblDauer.gridy = 4;
+		panel_3.add(lblDauer, gbc_lblDauer);
 
-			JSlider sliderDuration = new JSlider();
-			sliderDuration.setValue(9);
-			sliderDuration.setMaximum(96);
-			GridBagConstraints gbc_sliderDuration = new GridBagConstraints();
-			gbc_sliderDuration.insets = new Insets(0, 0, 5, 0);
-			gbc_sliderDuration.fill = GridBagConstraints.HORIZONTAL;
-			gbc_sliderDuration.gridx = 1;
-			gbc_sliderDuration.gridy = 4;
-			panel_3.add(sliderDuration, gbc_sliderDuration);
+		JSlider sliderDuration = new JSlider();
+		sliderDuration.setEnabled(_resultlist);
+		sliderDuration.setValue(9);
+		sliderDuration.setMaximum(96);
+		GridBagConstraints gbc_sliderDuration = new GridBagConstraints();
+		gbc_sliderDuration.insets = new Insets(0, 0, 5, 0);
+		gbc_sliderDuration.fill = GridBagConstraints.HORIZONTAL;
+		gbc_sliderDuration.gridx = 1;
+		gbc_sliderDuration.gridy = 4;
+		panel_3.add(sliderDuration, gbc_sliderDuration);
 
-			JLabel lblDuration = new JLabel("2.25 h");
-			GridBagConstraints gbc_lblDuration = new GridBagConstraints();
-			gbc_lblDuration.gridx = 1;
-			gbc_lblDuration.gridy = 5;
-			panel_3.add(lblDuration, gbc_lblDuration);
+		JLabel lblDuration = new JLabel("2.25 h");
+		GridBagConstraints gbc_lblDuration = new GridBagConstraints();
+		gbc_lblDuration.gridx = 1;
+		gbc_lblDuration.gridy = 5;
+		panel_3.add(lblDuration, gbc_lblDuration);
 
-			// Funktionen
-			sliderStarttime.addChangeListener(new ChangeListener() {
-				public void stateChanged(ChangeEvent arg0) {
-					starttime = sliderStarttime.getValue();
-					lblStarttime.setText(String.valueOf(starttime) + " Uhr");
-				}
-			});
+		// Funktionen
+		sliderStarttime.addChangeListener(new ChangeListener() {
+			public void stateChanged(ChangeEvent arg0) {
+				starttime = sliderStarttime.getValue();
+				lblStarttime.setText(String.valueOf(starttime) + " Uhr");
+			}
+		});
 
-			sliderDuration.addChangeListener(new ChangeListener() {
-				public void stateChanged(ChangeEvent e) {
-					duration = (double)sliderDuration.getValue() / 4.0;
-					lblDuration.setText(String.valueOf(duration) + " h");
-				}
-			});
-			
-			comboBoxDay.addActionListener(new ActionListener() {
-				public void actionPerformed(ActionEvent arg0) {
-					day = comboBoxDay.getSelectedIndex() + 1;
-				}
-			});
-			
-			comboBoxArrival.addActionListener(new ActionListener() {
-				public void actionPerformed(ActionEvent e) {
-					arrival = comboBoxArrival.getSelectedItem().toString();
-				}
-			});
-		//}
+		sliderDuration.addChangeListener(new ChangeListener() {
+			public void stateChanged(ChangeEvent e) {
+				duration = (double)sliderDuration.getValue() / 4.0;
+				lblDuration.setText(String.valueOf(duration) + " h");
+			}
+		});
+
+		comboBoxDay.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				day = comboBoxDay.getSelectedIndex() + 1;
+			}
+		});
+
+		comboBoxArrival.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				arrival = comboBoxArrival.getSelectedItem().toString();
+			}
+		});
+
 
 		JPanel panel_2 = new JPanel();
 		FlowLayout flowLayout = (FlowLayout) panel_2.getLayout();

@@ -216,6 +216,7 @@ public class ProfileEditor extends JPanel {
 		model = new DefaultListModel<JCheckBox>();
 		for(String s:profile.getCategories()){
 			model.addElement(new JCheckBox(s));
+			model.get(model.getSize()-1).setSelected(true);
 		}
 		
 		JCheckBoxList checkBoxList = new JCheckBoxList(model);
