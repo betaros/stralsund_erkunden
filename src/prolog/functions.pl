@@ -213,11 +213,13 @@ Return = Rückgabewert wird true oder false
 Price = Gesamtpreis der Tour
 
 Beispiel positiv an einem Tag:
-checkTimeLine([1,2], [['Haus 8',1,830,100,'Car'],['Zoo',1,1030,100,'Car']],800, 2200, 'X Sterne Hotel', 1000000, Return, Price).
+checkTimeLine([1,2], [['Haus 8',1,1030,100,'Car'],['Zoo',1,1230,100,'Car']],800, 2200, 'X Sterne Hotel', 1000000, Return, Price).
 Beispiel negativ an einem Tag:
-checkTimeLine([1,2],[['Haus 8',1,830,100,'Car'],['Zoo',1,930,100,'Car']],800, 2200, '1 Sterne Hotel', 100000, Return, Price).
+checkTimeLine([1,2],[['Haus 8',1,1030,100,'Car'],['Zoo',1,1130,100,'Car']],800, 2200, '1 Sterne Hotel', 100000, Return, Price).
+Beispiel negativ an einem Tag:
+checkTimeLine([1,2], [['Haus 8',1,830,100,'Car'],['Zoo',1,1230,100,'Car']],800, 2200, 'X Sterne Hotel', 1000000, Return, Price).
 Beispiel positiv an 2 Tagen:
-checkTimeLine([1,2],[['Haus 8',1,830,100,'Car'],['Zoo',2,1030,100,'Car']],800, 2200, '1 Sterne Hotel', 100000, Return, Price).
+checkTimeLine([1,2],[['Haus 8',1,1030,100,'Car'],['Zoo',2,1030,100,'Car']],800, 2200, '1 Sterne Hotel', 100000, Return, Price).
 Beispiel negativ an 2 Tagen weil letztes Event zu lange:
 checkTimeLine([1,2],[['Haus 8',1,830,100,'Car'],['Zoo',2,2130,100,'Car']],800, 2200, '1 Sterne Hotel', 100000, Return, Price).
 Beispiel negativ an 2 Tagen:
@@ -227,7 +229,7 @@ checkTimeLine([1,2],[['Haus 8',1,830,100,'Car'],['Haus 8',2,830,100,'Car'],['Zoo
 Beispiel negativ an 2 Tagen weil Budget zu gering:
 checkTimeLine([1,2],[['Haus 8',1,830,100,'Car'],['Haus 8',2,830,100,'Car'],['Zoo',2,1030,100,'Car']],800, 2200, '1 Sterne Hotel', 450000, Return, Price).
 Beispiel positiv an 2 Tagen:
-checkTimeLine([1,2],[['Haus 8',1,830,100,'Car'],['Meeresmuseum',2,830,100,'Car'],['Zoo',2,1030,100,'Car']], 800, 2200, '2 Sterne Hotel', 100000, Return, Price).
+checkTimeLine([1,2],[['Haus 8',1,930,100,'Car'],['Meeresmuseum',2,930,100,'Car'],['Zoo',2,1100,100,'Car']], 800, 2200, '2 Sterne Hotel', 100000, Return, Price).
 */ 
 
 
@@ -235,7 +237,7 @@ checkTimeLine(Persons,[EventHead|EventsTail],DayStart, DayEnd, Hotel, Budget, Re
 	(
 		write('Prüfe Event ohne Vorgänger'), nl,
 		calcHotelPrice(Persons, Hotel, HotelPrice),
-		[ThisEvent,_,EventStartTime,_,Vehicle] = EventHead,
+		[ThisEvent,_,EventStartTime,EventTime,Vehicle] = EventHead,
 		write(Hotel + " zu " + ThisEvent), nl,
 		calcApproachForEvent(Persons, _, ThisEvent, Hotel, Vehicle, EventStartTime, [_,_,_,RealStartTime,Price1]),
 		calcEventPrice(Persons, ThisEvent, Price2),
@@ -244,6 +246,7 @@ checkTimeLine(Persons,[EventHead|EventsTail],DayStart, DayEnd, Hotel, Budget, Re
 		RealStartTime >= DayStart,
 		Price3 is Price1 + Price2 + HotelPrice,
 		Budget >= Price3,
+		checkBussinesHours(ThisEvent, EventStartTime, EventTime),
 		write("Event gültig"), nl,
 		write("checkTimeLine 1"), nl,
 		checkTimeLine(Persons, EventHead, EventsTail, DayStart, DayEnd, Hotel, Budget, Return1, Price4),
@@ -263,7 +266,7 @@ checkTimeLine(Persons,[EventHead|EventsTail],DayStart, DayEnd, Hotel, Budget, Re
 checkTimeLine(Persons, PrevEventInput,[EventHead|EventsTail],DayStart, DayEnd, Hotel,Budget, Return, Price):-
 	(
 		write('Prüfe Event mit Vorgänger'), nl,
-		[ThisEvent,Day,EventStartTime,_,Vehicle] = EventHead,
+		[ThisEvent,Day,EventStartTime,EventTime,Vehicle] = EventHead,
 		[PrevEvent,PrevDay,PrevEventStartTime,PrevEventTime,_] = PrevEventInput,
 		write("Prüfe " + PrevEvent + " und " + ThisEvent), nl,
 		((
@@ -298,6 +301,7 @@ checkTimeLine(Persons, PrevEventInput,[EventHead|EventsTail],DayStart, DayEnd, H
 		Price is Price3 + Price2 + Price1,
 		write("Gesamtpreis bis hier: "+Price), nl,
 		Budget >= Price,
+		checkBussinesHours(ThisEvent, EventStartTime, EventTime),
 		write("Event gültig"), nl
 	)
 	;
@@ -320,6 +324,7 @@ checkTimeLine(Persons, PrevEventInput, [], _, DayEnd, Hotel, _, Return, Price):-
 		Price is Price1 + HotelPrice,
 		% Prüfe Preis und Budget
 		write('Letztes Event des Tages gültig'), nl,
+		checkBussinesHours(PrevEvent, PrevEventStartTime, PrevEventTime),
 		Return = true
 	)
 	;
@@ -424,3 +429,13 @@ Findet Restaurant passend zur Gruppe
 */
 findRestaurant():-
 	write().
+	
+/*
+Prüft die Öffnungszeiten
+*/
+checkBussinesHours(ThisEvent, EventStartTime, EventTime):-
+	event(ThisEvent,_,_,_,_,[Opening, Closing]),
+	EventStartTime >= Opening,
+	EventEndTime is EventStartTime + EventTime,
+	EventEndTime =< Closing.
+	
