@@ -55,35 +55,35 @@ event(	'Nautineum',
 event(	'Marinemuseum',
 	[54.309746,13.119041],
 	['Freizeit','Museum','Bildung'],
-	['Fast-Food'],
+	[],
 	[2000,1000],
 	[930, 2100]).
 	
 event(	'Fachhochschule Stralsund',
 	[54.339149,13.076232],
 	['Bildung','Studium'],
-	['Fast-Food'],
+	['Kantinenessen','Mittag'],
 	[0,0],
 	[930, 2100]).
 	
 event(	'Zoo',
 	[54.319651,13.051815],
 	['Tiere'],
-	['Fast-Food'],
+	[],
 	[2000,1000],
 	[930, 2100]).
 	
 event(	'Cinestar',
 	[54.311055,13.090076],
 	['Freizeit','Unterhaltung'],
-	['Fast-Food'],
+	[],
 	[2000,1000],
 	[930, 2100]).
 	
 event(	'Haus 8',
 	[54.340094,13.076638],
 	['Bar','Kneipe'],
-	['Fast-Food'],
+	[],
 	[0,0],
 	[930, 2100]).
 	
