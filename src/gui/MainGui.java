@@ -172,6 +172,16 @@ public class MainGui {
 		summaryText.append("\n");
 		summaryText.append("\n");
 		
+		summaryText.append("Hotelkategorien:");
+		summaryText.append("\n");
+		for(String s:profile.getSelectedHotel()){
+			summaryText.append(s);
+			summaryText.append(" Sterne");
+			summaryText.append("\n");
+		}
+		
+		summaryText.append("\n");
+		
 		if(profile.getAdultCounter() > 0) {
 			summaryText.append(String.valueOf(profile.getAdultCounter()));
 			if(profile.getAdultCounter() == 1){

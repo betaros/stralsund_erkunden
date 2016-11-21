@@ -242,6 +242,7 @@ public class Result extends JPanel {
 		sliderStarttime.addChangeListener(new ChangeListener() {
 			public void stateChanged(ChangeEvent arg0) {
 				starttime = sliderStarttime.getValue();
+				event.setStartTime(starttime);
 				lblStarttime.setText(String.valueOf(starttime) + " Uhr");
 			}
 		});
@@ -249,6 +250,7 @@ public class Result extends JPanel {
 		sliderDuration.addChangeListener(new ChangeListener() {
 			public void stateChanged(ChangeEvent e) {
 				duration = (double)sliderDuration.getValue() / 4.0;
+				event.setDuration(duration);
 				lblDuration.setText(String.valueOf(duration) + " h");
 			}
 		});
@@ -256,6 +258,7 @@ public class Result extends JPanel {
 		comboBoxDay.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
 				day = comboBoxDay.getSelectedIndex() + 1;
+				event.setDay(day);
 			}
 		});
 

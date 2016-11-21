@@ -117,6 +117,46 @@ public class PrologConnector {
 	}
 
 	/**
+	 * Hole passende Hotels zu Hotelkategorien
+	 * 
+	 * @param hotelCategories
+	 * @return
+	 */
+	public ArrayList<Event> findHotels(ArrayList<String> hotelCategories){
+		Term HotelCategories = Util.textToTerm(prologListGenerator(hotelCategories));
+		Variable Hotels = new Variable("Hotels");
+		
+		Query query =
+				new Query(
+						"searchHotelsOnCategory",
+						new Term[] {HotelCategories, Hotels}
+						);
+		
+		ArrayList<Event> hotelList = new ArrayList<Event>();
+		ArrayList<String> categories = new ArrayList<String>();
+		categories.add("Hotel");
+		
+		if(query.hasSolution()){
+			Map<String, Term> solution = query.oneSolution();
+			String[] array = solution.get("Hotels").toString().split(",");
+			for(int i = 0; i<array.length-1; i++){
+				array[i] = array[i].replaceAll("[^A-Za-z0-9 ]", "");
+				array[i] = array[i].trim();
+				if(debug){
+					System.out.println("findHotels: " + array[i]);
+				}
+				
+				Event e = new Event(array[i], 0, 0, 0, 0, categories, new ArrayList<String>(), 1, 0, 0, 0, 0);
+				if (!hotelList.contains(e)) {
+					hotelList.add(e);
+				}
+			}
+		}
+		
+		return hotelList;
+	}
+	
+	/**
 	 * Berechnet die Distanz zwischen zwei Orten
 	 * @param placeA
 	 * @param placeB

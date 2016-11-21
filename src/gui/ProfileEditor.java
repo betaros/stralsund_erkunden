@@ -529,6 +529,11 @@ public class ProfileEditor extends JPanel {
 		});
 	}
 
+	/**
+	 * Gebe Profil zurueck
+	 * 
+	 * @return
+	 */
 	public Profile getProfile(){
 		Profile tempProfile = new Profile(days, budgetInCent, adultCounter, childCounter);
 		if(dayBegin<dayEnd){
@@ -562,7 +567,8 @@ public class ProfileEditor extends JPanel {
 
 		for(int i = 0; i < modelHotel.getSize(); i++){
 			if(modelHotel.get(i).isSelected()){
-				selectedHotel.add(modelHotel.get(i).getText());
+				String hotelCategory = modelHotel.get(i).getText().replaceAll("[^0-9]", "");
+				selectedHotel.add(hotelCategory);
 			}
 		}
 

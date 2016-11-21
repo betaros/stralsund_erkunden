@@ -170,16 +170,22 @@ public class MainPanel extends JPanel {
 	public boolean showSearchResults(Profile _p){
 		profile = _p;
 		ArrayList<String> categoryList = profile.getSelectedCategories();
-		if(categoryList.isEmpty()){
+		ArrayList<String> hotelList = profile.getSelectedHotel();
+		ArrayList<String> foodList = profile.getSelectedFood();
+		if(categoryList.isEmpty() || hotelList.isEmpty() || foodList.isEmpty()){
 			return false;
 		}
 		
-		ArrayList<String> eventStringList = prologConnector.getEventsByPrologWithCategories(categoryList); 
+		ArrayList<String> eventStringList = prologConnector.getEventsByPrologWithCategories(categoryList);
+		ArrayList<Event> hotelArrayList = prologConnector.findHotels(hotelList);
 		eventStringList.removeAll(Collections.singleton(null));
 		
 		resultArrayList.removeAll(resultArrayList);
 		for(String s:eventStringList){
 			resultArrayList.add(prologConnector.findEvent(s));
+		}
+		for(Event e:hotelArrayList){
+			resultArrayList.add(e);
 		}
 		
 		resultArrayList.removeAll(Collections.singleton(null));
