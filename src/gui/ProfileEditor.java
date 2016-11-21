@@ -216,6 +216,7 @@ public class ProfileEditor extends JPanel {
 		model = new DefaultListModel<JCheckBox>();
 		for(String s:profile.getCategories()){
 			model.addElement(new JCheckBox(s));
+			model.get(model.getSize()-1).setSelected(true);
 		}
 		
 		JCheckBoxList checkBoxList = new JCheckBoxList(model);
@@ -322,6 +323,19 @@ public class ProfileEditor extends JPanel {
 		}
 		
 		tempProfile.setSelectedCategories(selectedCategories);
+		
+		String budget = textFieldBudget.getText();
+		budget = budget.replaceAll(",", ".");
+		budget = budget.replaceAll("[^0-9.]", "");
+		try {
+			double budgetDouble = Double.parseDouble(budget) * 100;
+			int budgetInt = (int) budgetDouble;
+			if(budgetInt >= 0){
+				tempProfile.setBudgetInCent(budgetInt);
+			}
+		} catch (Exception e) {
+			
+		}
 		
 		return tempProfile;
 	}

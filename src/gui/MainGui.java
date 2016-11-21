@@ -158,6 +158,10 @@ public class MainGui {
 		});
 	}
 
+	/**
+	 * Erzeugt Zusammenfassung
+	 * @return
+	 */
 	private String generateSummary(){
 		StringBuilder summaryText = new StringBuilder();
 
