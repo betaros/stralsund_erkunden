@@ -230,7 +230,7 @@ public class MainPanel extends JPanel {
 	 * Zeige Zeitplan an
 	 */
 	public void showTimePlan(){
-		ArrayList<String> categories = new ArrayList<String>();
+		/*ArrayList<String> categories = new ArrayList<String>();
 		categories.add("Shopping");
 		categories.add("Schwimmen");
     	Event event = new Event("Hansedom", 52.1, 19.1, 250, 350, categories, 1, 0, 0, "Auto");
@@ -244,7 +244,7 @@ public class MainPanel extends JPanel {
         planList.add(r, gbc, 0);
 
         validate();
-        repaint();
+        repaint();*/
 	}
 	
 }

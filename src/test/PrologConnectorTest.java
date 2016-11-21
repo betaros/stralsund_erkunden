@@ -16,12 +16,15 @@ public class PrologConnectorTest {
 	@Test
 	public void testFindEvent() {
 		Event result = pc.findEvent("Hansedom");
+		ArrayList<String> food = new ArrayList<String>();
+		food.add("Fast-Food");
+		
 		ArrayList<String> categories = new ArrayList<String>();
 		categories.add("Sport");
 		categories.add("Schwimmen");
 		categories.add("Sauna");
 		
-		Event toTestEvent = new Event("Hansedom", 54.320021, 13.04384, 2000, 1000, categories, 1, 0, 0, "Auto");
+		Event toTestEvent = new Event("Hansedom", 54.320021, 13.04384, 2000, 1000, categories, food, 800, 1000, 1, 0, 0, "Auto");
 		
 		StringBuilder expected = new StringBuilder();
 		expected.append(toTestEvent.getName());

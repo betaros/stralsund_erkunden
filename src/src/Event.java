@@ -9,6 +9,8 @@ public class Event {
 	private double latitude;
 	private double longitude;
 	private ArrayList<String> categories;
+	private ArrayList<String> food;
+
 	private GeoPosition geoPos;
 	
 	private int priceInCentAdult;
@@ -17,7 +19,8 @@ public class Event {
 	private int day;
 	private int startTime;
 	private double duration;
-	private String arrival;
+	private int businesshoursBegin;
+	private int businesshoursEnd;
 
 	/**
 	 * 
@@ -27,22 +30,26 @@ public class Event {
 	 * @param _priceAdult
 	 * @param _priceChild
 	 * @param _cat
+	 * @param _food
 	 * @param _day
 	 * @param _startTime
 	 * @param _duration
-	 * @param _arrival
+	 * @param _businesshoursBegin
+	 * @param _businesshoursEnd
 	 */
-	public Event(String _name, double _lat, double _lon, int _priceAdult, int _priceChild, ArrayList<String> _cat, int _day, int _startTime, double _duration, String _arrival){
+	public Event(String _name, double _lat, double _lon, int _priceAdult, int _priceChild, ArrayList<String> _cat, ArrayList<String> _food, int _day, int _startTime, double _duration, int _businesshoursBegin, int _businesshoursEnd){
 		this.name = _name;
 		this.latitude = _lat;
 		this.longitude = _lon;
 		this.priceInCentChild = _priceChild;
 		this.priceInCentAdult = _priceAdult;
 		this.categories = _cat;
+		this.food = _food;
 		this.day = _day;
 		this.startTime = _startTime;
 		this.duration = _duration;
-		this.arrival = _arrival;
+		this.businesshoursBegin = _businesshoursBegin;
+		this.businesshoursEnd = _businesshoursEnd;
 		
 		this.geoPos = new GeoPosition(_lat, _lon);
 	}
@@ -75,6 +82,13 @@ public class Event {
 		return categories;
 	}
 
+	/**
+	 * @return the food
+	 */
+	public ArrayList<String> getFood() {
+		return food;
+	}
+	
 	/**
 	 * @return the geoPos
 	 */
@@ -139,17 +153,17 @@ public class Event {
 	}
 	
 	/**
-	 * @return the arrival
+	 * @return the businesshoursBegin
 	 */
-	public String getArrival() {
-		return arrival;
+	public int getBusinesshoursBegin() {
+		return businesshoursBegin;
 	}
 
 	/**
-	 * @param arrival the arrival to set
+	 * @return the businesshoursEnd
 	 */
-	public void setArrival(String arrival) {
-		this.arrival = arrival;
+	public int getBusinesshoursEnd() {
+		return businesshoursEnd;
 	}
 	
 	/**

@@ -29,21 +29,25 @@ public class PrologConnector {
 		Atom Name = new Atom(title);
 		Variable Position = new Variable("Position");
 		Variable Categories = new Variable("Categories");
+		Variable Food = new Variable("Food");
 		Variable Price = new Variable("Price");
+		Variable Businesshours = new Variable("Businesshours");
 
 		Query query =
 				new Query(
 						"event",
-						new Term[] {Name, Position, Categories, Price}
+						new Term[] {Name, Position, Categories, Food, Price, Businesshours}
 						);
 
 		Event e = null;
 		
 		if(query.hasSolution()){
 			Map<String, Term> solution = query.oneSolution();
-			String arrayPosition[]   = solution.get("Position").toString().split(",");
-			String arrayCategories[] = solution.get("Categories").toString().split(",");
-			String arrayPrice[]      = solution.get("Price").toString().split(",");
+			String arrayPosition[]     = solution.get("Position").toString().split(",");
+			String arrayCategories[]   = solution.get("Categories").toString().split(",");
+			String arrayFood[]         = solution.get("Food").toString().split(",");
+			String arrayPrice[]        = solution.get("Price").toString().split(",");
+			String arrayBusinesshours[]        = solution.get("Businesshours").toString().split(",");
 
 			for(int i = 0; i<arrayPosition.length; i++){
 				arrayPosition[i] = arrayPosition[i].replaceAll("[^A-Za-z0-9.]", "");
@@ -59,6 +63,13 @@ public class PrologConnector {
 				}
 			}
 			
+			for(int i = 0; i<arrayFood.length; i++){
+				arrayFood[i] = arrayFood[i].replaceAll("[^A-Za-z0-9.]", "");
+				if(debug){
+					System.out.println("findEvent: Food:       " + arrayFood[i]);
+				}
+			}
+			
 			for(int i = 0; i<arrayPrice.length; i++){
 				arrayPrice[i] = arrayPrice[i].replaceAll("[^A-Za-z0-9.]", "");
 				if(debug){
@@ -66,21 +77,38 @@ public class PrologConnector {
 				}
 			}
 			
+			for(int i = 0; i<arrayBusinesshours.length; i++){
+				arrayBusinesshours[i] = arrayBusinesshours[i].replaceAll("[^A-Za-z0-9.]", "");
+				if(debug){
+					System.out.println("findEvent: Businesshours: " + arrayBusinesshours[i]);
+				}
+			}
+			
 			arrayPosition = Arrays.copyOf(arrayPosition, arrayPosition.length-1);
 			arrayCategories = Arrays.copyOf(arrayCategories, arrayCategories.length-1);
+			arrayFood = Arrays.copyOf(arrayFood, arrayFood.length-1);
 			arrayPrice = Arrays.copyOf(arrayPrice, arrayPrice.length-1);
+			arrayBusinesshours = Arrays.copyOf(arrayBusinesshours, arrayBusinesshours.length-1);
 			
 			double lat = Double.parseDouble(arrayPosition[0]);
 			double lon = Double.parseDouble(arrayPosition[1]);
 			int priceAdult = java.lang.Integer.parseInt(arrayPrice[0]);
 			int priceReduced = java.lang.Integer.parseInt(arrayPrice[1]);
 			ArrayList<String> categoryList = new ArrayList<String>();
+			ArrayList<String> foodList = new ArrayList<String>();
 
 			for(String category:arrayCategories){
 				categoryList.add(category);
 			}
 
-			e = new Event(title, lat, lon, priceAdult, priceReduced, categoryList, 1, 0, 0, "Auto");
+			for(String food:arrayFood){
+				foodList.add(food);
+			}
+			
+			int businessOpen = java.lang.Integer.parseInt(arrayBusinesshours[0]);
+			int businessClosed = java.lang.Integer.parseInt(arrayBusinesshours[1]);
+			
+			e = new Event(title, lat, lon, priceAdult, priceReduced, categoryList, foodList, 1, 0, 0, businessOpen, businessClosed, "Auto");
 		}
 
 		return e;
@@ -263,6 +291,70 @@ public class PrologConnector {
 		return categories;
 	}
 
+	/**
+	 * Gibt eine Liste aller Essenskategorien aus
+	 * @return
+	 */
+	public ArrayList<String> getFoodByProlog(){
+		ArrayList<String> foodCategories = new ArrayList<String>();
+		Variable X = new Variable("X");
+
+		Query query =
+				new Query(
+						"findAllFoodCategories",
+						new Term[] {X}
+						);
+
+		if(query.hasSolution()){
+			Map<String, Term> solution = query.oneSolution();
+			String[] array = solution.get("X").toString().split(" ");
+
+			for(int i = 0; i<array.length-1; i++){
+				array[i] = array[i].replaceAll("[^A-Za-z0-9 ]", "");
+				if (!foodCategories.contains(array[i])) {
+					foodCategories.add(array[i]);
+					if(debug){
+						System.out.println("getFoodByProlog: " + array[i]);
+					}
+				}
+			}
+		}
+
+		return foodCategories;
+	}
+	
+	/**
+	 * Gibt eine Liste aller Hotelkategorien aus
+	 * @return
+	 */
+	public ArrayList<String> getHotelByProlog(){
+		ArrayList<String> hotelCategories = new ArrayList<String>();
+		Variable X = new Variable("X");
+
+		Query query =
+				new Query(
+						"findAllHotelCategories",
+						new Term[] {X}
+						);
+
+		if(query.hasSolution()){
+			Map<String, Term> solution = query.oneSolution();
+			String[] array = solution.get("X").toString().split(" ");
+
+			for(int i = 0; i<array.length-1; i++){
+				array[i] = array[i].replaceAll("[^A-Za-z0-9 ]", "");
+				if (!hotelCategories.contains(array[i])) {
+					hotelCategories.add(array[i]);
+					if(debug){
+						System.out.println("getHotelByProlog: " + array[i]);
+					}
+				}
+			}
+		}
+
+		return hotelCategories;
+	}
+	
 	/**
 	 * Ueberprueft, ob ein Event zeitlich passt (einzelnes Event)
 	 * 

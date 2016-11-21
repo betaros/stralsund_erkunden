@@ -27,7 +27,6 @@ public class Result extends JPanel {
 	private int starttime = 0;
 	private int day = 1;
 	private double duration = 0.0d;
-	private String arrival = "Auto";
 
 	private Event event;
 	private Profile profile;
@@ -45,10 +44,12 @@ public class Result extends JPanel {
 
 		int reducedPriceInCents = event.getPriceInCentChild() * profile.getChildCounter();
 		int adultPriceInCents = event.getPriceInCentAdult() * profile.getAdultCounter();
-
+		int totalPriceInCents = reducedPriceInCents + adultPriceInCents;
+		
 		double reducedPrice = (double)(reducedPriceInCents) / 100.0;
 		double adultPrice = (double)(adultPriceInCents) / 100.0;
-
+		double totalPrice = (double)(totalPriceInCents) / 100.0;
+		
 		GridBagLayout gridBagLayout = new GridBagLayout();
 		gridBagLayout.columnWidths = new int[]{0, 0};
 		gridBagLayout.rowHeights = new int[]{0, 0, 0, 0, 0};
@@ -56,47 +57,47 @@ public class Result extends JPanel {
 		gridBagLayout.rowWeights = new double[]{0.0, 0.0, 0.0, 0.0, Double.MIN_VALUE};
 		setLayout(gridBagLayout);
 
-		JPanel panel = new JPanel();
-		GridBagConstraints gbc_panel = new GridBagConstraints();
-		gbc_panel.anchor = GridBagConstraints.WEST;
-		gbc_panel.insets = new Insets(0, 0, 5, 0);
-		gbc_panel.fill = GridBagConstraints.VERTICAL;
-		gbc_panel.gridx = 0;
-		gbc_panel.gridy = 0;
-		add(panel, gbc_panel);
+		JPanel panelTitle = new JPanel();
+		GridBagConstraints gbc_panelTitle = new GridBagConstraints();
+		gbc_panelTitle.anchor = GridBagConstraints.WEST;
+		gbc_panelTitle.insets = new Insets(0, 0, 5, 0);
+		gbc_panelTitle.fill = GridBagConstraints.VERTICAL;
+		gbc_panelTitle.gridx = 0;
+		gbc_panelTitle.gridy = 0;
+		add(panelTitle, gbc_panelTitle);
 
 		JLabel lblTitle = new JLabel(event.getName());
 		lblTitle.setFont(new Font("Tahoma", Font.BOLD, 15));
-		panel.add(lblTitle);
+		panelTitle.add(lblTitle);
 
-		JPanel panel_1 = new JPanel();
-		GridBagConstraints gbc_panel_1 = new GridBagConstraints();
-		gbc_panel_1.insets = new Insets(0, 0, 5, 0);
-		gbc_panel_1.fill = GridBagConstraints.BOTH;
-		gbc_panel_1.gridx = 0;
-		gbc_panel_1.gridy = 1;
-		add(panel_1, gbc_panel_1);
-		GridBagLayout gbl_panel_1 = new GridBagLayout();
-		gbl_panel_1.columnWidths = new int[]{0, 0, 0, 0, 0, 0};
-		gbl_panel_1.rowHeights = new int[]{0, 0, 0};
-		gbl_panel_1.columnWeights = new double[]{0.0, 0.0, 0.0, 1.0, 1.0, Double.MIN_VALUE};
-		gbl_panel_1.rowWeights = new double[]{0.0, 0.0, Double.MIN_VALUE};
-		panel_1.setLayout(gbl_panel_1);
+		JPanel panelCost = new JPanel();
+		GridBagConstraints gbc_panelCost = new GridBagConstraints();
+		gbc_panelCost.insets = new Insets(0, 0, 5, 0);
+		gbc_panelCost.fill = GridBagConstraints.BOTH;
+		gbc_panelCost.gridx = 0;
+		gbc_panelCost.gridy = 1;
+		add(panelCost, gbc_panelCost);
+		GridBagLayout gbl_panelCost = new GridBagLayout();
+		gbl_panelCost.columnWidths = new int[]{0, 0, 0, 0, 0, 0};
+		gbl_panelCost.rowHeights = new int[]{0, 0, 0};
+		gbl_panelCost.columnWeights = new double[]{0.0, 0.0, 0.0, 1.0, 1.0, Double.MIN_VALUE};
+		gbl_panelCost.rowWeights = new double[]{0.0, 0.0, Double.MIN_VALUE};
+		panelCost.setLayout(gbl_panelCost);
+
+		JLabel lblChildren = new JLabel(String.valueOf(profile.getChildCounter()));
+		GridBagConstraints gbc_lblChildren = new GridBagConstraints();
+		gbc_lblChildren.insets = new Insets(0, 0, 5, 5);
+		gbc_lblChildren.gridx = 0;
+		gbc_lblChildren.gridy = 0;
+		panelCost.add(lblChildren, gbc_lblChildren);
 
 		JLabel lblKinder = new JLabel("Kinder");
 		GridBagConstraints gbc_lblKinder = new GridBagConstraints();
 		gbc_lblKinder.anchor = GridBagConstraints.WEST;
 		gbc_lblKinder.insets = new Insets(0, 0, 5, 5);
-		gbc_lblKinder.gridx = 0;
+		gbc_lblKinder.gridx = 1;
 		gbc_lblKinder.gridy = 0;
-		panel_1.add(lblKinder, gbc_lblKinder);
-
-		JLabel lblChildren = new JLabel(String.valueOf(profile.getChildCounter()));
-		GridBagConstraints gbc_lblChildren = new GridBagConstraints();
-		gbc_lblChildren.insets = new Insets(0, 0, 5, 5);
-		gbc_lblChildren.gridx = 1;
-		gbc_lblChildren.gridy = 0;
-		panel_1.add(lblChildren, gbc_lblChildren);
+		panelCost.add(lblKinder, gbc_lblKinder);
 
 		JLabel lblReducedPrice = new JLabel(String.format( "%.2f", reducedPrice ) + " \u20AC");
 		GridBagConstraints gbc_lblReducedPrice = new GridBagConstraints();
@@ -104,29 +105,29 @@ public class Result extends JPanel {
 		gbc_lblReducedPrice.insets = new Insets(0, 0, 5, 5);
 		gbc_lblReducedPrice.gridx = 3;
 		gbc_lblReducedPrice.gridy = 0;
-		panel_1.add(lblReducedPrice, gbc_lblReducedPrice);
+		panelCost.add(lblReducedPrice, gbc_lblReducedPrice);
 
-		JLabel lblOpeningHours = new JLabel("\u00D6ffnungszeiten");
-		GridBagConstraints gbc_lblOpeningHours = new GridBagConstraints();
-		gbc_lblOpeningHours.insets = new Insets(0, 0, 5, 0);
-		gbc_lblOpeningHours.gridx = 4;
-		gbc_lblOpeningHours.gridy = 0;
-		panel_1.add(lblOpeningHours, gbc_lblOpeningHours);
+		JLabel lblTotalCost = new JLabel("Gesamtkosten");
+		GridBagConstraints gbc_lblTotalCost = new GridBagConstraints();
+		gbc_lblTotalCost.insets = new Insets(0, 0, 5, 0);
+		gbc_lblTotalCost.gridx = 4;
+		gbc_lblTotalCost.gridy = 0;
+		panelCost.add(lblTotalCost, gbc_lblTotalCost);
+
+		JLabel lblAdult = new JLabel(String.valueOf(profile.getAdultCounter()));
+		GridBagConstraints gbc_lblAdult = new GridBagConstraints();
+		gbc_lblAdult.insets = new Insets(0, 0, 0, 5);
+		gbc_lblAdult.gridx = 0;
+		gbc_lblAdult.gridy = 1;
+		panelCost.add(lblAdult, gbc_lblAdult);
 
 		JLabel lblErwachsene = new JLabel("Erwachsene");
 		GridBagConstraints gbc_lblErwachsene = new GridBagConstraints();
 		gbc_lblErwachsene.insets = new Insets(0, 0, 0, 5);
 		gbc_lblErwachsene.anchor = GridBagConstraints.WEST;
-		gbc_lblErwachsene.gridx = 0;
+		gbc_lblErwachsene.gridx = 1;
 		gbc_lblErwachsene.gridy = 1;
-		panel_1.add(lblErwachsene, gbc_lblErwachsene);
-
-		JLabel lblAdult = new JLabel(String.valueOf(profile.getAdultCounter()));
-		GridBagConstraints gbc_lblAdult = new GridBagConstraints();
-		gbc_lblAdult.insets = new Insets(0, 0, 0, 5);
-		gbc_lblAdult.gridx = 1;
-		gbc_lblAdult.gridy = 1;
-		panel_1.add(lblAdult, gbc_lblAdult);
+		panelCost.add(lblErwachsene, gbc_lblErwachsene);
 
 		JLabel lblAdultPrice = new JLabel(String.format( "%.2f", adultPrice ) + " \u20AC");
 		GridBagConstraints gbc_lblAdultPrice = new GridBagConstraints();
@@ -134,21 +135,28 @@ public class Result extends JPanel {
 		gbc_lblAdultPrice.insets = new Insets(0, 0, 0, 5);
 		gbc_lblAdultPrice.gridx = 3;
 		gbc_lblAdultPrice.gridy = 1;
-		panel_1.add(lblAdultPrice, gbc_lblAdultPrice);
+		panelCost.add(lblAdultPrice, gbc_lblAdultPrice);
 
-		JPanel panel_3 = new JPanel();
-		GridBagConstraints gbc_panel_3 = new GridBagConstraints();
-		gbc_panel_3.insets = new Insets(0, 0, 5, 0);
-		gbc_panel_3.fill = GridBagConstraints.BOTH;
-		gbc_panel_3.gridx = 0;
-		gbc_panel_3.gridy = 2;
-		add(panel_3, gbc_panel_3);
-		GridBagLayout gbl_panel_3 = new GridBagLayout();
-		gbl_panel_3.columnWidths = new int[]{52, 200, 0};
-		gbl_panel_3.rowHeights = new int[]{26, 0, 0, 0, 0, 0, 0};
-		gbl_panel_3.columnWeights = new double[]{0.0, 1.0, Double.MIN_VALUE};
-		gbl_panel_3.rowWeights = new double[]{0.0, 0.0, 0.0, 0.0, 0.0, 0.0, Double.MIN_VALUE};
-		panel_3.setLayout(gbl_panel_3);
+		JLabel lblTotalCostResult = new JLabel(String.format( "%.2f", totalPrice ) + " \u20AC");
+		lblTotalCostResult.setFont(new Font("Tahoma", Font.PLAIN, 16));
+		GridBagConstraints gbc_lblTotalCostResult = new GridBagConstraints();
+		gbc_lblTotalCostResult.gridx = 4;
+		gbc_lblTotalCostResult.gridy = 1;
+		panelCost.add(lblTotalCostResult, gbc_lblTotalCostResult);
+
+		JPanel panelSettings = new JPanel();
+		GridBagConstraints gbc_panelSettings = new GridBagConstraints();
+		gbc_panelSettings.insets = new Insets(0, 0, 5, 0);
+		gbc_panelSettings.fill = GridBagConstraints.BOTH;
+		gbc_panelSettings.gridx = 0;
+		gbc_panelSettings.gridy = 2;
+		add(panelSettings, gbc_panelSettings);
+		GridBagLayout gbl_panelSettings = new GridBagLayout();
+		gbl_panelSettings.columnWidths = new int[]{52, 200, 0};
+		gbl_panelSettings.rowHeights = new int[]{26, 0, 0, 0, 0, 0};
+		gbl_panelSettings.columnWeights = new double[]{0.0, 1.0, Double.MIN_VALUE};
+		gbl_panelSettings.rowWeights = new double[]{0.0, 0.0, 0.0, 0.0, 0.0, Double.MIN_VALUE};
+		panelSettings.setLayout(gbl_panelSettings);
 
 		JLabel lblTag = new JLabel("Tag");
 		GridBagConstraints gbc_lblTag = new GridBagConstraints();
@@ -156,7 +164,7 @@ public class Result extends JPanel {
 		gbc_lblTag.anchor = GridBagConstraints.WEST;
 		gbc_lblTag.gridx = 0;
 		gbc_lblTag.gridy = 0;
-		panel_3.add(lblTag, gbc_lblTag);
+		panelSettings.add(lblTag, gbc_lblTag);
 
 		JComboBox<String> comboBoxDay = new JComboBox<String>();
 		comboBoxDay.setEnabled(_resultlist);
@@ -166,33 +174,15 @@ public class Result extends JPanel {
 		gbc_comboBoxDay.insets = new Insets(0, 0, 5, 0);
 		gbc_comboBoxDay.gridx = 1;
 		gbc_comboBoxDay.gridy = 0;
-		panel_3.add(comboBoxDay, gbc_comboBoxDay);
-
-		JLabel lblAnkunft = new JLabel("Ankunft");
-		GridBagConstraints gbc_lblAnkunft = new GridBagConstraints();
-		gbc_lblAnkunft.insets = new Insets(0, 0, 5, 5);
-		gbc_lblAnkunft.anchor = GridBagConstraints.WEST;
-		gbc_lblAnkunft.gridx = 0;
-		gbc_lblAnkunft.gridy = 1;
-		panel_3.add(lblAnkunft, gbc_lblAnkunft);
-
-		JComboBox<String> comboBoxArrival = new JComboBox<String>();
-		comboBoxArrival.setEnabled(_resultlist);
-		comboBoxArrival.setModel(new DefaultComboBoxModel<String>(new String[] {"Zu Fuss", "Fahrrad", "Bus", "Auto"}));
-		GridBagConstraints gbc_comboBoxArrival = new GridBagConstraints();
-		gbc_comboBoxArrival.fill = GridBagConstraints.HORIZONTAL;
-		gbc_comboBoxArrival.insets = new Insets(0, 0, 5, 0);
-		gbc_comboBoxArrival.gridx = 1;
-		gbc_comboBoxArrival.gridy = 1;
-		panel_3.add(comboBoxArrival, gbc_comboBoxArrival);
+		panelSettings.add(comboBoxDay, gbc_comboBoxDay);
 
 		JLabel lblBeginn = new JLabel("Beginn");
 		GridBagConstraints gbc_lblBeginn = new GridBagConstraints();
 		gbc_lblBeginn.anchor = GridBagConstraints.WEST;
 		gbc_lblBeginn.insets = new Insets(0, 0, 5, 5);
 		gbc_lblBeginn.gridx = 0;
-		gbc_lblBeginn.gridy = 2;
-		panel_3.add(lblBeginn, gbc_lblBeginn);
+		gbc_lblBeginn.gridy = 1;
+		panelSettings.add(lblBeginn, gbc_lblBeginn);
 
 		JSlider sliderStarttime = new JSlider();
 		sliderStarttime.setEnabled(_resultlist);
@@ -203,23 +193,23 @@ public class Result extends JPanel {
 		gbc_sliderStarttime.fill = GridBagConstraints.HORIZONTAL;
 		gbc_sliderStarttime.anchor = GridBagConstraints.NORTH;
 		gbc_sliderStarttime.gridx = 1;
-		gbc_sliderStarttime.gridy = 2;
-		panel_3.add(sliderStarttime, gbc_sliderStarttime);
+		gbc_sliderStarttime.gridy = 1;
+		panelSettings.add(sliderStarttime, gbc_sliderStarttime);
 
 		JLabel lblStarttime = new JLabel("9 Uhr");
 		GridBagConstraints gbc_lblStarttime = new GridBagConstraints();
 		gbc_lblStarttime.insets = new Insets(0, 0, 5, 0);
 		gbc_lblStarttime.gridx = 1;
-		gbc_lblStarttime.gridy = 3;
-		panel_3.add(lblStarttime, gbc_lblStarttime);
+		gbc_lblStarttime.gridy = 2;
+		panelSettings.add(lblStarttime, gbc_lblStarttime);
 
 		JLabel lblDauer = new JLabel("Dauer");
 		GridBagConstraints gbc_lblDauer = new GridBagConstraints();
 		gbc_lblDauer.anchor = GridBagConstraints.WEST;
 		gbc_lblDauer.insets = new Insets(0, 0, 5, 5);
 		gbc_lblDauer.gridx = 0;
-		gbc_lblDauer.gridy = 4;
-		panel_3.add(lblDauer, gbc_lblDauer);
+		gbc_lblDauer.gridy = 3;
+		panelSettings.add(lblDauer, gbc_lblDauer);
 
 		JSlider sliderDuration = new JSlider();
 		sliderDuration.setEnabled(_resultlist);
@@ -229,14 +219,14 @@ public class Result extends JPanel {
 		gbc_sliderDuration.insets = new Insets(0, 0, 5, 0);
 		gbc_sliderDuration.fill = GridBagConstraints.HORIZONTAL;
 		gbc_sliderDuration.gridx = 1;
-		gbc_sliderDuration.gridy = 4;
-		panel_3.add(sliderDuration, gbc_sliderDuration);
+		gbc_sliderDuration.gridy = 3;
+		panelSettings.add(sliderDuration, gbc_sliderDuration);
 
 		JLabel lblDuration = new JLabel("2.25 h");
 		GridBagConstraints gbc_lblDuration = new GridBagConstraints();
 		gbc_lblDuration.gridx = 1;
-		gbc_lblDuration.gridy = 5;
-		panel_3.add(lblDuration, gbc_lblDuration);
+		gbc_lblDuration.gridy = 4;
+		panelSettings.add(lblDuration, gbc_lblDuration);
 
 		// Funktionen
 		sliderStarttime.addChangeListener(new ChangeListener() {
@@ -259,28 +249,22 @@ public class Result extends JPanel {
 			}
 		});
 
-		comboBoxArrival.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				arrival = comboBoxArrival.getSelectedItem().toString();
-			}
-		});
 
-
-		JPanel panel_2 = new JPanel();
-		FlowLayout flowLayout = (FlowLayout) panel_2.getLayout();
-		flowLayout.setAlignment(FlowLayout.RIGHT);
-		GridBagConstraints gbc_panel_2 = new GridBagConstraints();
-		gbc_panel_2.fill = GridBagConstraints.BOTH;
-		gbc_panel_2.gridx = 0;
-		gbc_panel_2.gridy = 3;
-		add(panel_2, gbc_panel_2);
+		JPanel panelButtons = new JPanel();
+		FlowLayout fl_panelButtons = (FlowLayout) panelButtons.getLayout();
+		fl_panelButtons.setAlignment(FlowLayout.RIGHT);
+		GridBagConstraints gbc_panelButtons = new GridBagConstraints();
+		gbc_panelButtons.fill = GridBagConstraints.BOTH;
+		gbc_panelButtons.gridx = 0;
+		gbc_panelButtons.gridy = 3;
+		add(panelButtons, gbc_panelButtons);
 
 		btnRemoveButton = new JButton("-");
-		panel_2.add(btnRemoveButton);
+		panelButtons.add(btnRemoveButton);
 
 		if(_resultlist){
 			btnNewButton = new JButton("+");
-			panel_2.add(btnNewButton);
+			panelButtons.add(btnNewButton);
 		}
 	}
 
@@ -319,7 +303,6 @@ public class Result extends JPanel {
 		event.setDay(day);
 		event.setDuration(duration);
 		event.setStartTime(starttime);
-		event.setArrival(arrival);
 		return event;
 	}
 
