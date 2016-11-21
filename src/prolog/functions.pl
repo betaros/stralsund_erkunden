@@ -19,10 +19,14 @@ lonInKm(X, Res) :-
 * Sucht alle Kategorien
 */
 findAllCategories(Categories):-
-	findall(X, event(_,_,X,_), L),
+	findall(X, event(_,_,X,_,_,_), L),
 	appendCategories(C1,L),
 	Categories = C1.
 
+findAllFoodCategories(Categories):-
+	findall(X, event(_,_,_,X,_,_), L),
+	appendCategories(C1,L),
+	Categories = C1.
 	
 /* searchHotelCategories
 */
@@ -49,14 +53,14 @@ appendCategories(C,[R|L]):-
 */	
 calcDistance(EventA, EventB, Distance) :-
 	(
-		event(EventA, [XA, YA], _, _)
+		event(EventA, [XA, YA], _, _, _, _)
 		;
 		hotel(EventA, [XA, YA], _, _)	
 	),
 		(
-		event(EventB, [XB, YB], _, _)
+		event(EventB, [XB, YB],  _, _, _, _)
 		;
-		hotel(EventB, [XB, YB], _, _)	
+		hotel(EventB, [XB, YB],  _, _)	
 	),
 	latInKm(XA, XAinKm),
 	latInKm(XB, XBinKm),
@@ -75,7 +79,7 @@ calcDistance(EventA, EventB, Distance) :-
 * Gibt die möglichen Events zu den Kategorien zurück, wenn Events leer
 */
 searchEventsOnCategory(Categories,Events):-
-	findall([X,V], event(X,_,V,_), List),
+	findall([X,V], event(X,_,V, _, _,_), List),
 	compareCategories(List,Categories,Events1),
 	Events = Events1.
 	
@@ -126,7 +130,7 @@ checkEventForBudget(_,_,[],ValidEvents):-
 checkEventForBudget(Persons,Budget,[Event|MyEvents],ValidEvents):-
 	checkEventForBudget(Persons,Budget,MyEvents,ValidEvents1),
 	((
-		event(Event,_,_,[AdultPrice,ReducedPrice]),
+		event(Event,_,_,_,[AdultPrice,ReducedPrice],_),
 		[AdultCount|ReducedCount] = Persons,
 		Price is (AdultCount*AdultPrice)+(ReducedCount*ReducedPrice),
 		write(Price), nl,
@@ -331,7 +335,7 @@ Genutzt werden Price1 und Price2 für die Berechnung in der Überprüfung der Timel
 */
 calcEventPrice([AdultCount,ReducedCount], Event, Price):-
 	write("Berechne Preis für "+Event), nl,
-	event(Event,_,_,[AdultPrice,ReducedPrice]),
+	event(Event,_,_,_,[AdultPrice,ReducedPrice],_),
 	Price is (AdultCount*AdultPrice) + (ReducedCount*ReducedPrice),
 	write("-> Preis für " + Event + " ist: " + Price), nl. 
 	
