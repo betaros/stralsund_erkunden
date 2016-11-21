@@ -16,19 +16,23 @@ lonInKm(X, Res) :-
 /*----------------------------------------------------------------------------------------------*/
 
 /*
-* Sucht alle Kategorien
+* Sucht alle Kategorien für Events
 */
 findAllCategories(Categories):-
 	findall(X, event(_,_,X,_,_,_), L),
 	appendCategories(C1,L),
 	Categories = C1.
 
+/*
+* Sucht alle Kategorien für Restaurants, Imbisse ...
+*/
 findAllFoodCategories(Categories):-
 	findall(X, event(_,_,_,X,_,_), L),
 	appendCategories(C1,L),
 	Categories = C1.
 	
-/* searchHotelCategories
+/*
+* Sucht alle Kategorien der Hotels
 */
 findAllHotelCategories(Categories):-
 	findall(X, hotel(_,_,_,X), L),
@@ -168,23 +172,42 @@ compare_list([L1Head|L1Tail], List2):-
 
 
 /*
-Beispiel positiv an einem Tag:
-checkEventsOnTime([1,2], [['Haus 8',1,830,100,'Car'],['Zoo',1,1030,100,'Car']],800, 'X Sterne Hotel', 1000000, Return, Price).
-Beispiel negativ an einem Tag:
-checkEventsOnTime([1,2],[['Haus 8',1,830,100,'Car'],['Zoo',1,930,100,'Car']],800, '1 Sterne Hotel', 100000, Return, Price).
-Beispiel positiv an 2 Tagen:
-checkEventsOnTime([1,2],[['Haus 8',1,830,100,'Car'],['Zoo',2,1030,100,'Car']],800, '1 Sterne Hotel', 100000, Return, Price).
-Beispiel negativ an 2 Tagen:
-checkEventsOnTime([1,2],[['Haus 8',1,830,100,'Car'],['Haus 8',2,830,100,'Car'],['Zoo',2,930,100,'Car']],800, '1 Sterne Hotel', 100000, Return, Price).
-Beispiel negativ an 2 Tagen weil zu früh begonnen:
-checkEventsOnTime([1,2],[['Haus 8',1,830,100,'Car'],['Haus 8',2,830,100,'Car'],['Zoo',2,930,100,'Car']],830, '1 Sterne Hotelm', 100000, Return, Price).
-Beispiel negativ an 2 Tagen weil Budget zu gering:
-checkEventsOnTime([1,2],[['Haus 8',1,830,100,'Car'],['Haus 8',2,830,100,'Car'],['Zoo',2,1030,100,'Car']],800, '1 Sterne Hotel', 450000, Return, Price).
-Beispiel positiv an 2 Tagen:
-checkEventsOnTime([1,2],[['Haus 8',1,830,100,'Car'],['Meeresmuseum',2,830,100,'Car'],['Zoo',2,1030,100,'Car']], 800, '2 Sterne Hotel', 100000, Return, Price).
+Überprüft die gesamte Timeline
+*/
 
+checkEventsOnTime(Persons,[EventHead|EventsTail],DayStart, Hotel, HotelCategorie, Budget, Return, Price):-
+	((
+		nonvar(Hotel)
+	)
+	;
+	(
+		var(Hotel),
+		findHotelForCategorie(HotelCategorie, Hotel1),
+		Hotel = Hotel1
+	)),
+	checkTimeLine(Persons,[EventHead|EventsTail],DayStart, Hotel, Budget, Return, Price).	
+
+
+
+/*
+Beispiel positiv an einem Tag:
+checkTimeLine([1,2], [['Haus 8',1,830,100,'Car'],['Zoo',1,1030,100,'Car']],800, 'X Sterne Hotel', 1000000, Return, Price).
+Beispiel negativ an einem Tag:
+checkTimeLine([1,2],[['Haus 8',1,830,100,'Car'],['Zoo',1,930,100,'Car']],800, '1 Sterne Hotel', 100000, Return, Price).
+Beispiel positiv an 2 Tagen:
+checkTimeLine([1,2],[['Haus 8',1,830,100,'Car'],['Zoo',2,1030,100,'Car']],800, '1 Sterne Hotel', 100000, Return, Price).
+Beispiel negativ an 2 Tagen:
+checkTimeLine([1,2],[['Haus 8',1,830,100,'Car'],['Haus 8',2,830,100,'Car'],['Zoo',2,930,100,'Car']],800, '1 Sterne Hotel', 100000, Return, Price).
+Beispiel negativ an 2 Tagen weil zu früh begonnen:
+checkTimeLine([1,2],[['Haus 8',1,830,100,'Car'],['Haus 8',2,830,100,'Car'],['Zoo',2,930,100,'Car']],830, '1 Sterne Hotelm', 100000, Return, Price).
+Beispiel negativ an 2 Tagen weil Budget zu gering:
+checkTimeLine([1,2],[['Haus 8',1,830,100,'Car'],['Haus 8',2,830,100,'Car'],['Zoo',2,1030,100,'Car']],800, '1 Sterne Hotel', 450000, Return, Price).
+Beispiel positiv an 2 Tagen:
+checkTimeLine([1,2],[['Haus 8',1,830,100,'Car'],['Meeresmuseum',2,830,100,'Car'],['Zoo',2,1030,100,'Car']], 800, '2 Sterne Hotel', 100000, Return, Price).
 */ 
-checkEventsOnTime(Persons,[EventHead|EventsTail],DayStart, Hotel, Budget, Return, Price):-
+
+
+checkTimeLine(Persons,[EventHead|EventsTail],DayStart, Hotel, Budget, Return, Price):-
 	(
 		write('Prüfe Event ohne Vorgänger'), nl,
 		calcHotelPrice(Persons, Hotel, HotelPrice),
@@ -198,8 +221,8 @@ checkEventsOnTime(Persons,[EventHead|EventsTail],DayStart, Hotel, Budget, Return
 		Price3 is Price1 + Price2 + HotelPrice,
 		Budget >= Price3,
 		write("Event gültig"), nl,
-		write("CheckEventsOnTime 1"), nl,
-		checkEventsOnTime(Persons, EventHead, EventsTail, DayStart, Hotel, Budget, Return1, Price4),
+		write("checkTimeLine 1"), nl,
+		checkTimeLine(Persons, EventHead, EventsTail, DayStart, Hotel, Budget, Return1, Price4),
 		write("Price3 " + Price3 + " Price4 " + Price4), nl,
 		Price is Price3 + Price4,
 		write("Entgültiger Gesamtpreis: "+ Price), nl,
@@ -212,8 +235,8 @@ checkEventsOnTime(Persons,[EventHead|EventsTail],DayStart, Hotel, Budget, Return
 		Price = 0,
 		Return = false,!
 	).
-
-checkEventsOnTime(Persons, PrevEventInput,[EventHead|EventsTail],DayStart, Hotel,Budget, Return, Price):-
+	
+checkTimeLine(Persons, PrevEventInput,[EventHead|EventsTail],DayStart, Hotel,Budget, Return, Price):-
 	(
 		write('Prüfe Event mit Vorgänger'), nl,
 		[ThisEvent,Day,EventStartTime,_,Vehicle] = EventHead,
@@ -222,9 +245,9 @@ checkEventsOnTime(Persons, PrevEventInput,[EventHead|EventsTail],DayStart, Hotel
 		((
 			PrevDay \= Day,
 			write("Events an unterschiedlichen Tagen"), nl,
-			write("CheckEventsOnTime für Vorgängertag start"), nl,
-			checkEventsOnTime(Persons, PrevEventInput, [], _, Hotel, _, Return, Price1a),
-			write("CheckEventsOnTime für Vorgängertag beendet"), nl,
+			write("checkTimeLine für Vorgängertag start"), nl,
+			checkTimeLine(Persons, PrevEventInput, [], _, Hotel, _, Return, Price1a),
+			write("checkTimeLine für Vorgängertag beendet"), nl,
 			calcApproachForEvent(Persons, _, ThisEvent, Hotel, Vehicle, EventStartTime, [_,_,_,RealStartTime,Price1b]),
 			write("Price1a " + Price1a + " Price1b " + Price1b), nl,
 			Price1 is Price1a + Price1b,
@@ -243,8 +266,8 @@ checkEventsOnTime(Persons, PrevEventInput,[EventHead|EventsTail],DayStart, Hotel
 			write("Startzeit: "+RealStartTime), nl,
 			RealStartTime >= PrevEventEndTime		
 		)),
-		write("CheckEventsOnTime 3"), nl,
-		checkEventsOnTime(Persons, EventHead, EventsTail, DayStart, Hotel,Budget, Return1, Price2),
+		write("checkTimeLine 3"), nl,
+		checkTimeLine(Persons, EventHead, EventsTail, DayStart, Hotel,Budget, Return1, Price2),
 		Return = Return1,
 		calcEventPrice(Persons, ThisEvent, Price3),
 		write("Price1 " + Price1 + " Price2 " + Price2 +" Price3 " + Price3), nl,
@@ -260,7 +283,7 @@ checkEventsOnTime(Persons, PrevEventInput,[EventHead|EventsTail],DayStart, Hotel
 		Return = false,!
 	).
 
-checkEventsOnTime(Persons, PrevEventInput, [], _, Hotel, _, Return, Price):-
+checkTimeLine(Persons, PrevEventInput, [], _, Hotel, _, Return, Price):-
 	[PrevEvent, _, PrevEventStartTime, PrevEventTime, Vehicle] = PrevEventInput,
 	write("Kalkuliere letztes Event und Hotel: "+ PrevEvent), nl, nl,
 	calcApproachForEvent(Persons, PrevEvent, _, Hotel, Vehicle, PrevEventStartTime, [_,_,DriveTime,_,Price1]),
@@ -352,3 +375,10 @@ calcHotelPrice(Persons, Hotel, Price):-
 	HotelPrice is Rooms * PricePerRoom,
 	write("-> Preis für Hotel für diese Nacht: " + HotelPrice), nl,
 	Price is HotelPrice.
+	
+/*
+Findet Hotels zur angegebenen Categorie
+*/
+findHotelForCategorie(HotelCategorie, Hotel1):-
+	write('Suche Hotel zu Kategorien').
+	
