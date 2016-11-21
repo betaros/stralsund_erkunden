@@ -165,6 +165,13 @@ public class MainGui {
 	private String generateSummary(){
 		StringBuilder summaryText = new StringBuilder();
 
+		summaryText.append("Gesamtkosten: ");
+		summaryText.append("\n");
+		double totalCost = (double)profile.getTotalCost() / 100.0;
+		summaryText.append(String.format( "%.2f", totalCost ) + " \u20AC");
+		summaryText.append("\n");
+		summaryText.append("\n");
+		
 		if(profile.getAdultCounter() > 0) {
 			summaryText.append(String.valueOf(profile.getAdultCounter()));
 			if(profile.getAdultCounter() == 1){

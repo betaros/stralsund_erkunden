@@ -91,7 +91,12 @@ public class Result extends JPanel {
 		gbc_lblChildren.gridy = 0;
 		panelCost.add(lblChildren, gbc_lblChildren);
 
-		JLabel lblKinder = new JLabel("Kinder");
+		JLabel lblKinder = new JLabel("");
+		if(profile.getChildCounter()==1){
+			lblKinder.setText("Kind");
+		} else {
+			lblKinder.setText("Kinder");
+		}
 		GridBagConstraints gbc_lblKinder = new GridBagConstraints();
 		gbc_lblKinder.anchor = GridBagConstraints.WEST;
 		gbc_lblKinder.insets = new Insets(0, 0, 5, 5);
@@ -121,7 +126,12 @@ public class Result extends JPanel {
 		gbc_lblAdult.gridy = 1;
 		panelCost.add(lblAdult, gbc_lblAdult);
 
-		JLabel lblErwachsene = new JLabel("Erwachsene");
+		JLabel lblErwachsene = new JLabel("");
+		if(profile.getAdultCounter()==1){
+			lblErwachsene.setText("Erwachsener");
+		} else {
+			lblErwachsene.setText("Erwachsene");
+		}
 		GridBagConstraints gbc_lblErwachsene = new GridBagConstraints();
 		gbc_lblErwachsene.insets = new Insets(0, 0, 0, 5);
 		gbc_lblErwachsene.anchor = GridBagConstraints.WEST;

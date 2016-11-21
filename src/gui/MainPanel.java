@@ -119,9 +119,6 @@ public class MainPanel extends JPanel {
 		gbl_routingpanel.rowWeights = new double[]{1.0, Double.MIN_VALUE};
 		routingpanel.setLayout(gbl_routingpanel);
 		
-		GridBagLayout gbl_planList = new GridBagLayout();
-		gbl_planList.rowWeights = new double[]{1.0};
-		
 		planList = new JPanel();
 		GridBagConstraints gbc_planlist = new GridBagConstraints();
         gbc_planlist.fill = GridBagConstraints.VERTICAL;
@@ -129,6 +126,13 @@ public class MainPanel extends JPanel {
         gbc_planlist.weightx = 1;
         gbc_planlist.weighty = 1;
         planList.add(new JPanel(), gbc_planlist);
+        
+		GridBagLayout gbl_planList = new GridBagLayout();
+		gbl_planList.columnWidths = new int[]{144, 0};
+		gbl_planList.rowHeights = new int[]{10, 0};
+		gbl_planList.columnWeights = new double[]{1.0, Double.MIN_VALUE};
+		gbl_planList.rowWeights = new double[]{1.0, Double.MIN_VALUE};
+		planList.setLayout(gbl_planList);
 		
 		JScrollPane planListScrollPane = new JScrollPane(planList);
 		GridBagConstraints gbc_planListScrollPane = new GridBagConstraints();
@@ -222,29 +226,26 @@ public class MainPanel extends JPanel {
 		 * Hotel
 		 * */
 		//prologConnector.checkEventsOnTime(profile.getAdultCounter(), profile.getChildCounter(), timelineArrayList, 800, "1 Sterne Hotel", profile.getBudgetInCent(), )
-		timelineArrayList.add(_newEvent);
-		System.out.println("Timeline: " + _newEvent.getName());
-	}
-	
-	/**
-	 * Zeige Zeitplan an
-	 */
-	public void showTimePlan(){
-		/*ArrayList<String> categories = new ArrayList<String>();
-		categories.add("Shopping");
-		categories.add("Schwimmen");
-    	Event event = new Event("Hansedom", 52.1, 19.1, 250, 350, categories, 1, 0, 0, "Auto");
-		Profile profile = new Profile(2, 20000, 2, 1);
+		if(!timelineArrayList.contains(_newEvent)){
+			timelineArrayList.add(_newEvent);
+			System.out.println("Timeline: " + _newEvent.getName());
+		}
 		
-		Result r = new Result(event, profile, false);
-        GridBagConstraints gbc = new GridBagConstraints();
-        gbc.gridwidth = GridBagConstraints.REMAINDER;
-        gbc.weightx = 1;
-        gbc.fill = GridBagConstraints.HORIZONTAL;
-        planList.add(r, gbc, 0);
-
-        validate();
-        repaint();*/
+		for(Event e:timelineArrayList){			
+			Result result = new Result(e, profile, false);
+			GridBagConstraints gbc = new GridBagConstraints();
+	        gbc.gridwidth = GridBagConstraints.REMAINDER;
+	        gbc.weightx = 1;
+	        gbc.fill = GridBagConstraints.HORIZONTAL;
+	        planList.add(result, gbc, 0);
+	        
+	        result.btnRemoveButton.addActionListener(new ActionListener() {
+				public void actionPerformed(ActionEvent arg0) {
+					planList.remove(result);
+					validate();
+			        repaint();
+				}
+			});
+		}
 	}
-	
 }

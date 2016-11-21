@@ -16,6 +16,8 @@ public class Profile {
 	
 	private String arrival;
 	
+	private int totalCost;
+	
 	private ArrayList<String> categories;
 	private ArrayList<String> selectedCategories;
 	
@@ -50,6 +52,8 @@ public class Profile {
 		this.selectedHotel = new ArrayList<String>();
 		
 		this.arrival = "Auto";
+		
+		this.totalCost = 0;
 	}
 	
 	/**
@@ -58,48 +62,71 @@ public class Profile {
 	public int getDays() {
 		return days;
 	}
+	
 	/**
 	 * @param days the days to set
 	 */
 	public void setDays(int days) {
 		this.days = days;
 	}
+	
 	/**
 	 * @return the budgetInCent
 	 */
 	public int getBudgetInCent() {
 		return budgetInCent;
 	}
+	
 	/**
 	 * @param budgetInCent the budgetInCent to set
 	 */
 	public void setBudgetInCent(int budgetInCent) {
 		this.budgetInCent = budgetInCent;
 	}
+	
 	/**
 	 * @return the adultCounter
 	 */
 	public int getAdultCounter() {
 		return adultCounter;
 	}
+	
 	/**
 	 * @param adultCounter the adultCounter to set
 	 */
 	public void setAdultCounter(int adultCounter) {
 		this.adultCounter = adultCounter;
 	}
+	
 	/**
 	 * @return the childCounter
 	 */
 	public int getChildCounter() {
 		return childCounter;
 	}
+	
 	/**
 	 * @param childCounter the childCounter to set
 	 */
+	
 	public void setChildCounter(int childCounter) {
 		this.childCounter = childCounter;
 	}
+	
+	/**
+	 * @return the totalCost
+	 */
+	public int getTotalCost() {
+		return totalCost;
+	}
+
+	/**
+	 * @param totalCost the totalCost to set
+	 */
+	public void setTotalCost(int totalCost) {
+		this.totalCost = totalCost;
+	}
+	
 	/**
 	 * @return the categories
 	 */
