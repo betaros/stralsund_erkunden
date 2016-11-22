@@ -176,7 +176,7 @@ checkEventsOnTime(Persons,[EventHead|EventsTail],DayStart, DayEnd, Hotel, HotelC
 	;
 	(
 		var(Hotel),
-		findHotelsForTrip(HotelCategorie, Hotel1),
+		findHotelsForTrip(HotelCategorie, Hotel1), 
 		Hotel = Hotel1
 	)),
 	checkTimeLine(Persons,[EventHead|EventsTail],DayStart, DayEnd, Hotel, Budget, Return, Price).	
