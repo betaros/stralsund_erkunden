@@ -74,7 +74,7 @@ calcDistance(EventA, EventB, Distance) :-
 * Gibt die möglichen Events zu den Kategorien zurück, wenn Events leer
 */
 searchEventsOnCategory(Categories,Events):-
-	findall([X,V], event(X,_,V, _, _,_), List),
+	findall([X,V], event(X,_,V, _, _,_,_), List),
 	compareCategories(List,Categories,Events1),
 	Events = Events1.
 	
