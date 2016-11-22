@@ -15,7 +15,7 @@ event(	'Hansedom',
 	['Sport','Schwimmen','Sauna'],
 	['Fast-Food'],
 	[2000,1000],
-	[930, 2100],
+	[600, 2100],
 	[200]).
 
 event(	'Strelapark',
@@ -23,7 +23,7 @@ event(	'Strelapark',
 	['Einkaufen'],
 	['Fast-Food'],
 	[2000,1000],
-	[930, 2100],
+	[600, 2100],
 	[200]).
 	
 event(	'Citti', 
@@ -31,7 +31,7 @@ event(	'Citti',
 	['Einkaufen','Grosshandel'],
 	['Fast-Food'],
 	[0,0],
-	[930, 2100],
+	[600, 2100],
 	[200]). 
 	
 event(	'Ozeaneum',
@@ -47,7 +47,7 @@ event(	'Meeresmuseum',
 	['Freizeit','Museum','Bildung'],
 	['Fast-Food'],
 	[2000,1000],
-	[930, 2100],
+	[900, 2100],
 	[200]).
 	
 event(	'Nautineum',
@@ -55,7 +55,7 @@ event(	'Nautineum',
 	['Freizeit','Museum','Bildung'],
 	['Fast-Food'],
 	[2000,1000],
-	[930, 2100],
+	[900, 2100],
 	[200]).
 	
 event(	'Marinemuseum',
@@ -63,7 +63,7 @@ event(	'Marinemuseum',
 	['Freizeit','Museum','Bildung'],
 	[],
 	[2000,1000],
-	[930, 2100],
+	[600, 2100],
 	[200]).
 	
 event(	'Fachhochschule Stralsund',

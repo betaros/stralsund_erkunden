@@ -167,9 +167,27 @@ HotelCategorie = Kategorie/nwunsch des Nutzers (wird nur beachtet, wenn kein Hot
 Budget = Maximales Budget
 Return = Rückgabewert wird true oder false
 Price = Gesamtpreis der Tour
+
+Beispiel:
+trace, 
+checkEventsOnTime([1,2], 
+[
+['Cinestar', 1, 1100, 100, 'Car'],
+['Fachhochschule Stralsund', 1, 1700, 100, 'Car'],
+['Marinemuseum', 2, 700, 100, 'Car'],
+['Nautineum', 1, 900, 100, 'Car'], 
+['Meeresmuseum', 2, 1100, 100, 'Car'],
+['Ozeaneum', 2, 1700, 100, 'Car'],
+['Citti', 1, 700, 100, 'Car'],
+['Strelapark', 2, 900, 100, 'Car']
+], 
+500, 2200, 'X Sterne Hotel', _, 
+10000000, Return, Price).
+
 */
 
-checkEventsOnTime(Persons,[EventHead|EventsTail],DayStart, DayEnd, Hotel, HotelCategorie, Budget, Return, Price):-
+checkEventsOnTime(Persons, EventList, DayStart, DayEnd, Hotel, HotelCategorie, Budget, Return, Price):-
+	sortEventList(EventList,SortedEventList),
 	((
 		nonvar(Hotel)
 	)
@@ -179,7 +197,7 @@ checkEventsOnTime(Persons,[EventHead|EventsTail],DayStart, DayEnd, Hotel, HotelC
 		findHotelsForTrip(HotelCategorie, Hotel1), 
 		Hotel = Hotel1
 	)),
-	checkTimeLine(Persons,[EventHead|EventsTail],DayStart, DayEnd, Hotel, Budget, Return, Price).	
+	checkTimeLine(Persons, SortedEventList, DayStart, DayEnd, Hotel, Budget, Return, Price).	
 
 
 
@@ -464,3 +482,74 @@ compare_list([L1Head|L1Tail], List2):-
     ;
     (compare_list(L1Tail,List2)
     ).
+
+
+
+
+/*
+Abfolge für das Trennen und Sortieren der Eventliste
+sortEventList([
+['E1_1', 1, 1000, 100, 'Car'],
+['E1_2', 1, 1700, 100, 'Car'],
+['E2_1', 2, 700, 100, 'Car'],
+['E1_3', 1, 900, 100, 'Car'], 
+['E2_2', 2, 1000, 100, 'Car'],
+['E2_3', 2, 1700, 100, 'Car'],
+['E1_4', 1, 700, 100, 'Car'],
+['E2_4', 2, 900, 100, 'Car']], 
+SortedEventList).
+
+*/
+sortEventList(EventList,SortedEventList):-
+	splitList(EventList,1,UnsortedDay1,UnsortedDay2),
+	quickSort(UnsortedDay1, SortedDay1),
+	quickSort(UnsortedDay2, SortedDay2),
+	append(SortedDay1, SortedDay2, SortedEventList1),
+	SortedEventList = SortedEventList1.
+
+
+/*
+Teilt die Liste in jeweils eine Liste pro Tag auf
+Funktioniert nur bei 2 Tagen
+splitList([['E1_1', 1, 1000, 100, 'Car'],['E2_2', 2, 900, 100, 'Car'],['E1_2', 2, 1200, 200, 'Car'],['E2_1', 2, 1300, 100, 'Car'],['E1_2', 1, 1200, 100, 'Car'],['E2_1', 2, 2100, 100, 'Car']], 1, List1, List2).
+*/
+
+splitList([], _, [], []).
+	
+splitList([Head|Rest], A, [Head|Rest1], Rest2) :-
+	[_, A, _, _, _] = Head,
+    	splitList(Rest, A, Rest1, Rest2).
+    	
+splitList([Head|Rest], B, Rest1, [Head|Rest2]) :-
+	[_, A, _, _, _] = Head,
+        A =\= B,
+        splitList(Rest, B, Rest1, Rest2).
+
+
+/*
+Sortiert die Liste der Events
+quickSort([['E1_1', 1, 1000, 100, 'Car'],['E1_2', 1, 1700, 100, 'Car'],['E1_2', 1, 700, 100, 'Car'],['E1_2', 1, 900, 100, 'Car']], SortedList).
+*/
+quickSort(List,Sorted):-
+	qSort(List,[],Sorted).
+	
+qSort([],Acc,Acc).
+
+qSort([H|T],Acc,Sorted):-
+	pivoting(H,T,L1,L2),
+	qSort(L1,Acc,Sorted1),
+	qSort(L2,[H|Sorted1],Sorted).
+	
+pivoting(H,[],[],[]).
+
+pivoting(H,[X|T],[X|L],G):-
+	[_, _, XStartTime, _, _] = X,
+	[_, _, HStartTime, _, _] = H,
+	XStartTime>HStartTime,
+	pivoting(H,T,L,G).
+	
+pivoting(H,[X|T],L,[X|G]):-
+	[_, _, XStartTime, _, _] = X,
+	[_, _, HStartTime, _, _] = H,
+	XStartTime=<HStartTime,
+	pivoting(H,T,L,G).
