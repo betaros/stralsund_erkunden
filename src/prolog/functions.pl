@@ -19,7 +19,7 @@ lonInKm(X, Res) :-
 * Sucht alle Kategorien für Events
 */
 findAllCategories(Categories):-
-	findall(X, event(_,_,X,_,_,_), L),
+	findall(X, event(_,_,X,_,_,_,_), L),
 	mergeListOfListsToList(C1,L),
 	Categories = C1.
 
@@ -27,7 +27,7 @@ findAllCategories(Categories):-
 * Sucht alle Kategorien für Restaurants, Imbisse ...
 */
 findAllFoodCategories(Categories):-
-	findall(X, event(_,_,_,X,_,_), L),
+	findall(X, event(_,_,_,X,_,_,_), L),
 	mergeListOfListsToList(C1,L),
 	Categories = C1.
 	
@@ -197,7 +197,8 @@ checkEventsOnTime(Persons, EventList, DayStart, DayEnd, Hotel, HotelCategorie, B
 		findHotelsForTrip(HotelCategorie, Hotel1), 
 		Hotel = Hotel1
 	)),
-	checkTimeLine(Persons, SortedEventList, DayStart, DayEnd, Hotel, Budget, Return, Price).	
+	Fill = false,
+	checkTimeLine(Fill, Persons, SortedEventList, DayStart, DayEnd, Hotel, Budget, Return, Price).	
 
 
 
@@ -463,6 +464,7 @@ compareCategoriesAndBudget([E|L],Categories,Budget,List1):-
 	
 compareCategoriesAndBudget([],_,_,List1):-
 	List1 = [].
+	
 /*
 Findet Restaurant passend zur Gruppe
 */
