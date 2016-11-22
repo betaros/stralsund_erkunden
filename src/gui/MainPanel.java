@@ -234,8 +234,10 @@ public class MainPanel extends JPanel {
 		//prologConnector.checkEventsOnTime(profile.getAdultCounter(), profile.getChildCounter(), timelineArrayList, 800, "1 Sterne Hotel", profile.getBudgetInCent(), )
 		if(!timelineArrayList.contains(_newEvent)){
 			timelineArrayList.add(_newEvent);
-			System.out.println("Timeline: " + _newEvent.getName());
+			//System.out.println("Timeline: " + _newEvent.getName());
 		}
+		
+		planList.removeAll();
 		
 		for(Event e:timelineArrayList){			
 			Result result = new Result(e, profile, false);
@@ -248,6 +250,7 @@ public class MainPanel extends JPanel {
 	        result.btnRemoveButton.addActionListener(new ActionListener() {
 				public void actionPerformed(ActionEvent arg0) {
 					planList.remove(result);
+					timelineArrayList.remove(result.getEvent());
 					validate();
 			        repaint();
 				}
