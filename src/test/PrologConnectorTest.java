@@ -16,7 +16,7 @@ public class PrologConnectorTest {
 
 	@Test
 	public void testFindEvent() {
-		Event result = pc.findEvent("Hansedom");
+		Event result = pc.findEvent("Hansedom", false);
 		ArrayList<String> food = new ArrayList<String>();
 		food.add("Fast-Food");
 		
@@ -111,11 +111,11 @@ public class PrologConnectorTest {
 		ArrayList<Event> resultEventList = pc.searchUsefulEvents(2, 1, 20000, resultCategories);
 		
 		ArrayList<Event> expectedEventList = new ArrayList<Event>();
-		expectedEventList.add(pc.findEvent("Ozeaneum"));
-		expectedEventList.add(pc.findEvent("Meeresmuseum"));
-		expectedEventList.add(pc.findEvent("Nautineum"));
-		expectedEventList.add(pc.findEvent("Marinemuseum"));
-		expectedEventList.add(pc.findEvent("Cinestar"));
+		expectedEventList.add(pc.findEvent("Ozeaneum", false));
+		expectedEventList.add(pc.findEvent("Meeresmuseum", false));
+		expectedEventList.add(pc.findEvent("Nautineum", false));
+		expectedEventList.add(pc.findEvent("Marinemuseum", false));
+		expectedEventList.add(pc.findEvent("Cinestar", false));
 		
 		StringBuilder resultString = new StringBuilder();
 		for(Event e:resultEventList){
@@ -182,7 +182,7 @@ public class PrologConnectorTest {
 	@Test
 	public void testCheckEventsOnTimeOneEvent() {
 		ArrayList<Event> eventlist = new ArrayList<Event>();
-		eventlist.add(pc.findEvent("Ozeaneum"));
+		eventlist.add(pc.findEvent("Ozeaneum", false));
 		Profile profile = new Profile(2, 20000, 2, 1);
 		boolean result = pc.checkEventsOnTime(2, 1, eventlist, 1, "Hansedom", 20000, profile);
 		
