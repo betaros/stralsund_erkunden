@@ -421,18 +421,24 @@ calcHotelPrice(Persons, Hotel, Price):-
 /*
 Findet Hotels zur angegebenen Categorie
 */
-findHotelsForTrip(HotelCategorie, Hotel1, Budget):-
-	findall([X,B,V], hotel(X,_,B,V), List),
-	compareCategoriesAndBudget(List,HotelCategorie,Budget,Hotels),
-	Hotel1 = Hotels.
+findHotelsForTrip(HotelCategorie, Hotel1, Budget, Persons):-
+	findall([X,V], hotel(X,_,_,V), List),
+	compareCategoriesAndBudget(List,HotelCategorie,Budget,Persons,Hotels),
+	Hotels = [Hotel1|_].
 
 /*
+* findHotelsForTrip([3], Hotel1, 10, [2,2]).
+* findHotelsForTrip([5], Hotel1, 10000000, [2,0]).
 * Vergleicht die Liste der Kategorien & Budget mit der übergebenen Liste
 */	
-compareCategoriesAndBudget([E|L],Categories,Budget,List1):-
-	compareCategoriesAndBudget(L,Categories,Budget,List2),
-	E = [X,B,Y],
-	(  (compare_list(Y,Categories), B =< Budget)
+compareCategoriesAndBudget([E|L],Categories,Budget,Persons,List1):-
+	compareCategoriesAndBudget(L,Categories,Budget,Persons,List2),
+	E = [X,Y],
+	((
+	
+		calcHotelPrice(Persons, X, Price),
+		compare_list(Y,Categories), 
+		Price  =< Budget)
 	-> (
 		append([X],List2,List3),
 	   	List1 = List3
@@ -443,7 +449,7 @@ compareCategoriesAndBudget([E|L],Categories,Budget,List1):-
 	   )	
 	).
 	
-compareCategoriesAndBudget([],_,_,List1):-
+compareCategoriesAndBudget([],_,_,_,List1):-
 	List1 = [].
 /*
 Findet Restaurant passend zur Gruppe
