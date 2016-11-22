@@ -28,19 +28,19 @@ import javax.swing.JScrollPane;
 public class MainPanel extends JPanel {
 
 	private static final long serialVersionUID = -8438576029794021570L;
-	
+
 	private JPanel mainList;
 	private JPanel planList;
 	private Map map;
 	private JXMapViewer mapViewer;
 	private ArrayList<GeoPosition> waypoints;
-	
+
 	private PrologConnector prologConnector;
 	private Profile profile;
 
 	private ArrayList<Event> resultArrayList;
 	private ArrayList<Event> timelineArrayList;
-	
+
 	/**
 	 * Create the panel.
 	 */
@@ -48,7 +48,7 @@ public class MainPanel extends JPanel {
 		prologConnector = new PrologConnector();
 		resultArrayList = new ArrayList<Event>();
 		timelineArrayList = new ArrayList<Event>();
-		
+
 		setBorder(null);
 		GridBagLayout gridBagLayout = new GridBagLayout();
 		gridBagLayout.columnWidths = new int[]{0, 0};
@@ -56,7 +56,7 @@ public class MainPanel extends JPanel {
 		gridBagLayout.columnWeights = new double[]{1.0, Double.MIN_VALUE};
 		gridBagLayout.rowWeights = new double[]{1.0, Double.MIN_VALUE};
 		setLayout(gridBagLayout);
-		
+
 		JPanel panel = new JPanel();
 		GridBagConstraints gbc_panel = new GridBagConstraints();
 		gbc_panel.fill = GridBagConstraints.BOTH;
@@ -69,14 +69,14 @@ public class MainPanel extends JPanel {
 		gbl_panel.columnWeights = new double[]{1.0, Double.MIN_VALUE};
 		gbl_panel.rowWeights = new double[]{1.0, Double.MIN_VALUE};
 		panel.setLayout(gbl_panel);
-		
+
 		JSplitPane splitPane_1 = new JSplitPane();
 		GridBagConstraints gbc_splitPane_1 = new GridBagConstraints();
 		gbc_splitPane_1.fill = GridBagConstraints.BOTH;
 		gbc_splitPane_1.gridx = 0;
 		gbc_splitPane_1.gridy = 0;
 		panel.add(splitPane_1, gbc_splitPane_1);
-		
+
 		JPanel resultpanel = new JPanel();
 		resultpanel.setBorder(new TitledBorder(UIManager.getBorder("TitledBorder.border"), "M\u00F6gliche Events", TitledBorder.LEADING, TitledBorder.TOP, null, new Color(0, 0, 0)));
 		splitPane_1.setLeftComponent(resultpanel);
@@ -86,29 +86,29 @@ public class MainPanel extends JPanel {
 		gbl_resultpanel.columnWeights = new double[]{1.0, Double.MIN_VALUE};
 		gbl_resultpanel.rowWeights = new double[]{1.0, Double.MIN_VALUE};
 		resultpanel.setLayout(gbl_resultpanel);
-		
+
 		GridBagLayout gbl_mainList = new GridBagLayout();
 		gbl_mainList.columnWeights = new double[]{1.0};
 		gbl_mainList.rowWeights = new double[]{1.0};
-		
+
 		mainList = new JPanel(gbl_mainList);
-        GridBagConstraints gbc_mainlist = new GridBagConstraints();
-        gbc_mainlist.fill = GridBagConstraints.VERTICAL;
-        gbc_mainlist.gridwidth = GridBagConstraints.REMAINDER;
-        gbc_mainlist.weightx = 1;
-        gbc_mainlist.weighty = 1;
-        mainList.add(new JPanel(), gbc_mainlist);
-		
+		GridBagConstraints gbc_mainlist = new GridBagConstraints();
+		gbc_mainlist.fill = GridBagConstraints.VERTICAL;
+		gbc_mainlist.gridwidth = GridBagConstraints.REMAINDER;
+		gbc_mainlist.weightx = 1;
+		gbc_mainlist.weighty = 1;
+		mainList.add(new JPanel(), gbc_mainlist);
+
 		JScrollPane resultScrollPane = new JScrollPane(mainList);
 		GridBagConstraints gbc_scrollPane = new GridBagConstraints();
 		gbc_scrollPane.fill = GridBagConstraints.BOTH;
 		gbc_scrollPane.gridx = 0;
 		gbc_scrollPane.gridy = 0;
 		resultpanel.add(resultScrollPane, gbc_scrollPane);
-		
+
 		JSplitPane splitPane = new JSplitPane();
 		splitPane_1.setRightComponent(splitPane);
-		
+
 		JPanel routingpanel = new JPanel();
 		routingpanel.setBorder(new TitledBorder(null, "Zeitablauf", TitledBorder.LEADING, TitledBorder.TOP, null, null));
 		splitPane.setLeftComponent(routingpanel);
@@ -118,29 +118,29 @@ public class MainPanel extends JPanel {
 		gbl_routingpanel.columnWeights = new double[]{1.0, Double.MIN_VALUE};
 		gbl_routingpanel.rowWeights = new double[]{1.0, Double.MIN_VALUE};
 		routingpanel.setLayout(gbl_routingpanel);
-		
+
 		planList = new JPanel();
 		GridBagConstraints gbc_planlist = new GridBagConstraints();
-        gbc_planlist.fill = GridBagConstraints.VERTICAL;
-        gbc_planlist.gridwidth = GridBagConstraints.REMAINDER;
-        gbc_planlist.weightx = 1;
-        gbc_planlist.weighty = 1;
-        planList.add(new JPanel(), gbc_planlist);
-        
+		gbc_planlist.fill = GridBagConstraints.VERTICAL;
+		gbc_planlist.gridwidth = GridBagConstraints.REMAINDER;
+		gbc_planlist.weightx = 1;
+		gbc_planlist.weighty = 1;
+		planList.add(new JPanel(), gbc_planlist);
+
 		GridBagLayout gbl_planList = new GridBagLayout();
 		gbl_planList.columnWidths = new int[]{144, 0};
 		gbl_planList.rowHeights = new int[]{10, 0};
 		gbl_planList.columnWeights = new double[]{1.0, Double.MIN_VALUE};
 		gbl_planList.rowWeights = new double[]{1.0, Double.MIN_VALUE};
 		planList.setLayout(gbl_planList);
-		
+
 		JScrollPane planListScrollPane = new JScrollPane(planList);
 		GridBagConstraints gbc_planListScrollPane = new GridBagConstraints();
 		gbc_planListScrollPane.fill = GridBagConstraints.BOTH;
 		gbc_planListScrollPane.gridx = 0;
 		gbc_planListScrollPane.gridy = 0;
 		routingpanel.add(planListScrollPane, gbc_planListScrollPane);
-		
+
 		JPanel mappanel = new JPanel();
 		splitPane.setRightComponent(mappanel);
 		GridBagLayout gbl_mappanel = new GridBagLayout();
@@ -149,21 +149,21 @@ public class MainPanel extends JPanel {
 		gbl_mappanel.columnWeights = new double[]{1.0, Double.MIN_VALUE};
 		gbl_mappanel.rowWeights = new double[]{1.0, Double.MIN_VALUE};
 		mappanel.setLayout(gbl_mappanel);
-		
+
 		map = new Map();
 		waypoints = new ArrayList<GeoPosition>();
-		
+
 		mapViewer = map.getMap(waypoints);
-		
+
 		mapViewer.setLayout(new FlowLayout(FlowLayout.CENTER, 5, 5));
-		
+
 		GridBagConstraints gbc_mapViewer = new GridBagConstraints();
 		gbc_mapViewer.fill = GridBagConstraints.BOTH;
 		gbc_mapViewer.gridx = 0;
 		gbc_mapViewer.gridy = 0;
 		mappanel.add(mapViewer, gbc_mapViewer);
 	}
-	
+
 	/**
 	 * Zeige Eventliste an
 	 */
@@ -175,55 +175,55 @@ public class MainPanel extends JPanel {
 		if(categoryList.isEmpty() || hotelList.isEmpty() || foodList.isEmpty()){
 			return false;
 		}
-		
+
 		ArrayList<String> eventStringList = prologConnector.getEventsByPrologWithCategories(categoryList);
-		ArrayList<Event> hotelArrayList = prologConnector.findHotels(hotelList);
+		ArrayList<String> hotelStringList = prologConnector.findHotels(hotelList);
 		eventStringList.removeAll(Collections.singleton(null));
-		
+
 		resultArrayList.removeAll(resultArrayList);
 		for(String s:eventStringList){
 			resultArrayList.add(prologConnector.findEvent(s, false));
 		}
-		for(Event e:hotelArrayList){
-			resultArrayList.add(e);
+		for(String s:hotelStringList){
+			resultArrayList.add(prologConnector.findEvent(s, true));
 		}
-		
+
 		resultArrayList.removeAll(Collections.singleton(null));
 		mainList.removeAll();
 		waypoints.removeAll(waypoints);
-		
+
 		for(Event e:resultArrayList){
 			waypoints.add(new GeoPosition(e.getLatitude(), e.getLongitude()));
-			
+
 			Result result = new Result(e, profile, true);
 			GridBagConstraints gbc = new GridBagConstraints();
-	        gbc.gridwidth = GridBagConstraints.REMAINDER;
-	        gbc.weightx = 1;
-	        gbc.fill = GridBagConstraints.HORIZONTAL;
-	        mainList.add(result, gbc, 0);
-	        
-	        result.btnNewButton.addActionListener(new ActionListener() {
+			gbc.gridwidth = GridBagConstraints.REMAINDER;
+			gbc.weightx = 1;
+			gbc.fill = GridBagConstraints.HORIZONTAL;
+			mainList.add(result, gbc, 0);
+
+			result.btnNewButton.addActionListener(new ActionListener() {
 				public void actionPerformed(ActionEvent arg0) {
 					addToTimeplan(result.getEvent());
 					validate();
-			        repaint();
+					repaint();
 				}
 			});
-	        
-	        result.btnRemoveButton.addActionListener(new ActionListener() {
+
+			result.btnRemoveButton.addActionListener(new ActionListener() {
 				public void actionPerformed(ActionEvent arg0) {
 					mainList.remove(result);
 					validate();
-			        repaint();
+					repaint();
 				}
 			});
 		}
-		
+
 		mapViewer = map.getMap(waypoints);
-        validate();
-        repaint();
-        
-        return true;
+		validate();
+		repaint();
+
+		return true;
 	}
 
 	public void addToTimeplan(Event _newEvent){
@@ -231,30 +231,34 @@ public class MainPanel extends JPanel {
 		 * TODO: 
 		 * Hotel
 		 * */
-		//prologConnector.checkEventsOnTime(profile.getAdultCounter(), profile.getChildCounter(), timelineArrayList, 800, "1 Sterne Hotel", profile.getBudgetInCent(), )
-		if(!timelineArrayList.contains(_newEvent)){
-			timelineArrayList.add(_newEvent);
-			//System.out.println("Timeline: " + _newEvent.getName());
-		}
-		
-		planList.removeAll();
-		
-		for(Event e:timelineArrayList){			
-			Result result = new Result(e, profile, false);
-			GridBagConstraints gbc = new GridBagConstraints();
-	        gbc.gridwidth = GridBagConstraints.REMAINDER;
-	        gbc.weightx = 1;
-	        gbc.fill = GridBagConstraints.HORIZONTAL;
-	        planList.add(result, gbc, 0);
-	        
-	        result.btnRemoveButton.addActionListener(new ActionListener() {
-				public void actionPerformed(ActionEvent arg0) {
-					planList.remove(result);
-					timelineArrayList.remove(result.getEvent());
-					validate();
-			        repaint();
-				}
-			});
-		}
+		//String hotel = "";
+		//boolean isEventOnTime = prologConnector.checkEventsOnTime(profile.getAdultCounter(), profile.getChildCounter(), timelineArrayList, profile.getDayStart(), hotel, profile.getBudgetInCent(), profile); 
+
+		//if(isEventOnTime){
+			if(!timelineArrayList.contains(_newEvent)){
+				timelineArrayList.add(_newEvent);
+				//System.out.println("Timeline: " + _newEvent.getName());
+			}
+
+			planList.removeAll();
+
+			for(Event e:timelineArrayList){			
+				Result result = new Result(e, profile, false);
+				GridBagConstraints gbc = new GridBagConstraints();
+				gbc.gridwidth = GridBagConstraints.REMAINDER;
+				gbc.weightx = 1;
+				gbc.fill = GridBagConstraints.HORIZONTAL;
+				planList.add(result, gbc, 0);
+
+				result.btnRemoveButton.addActionListener(new ActionListener() {
+					public void actionPerformed(ActionEvent arg0) {
+						planList.remove(result);
+						timelineArrayList.remove(result.getEvent());
+						validate();
+						repaint();
+					}
+				});
+			}
+		//}
 	}
 }

@@ -4,7 +4,6 @@ package prolog;
 
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collections;
 import java.util.Map;
 
 import org.jpl7.*;
@@ -143,7 +142,7 @@ public class PrologConnector {
 	 * @param hotelCategories
 	 * @return
 	 */
-	public ArrayList<Event> findHotels(ArrayList<String> hotelCategories){
+	public ArrayList<String> findHotels(ArrayList<String> hotelCategories){
 		Term HotelCategories = Util.textToTerm(prologListGenerator(hotelCategories));
 		Variable Hotels = new Variable("Hotels");
 		
@@ -153,30 +152,27 @@ public class PrologConnector {
 						new Term[] {HotelCategories, Hotels}
 						);
 		
-		ArrayList<Event> hotelList = new ArrayList<Event>();
-		ArrayList<String> categories = new ArrayList<String>();
-		categories.add("Hotel");
+		ArrayList<String> hotelList = new ArrayList<String>();
 		
 		if(query.hasSolution()){
 			Map<String, Term> solution = query.oneSolution();
 			String[] array = solution.get("Hotels").toString().split(",");
-			for(int i = 0; i<array.length-1; i++){
+			for(int i = 0; i<array.length; i++){
 				array[i] = array[i].replaceAll("[^A-Za-z0-9 ]", "");
 				array[i] = array[i].trim();
 				if(debug){
 					System.out.println("findHotels: " + array[i]);
 				}
 				
-				Event e = new Event(array[i], 0, 0, 0, 0, categories, new ArrayList<String>(), 1, 0, 0, 0, 0);
-				if (!hotelList.contains(e)) {
-					hotelList.add(e);
+				if (!hotelList.contains(array[i])) {
+					hotelList.add(array[i]);
 				}
 			}
 		}
 		
 		return hotelList;
 	}
-	
+		
 	/**
 	 * Berechnet die Distanz zwischen zwei Orten
 	 * @param placeA
@@ -437,40 +433,42 @@ public class PrologConnector {
 		peopleList.add(String.valueOf(reducedCount));
 		Term People = Util.textToTerm(prologListGenerator(peopleList));
 		
-		ArrayList<Event> sortedEventList = sortEventlist(eventList, profile.getDays());
-		
-		ArrayList<String> eventStringList = new ArrayList<String>();
-		for(Event event:sortedEventList){
-			StringBuilder eventString = new StringBuilder();
-			eventString.append("[");
-			eventString.append(event.getName());
-			eventString.append(",");
-			eventString.append(String.valueOf(event.getDay()));
-			eventString.append(",");
-			eventString.append(String.valueOf(event.getStartTime()));
-			eventString.append(",");
-			eventString.append(String.valueOf(event.getDuration()));
-			eventString.append(",");
-			
+		ArrayList<Term> eventTermList = new ArrayList<Term>();
+		for(Event event:eventList){
+			ArrayList<String> eventStringList = new ArrayList<String>();
+			eventStringList.add(event.getName());
+			eventStringList.add(String.valueOf(event.getDay()));
+			eventStringList.add(String.valueOf(event.getStartTime()));
+			eventStringList.add(String.valueOf(event.getDuration()));
 			String arrival = profile.getArrival(); 
 			switch(arrival){
 			case "Zu fuss":
-				eventString.append("Foot");
+				eventStringList.add("Foot");
 				break;
 			case "Fahrrad":
-				eventString.append("Bike");
+				eventStringList.add("Bike");
 				break;
 			case "Bus":
-				eventString.append("Bus");
+				eventStringList.add("Bus");
 				break;
 			default:
-				eventString.append("Car");
+				eventStringList.add("Car");
 			}
-			eventString.append("]");
 			
-			eventStringList.add(eventString.toString());
+			Term EventTerm = Util.textToTerm(prologListGenerator(eventStringList));
+			
+			eventTermList.add(EventTerm);
 		}
-		Term EventList = Util.textToTerm(prologListGenerator(eventStringList));
+		
+		// Term mit weiteren Termen fuellen
+		Term EventList = null;
+		for(Term t:eventTermList){
+			/* TODO:
+			 * Mehrere Terme in einen speichern
+			 */
+		}
+		
+		
 		Atom DayStart = new Atom(String.valueOf(dayStart));
 		Atom Hotel = new Atom(hotel);
 		Atom Budget = new Atom(String.valueOf(budget));
@@ -519,10 +517,8 @@ public class PrologConnector {
 		Term People = Util.textToTerm(prologListGenerator(peopleList));
 		Atom PrevEvent = new Atom(prevEvent);
 		
-		ArrayList<Event> sortedEventList = sortEventlist(eventList, profile.getDays());
-		
 		ArrayList<String> eventStringList = new ArrayList<String>();
-		for(Event event:sortedEventList){
+		for(Event event:eventList){
 			StringBuilder eventString = new StringBuilder();
 			eventString.append("[");
 			eventString.append(event.getName());
@@ -624,44 +620,6 @@ public class PrologConnector {
 		}
 		
 		return result;
-	}
-	
-	/**
-	 * Eventliste sortieren
-	 * 
-	 * @param eventlist
-	 * @param daysCounter
-	 * @return
-	 */
-	private ArrayList<Event> sortEventlist(ArrayList<Event> eventlist, int daysCounter) {
-		ArrayList<Event> resultEventlist = new ArrayList<Event>();
-		
-		Event[][] eventArray = new Event[daysCounter][];
-		int counter = 0;
-		
-		// NullPointerException
-		for(Event event:eventlist){
-			eventArray[event.getDay()-1][counter] = event;
-			counter++;
-		}
-		
-		for(int i = 0; i<daysCounter; i++){
-			int e = eventArray[i].length;
-			ArrayList<java.lang.Integer> times = new ArrayList<java.lang.Integer>();
-			for(int j = 0; j<e; j++){
-				times.add(eventArray[i][j].getStartTime());
-			}
-			Collections.sort(times);
-			for(int t:times){
-				for(int j = 0; j < eventArray[i].length; j++){
-					if(eventArray[i][j].getStartTime() == t){
-						resultEventlist.add(eventArray[i][j]);
-					}
-				}
-			}
-		}
-		
-		return resultEventlist;
 	}
 	
 	/**
