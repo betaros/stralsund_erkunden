@@ -26,8 +26,12 @@ public class Result extends JPanel {
 
 	private int starttime = 0;
 	private int day = 1;
-	private double duration = 0.0d;
+	private int duration = 0;
 
+	private JComboBox<String> comboBoxDay;
+	private JSlider sliderStarttime;
+	private JSlider sliderDuration;
+	
 	private Event event;
 	private Profile profile;
 
@@ -41,6 +45,10 @@ public class Result extends JPanel {
 
 		event = _event;
 		profile = _profile;
+		
+		duration = event.getDuration();
+		day = event.getDay();
+		starttime = event.getStartTime();
 
 		int reducedPriceInCents = event.getPriceInCentChild() * profile.getChildCounter();
 		int adultPriceInCents = event.getPriceInCentAdult() * profile.getAdultCounter();
@@ -176,9 +184,10 @@ public class Result extends JPanel {
 		gbc_lblTag.gridy = 0;
 		panelSettings.add(lblTag, gbc_lblTag);
 
-		JComboBox<String> comboBoxDay = new JComboBox<String>();
+		comboBoxDay = new JComboBox<String>();
 		comboBoxDay.setEnabled(_resultlist);
 		comboBoxDay.setModel(new DefaultComboBoxModel<String>(new String[] {"1", "2"}));
+		comboBoxDay.setSelectedIndex(event.getDay()-1);
 		GridBagConstraints gbc_comboBoxDay = new GridBagConstraints();
 		gbc_comboBoxDay.fill = GridBagConstraints.HORIZONTAL;
 		gbc_comboBoxDay.insets = new Insets(0, 0, 5, 0);
@@ -194,9 +203,9 @@ public class Result extends JPanel {
 		gbc_lblBeginn.gridy = 1;
 		panelSettings.add(lblBeginn, gbc_lblBeginn);
 
-		JSlider sliderStarttime = new JSlider();
+		sliderStarttime = new JSlider();
 		sliderStarttime.setEnabled(_resultlist);
-		sliderStarttime.setValue(9);
+		sliderStarttime.setValue(event.getStartTime()/60);
 		sliderStarttime.setMaximum(24);
 		GridBagConstraints gbc_sliderStarttime = new GridBagConstraints();
 		gbc_sliderStarttime.insets = new Insets(0, 0, 5, 0);
@@ -206,7 +215,7 @@ public class Result extends JPanel {
 		gbc_sliderStarttime.gridy = 1;
 		panelSettings.add(sliderStarttime, gbc_sliderStarttime);
 
-		JLabel lblStarttime = new JLabel("9 Uhr");
+		JLabel lblStarttime = new JLabel(String.valueOf(sliderStarttime.getValue()) + " Uhr");
 		GridBagConstraints gbc_lblStarttime = new GridBagConstraints();
 		gbc_lblStarttime.insets = new Insets(0, 0, 5, 0);
 		gbc_lblStarttime.gridx = 1;
@@ -221,9 +230,9 @@ public class Result extends JPanel {
 		gbc_lblDauer.gridy = 3;
 		panelSettings.add(lblDauer, gbc_lblDauer);
 
-		JSlider sliderDuration = new JSlider();
+		sliderDuration = new JSlider();
 		sliderDuration.setEnabled(_resultlist);
-		sliderDuration.setValue(9);
+		sliderDuration.setValue(duration/60*4);
 		sliderDuration.setMaximum(96);
 		GridBagConstraints gbc_sliderDuration = new GridBagConstraints();
 		gbc_sliderDuration.insets = new Insets(0, 0, 5, 0);
@@ -232,7 +241,7 @@ public class Result extends JPanel {
 		gbc_sliderDuration.gridy = 3;
 		panelSettings.add(sliderDuration, gbc_sliderDuration);
 
-		JLabel lblDuration = new JLabel("2.25 h");
+		JLabel lblDuration = new JLabel(String.valueOf(event.getDuration()/60) + " h");
 		GridBagConstraints gbc_lblDuration = new GridBagConstraints();
 		gbc_lblDuration.gridx = 1;
 		gbc_lblDuration.gridy = 4;
@@ -241,17 +250,17 @@ public class Result extends JPanel {
 		// Funktionen
 		sliderStarttime.addChangeListener(new ChangeListener() {
 			public void stateChanged(ChangeEvent arg0) {
-				starttime = sliderStarttime.getValue();
+				starttime = sliderStarttime.getValue() * 60;
 				event.setStartTime(starttime);
-				lblStarttime.setText(String.valueOf(starttime) + " Uhr");
+				lblStarttime.setText(String.valueOf(starttime / 60) + " Uhr");
 			}
 		});
 
 		sliderDuration.addChangeListener(new ChangeListener() {
 			public void stateChanged(ChangeEvent e) {
-				duration = (double)sliderDuration.getValue() / 4.0;
+				duration = sliderDuration.getValue() / 4 * 60;
 				event.setDuration(duration);
-				lblDuration.setText(String.valueOf(duration) + " h");
+				lblDuration.setText(String.valueOf(duration / 60) + " h");
 			}
 		});
 
@@ -298,14 +307,14 @@ public class Result extends JPanel {
 	/**
 	 * @return the duration
 	 */
-	public double getDuration() {
+	public int getDuration() {
 		return duration;
 	}
 
 	/**
 	 * @param duration the duration to set
 	 */
-	public void setDuration(double duration) {
+	public void setDuration(int duration) {
 		this.duration = duration;
 	}
 
@@ -316,7 +325,11 @@ public class Result extends JPanel {
 		event.setDay(day);
 		event.setDuration(duration);
 		event.setStartTime(starttime);
-		return event;
+		Event tempEvent = event;
+		tempEvent.setDay(comboBoxDay.getSelectedIndex() + 1);
+		tempEvent.setDuration(sliderDuration.getValue() / 4 * 60);
+		tempEvent.setStartTime(sliderStarttime.getValue() * 60);
+		return tempEvent;
 	}
 
 	/**

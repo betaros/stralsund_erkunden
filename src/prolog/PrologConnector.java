@@ -27,19 +27,30 @@ public class PrologConnector {
 	 * Finde Event
 	 * @return
 	 */
-	public Event findEvent(String title){
+	public Event findEvent(String title, boolean hotel){
 		Atom Name = new Atom(title);
 		Variable Position = new Variable("Position");
 		Variable Categories = new Variable("Categories");
 		Variable Food = new Variable("Food");
 		Variable Price = new Variable("Price");
 		Variable Businesshours = new Variable("Businesshours");
+		Variable Duration = new Variable("Duration");
 
-		Query query =
-				new Query(
-						"event",
-						new Term[] {Name, Position, Categories, Food, Price, Businesshours}
-						);
+		Query query;
+		
+		if(hotel){
+			query =
+					new Query(
+							"hotel",
+							new Term[] {Name, Position, Price, Categories}
+							);
+		} else {
+			query =
+					new Query(
+							"event",
+							new Term[] {Name, Position, Categories, Food, Price, Businesshours, Duration}
+							);
+		}
 
 		Event e = null;
 		
@@ -49,7 +60,8 @@ public class PrologConnector {
 			String arrayCategories[]   = solution.get("Categories").toString().split(",");
 			String arrayFood[]         = solution.get("Food").toString().split(",");
 			String arrayPrice[]        = solution.get("Price").toString().split(",");
-			String arrayBusinesshours[]        = solution.get("Businesshours").toString().split(",");
+			String arrayBusinesshours[] = solution.get("Businesshours").toString().split(",");
+			String arrayDuration[]     = solution.get("Duration").toString().split(",");
 
 			for(int i = 0; i<arrayPosition.length; i++){
 				arrayPosition[i] = arrayPosition[i].replaceAll("[^A-Za-z0-9.]", "");
@@ -86,16 +98,25 @@ public class PrologConnector {
 				}
 			}
 			
+			for(int i = 0; i<arrayDuration.length; i++){
+				arrayDuration[i] = arrayDuration[i].replaceAll("[^A-Za-z0-9.]", "");
+				if(debug){
+					System.out.println("findEvent: Duration: " + arrayDuration[i]);
+				}
+			}
+			
 			arrayPosition = Arrays.copyOf(arrayPosition, arrayPosition.length-1);
 			arrayCategories = Arrays.copyOf(arrayCategories, arrayCategories.length-1);
 			arrayFood = Arrays.copyOf(arrayFood, arrayFood.length-1);
 			arrayPrice = Arrays.copyOf(arrayPrice, arrayPrice.length-1);
 			arrayBusinesshours = Arrays.copyOf(arrayBusinesshours, arrayBusinesshours.length-1);
+			arrayDuration = Arrays.copyOf(arrayDuration, arrayDuration.length-1);
 			
 			double lat = Double.parseDouble(arrayPosition[0]);
 			double lon = Double.parseDouble(arrayPosition[1]);
 			int priceAdult = java.lang.Integer.parseInt(arrayPrice[0]);
 			int priceReduced = java.lang.Integer.parseInt(arrayPrice[1]);
+			int duration = java.lang.Integer.parseInt(arrayDuration[0]);
 			ArrayList<String> categoryList = new ArrayList<String>();
 			ArrayList<String> foodList = new ArrayList<String>();
 
@@ -110,12 +131,12 @@ public class PrologConnector {
 			int businessOpen = java.lang.Integer.parseInt(arrayBusinesshours[0]);
 			int businessClosed = java.lang.Integer.parseInt(arrayBusinesshours[1]);
 			
-			e = new Event(title, lat, lon, priceAdult, priceReduced, categoryList, foodList, 1, 0, 0, businessOpen, businessClosed);
+			e = new Event(title, lat, lon, priceAdult, priceReduced, categoryList, foodList, 1, 480, duration, businessOpen, businessClosed);
 		}
 
 		return e;
 	}
-
+	
 	/**
 	 * Hole passende Hotels zu Hotelkategorien
 	 * 

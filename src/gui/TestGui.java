@@ -53,7 +53,7 @@ public class TestGui {
 		
 		ArrayList<Event> eventList = new ArrayList<Event>();
 		for(String s:eventStringList){
-			eventList.add(pc.findEvent(s));
+			eventList.add(pc.findEvent(s, false));
 		}
 		
 		eventList.removeAll(Collections.singleton(null));

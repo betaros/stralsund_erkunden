@@ -182,7 +182,7 @@ public class MainPanel extends JPanel {
 		
 		resultArrayList.removeAll(resultArrayList);
 		for(String s:eventStringList){
-			resultArrayList.add(prologConnector.findEvent(s));
+			resultArrayList.add(prologConnector.findEvent(s, false));
 		}
 		for(Event e:hotelArrayList){
 			resultArrayList.add(e);

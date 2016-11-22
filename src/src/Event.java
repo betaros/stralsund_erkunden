@@ -18,7 +18,7 @@ public class Event {
 	
 	private int day;
 	private int startTime;
-	private double duration;
+	private int duration;
 	private int businesshoursBegin;
 	private int businesshoursEnd;
 
@@ -37,7 +37,7 @@ public class Event {
 	 * @param _businesshoursBegin
 	 * @param _businesshoursEnd
 	 */
-	public Event(String _name, double _lat, double _lon, int _priceAdult, int _priceChild, ArrayList<String> _cat, ArrayList<String> _food, int _day, int _startTime, double _duration, int _businesshoursBegin, int _businesshoursEnd){
+	public Event(String _name, double _lat, double _lon, int _priceAdult, int _priceChild, ArrayList<String> _cat, ArrayList<String> _food, int _day, int _startTime, int _duration, int _businesshoursBegin, int _businesshoursEnd){
 		this.name = _name;
 		this.latitude = _lat;
 		this.longitude = _lon;
@@ -141,14 +141,14 @@ public class Event {
 	/**
 	 * @return the duration
 	 */
-	public double getDuration() {
+	public int getDuration() {
 		return duration;
 	}
 
 	/**
 	 * @param duration the duration to set
 	 */
-	public void setDuration(double duration) {
+	public void setDuration(int duration) {
 		this.duration = duration;
 	}
 	
