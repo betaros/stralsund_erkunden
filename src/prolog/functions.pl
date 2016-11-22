@@ -19,7 +19,7 @@ lonInKm(X, Res) :-
 * Sucht alle Kategorien für Events
 */
 findAllCategories(Categories):-
-	findall(X, event(_,_,X,_,_,_,_), L),
+	findall(X, event(_,_,X,_,_,_), L),
 	mergeListOfListsToList(C1,L),
 	Categories = C1.
 
@@ -27,7 +27,7 @@ findAllCategories(Categories):-
 * Sucht alle Kategorien für Restaurants, Imbisse ...
 */
 findAllFoodCategories(Categories):-
-	findall(X, event(_,_,_,X,_,_,_), L),
+	findall(X, event(_,_,_,X,_,_), L),
 	mergeListOfListsToList(C1,L),
 	Categories = C1.
 	
@@ -48,12 +48,12 @@ findAllHotelCategories(Categories):-
 */	
 calcDistance(EventA, EventB, Distance) :-
 	(
-		event(EventA, [XA, YA], _, _, _, _, _)
+		event(EventA, [XA, YA], _, _, _, _)
 		;
 		hotel(EventA, [XA, YA], _, _)	
 	),
 		(
-		event(EventB, [XB, YB],  _, _, _, _, _)
+		event(EventB, [XB, YB],  _, _, _, _)
 		;
 		hotel(EventB, [XB, YB],  _, _)	
 	),
@@ -74,7 +74,7 @@ calcDistance(EventA, EventB, Distance) :-
 * Gibt die möglichen Events zu den Kategorien zurück, wenn Events leer
 */
 searchEventsOnCategory(Categories,Events):-
-	findall([X,V], event(X,_,V, _, _,_,_), List),
+	findall([X,V], event(X,_,V, _, _,_), List),
 	compareCategories(List,Categories,Events1),
 	Events = Events1.
 	
@@ -128,7 +128,7 @@ checkEventForBudget(_,_,[],ValidEvents):-
 checkEventForBudget(Persons,Budget,[Event|MyEvents],ValidEvents):-
 	checkEventForBudget(Persons,Budget,MyEvents,ValidEvents1),
 	((
-		event(Event,_,_,_,[AdultPrice,ReducedPrice],_,_),
+		event(Event,_,_,_,[AdultPrice,ReducedPrice],_),
 		[AdultCount|ReducedCount] = Persons,
 		Price is (AdultCount*AdultPrice)+(ReducedCount*ReducedPrice),
 		write(Price), nl,
@@ -397,7 +397,7 @@ Genutzt werden Price1 und Price2 für die Berechnung in der Überprüfung der Timel
 */
 calcEventPrice([AdultCount,ReducedCount], Event, Price):-
 		write("Berechne Preis für "+Event), nl,
-	event(Event,_,_,_,[AdultPrice,ReducedPrice],_,_),
+	event(Event,_,_,_,[AdultPrice,ReducedPrice],_),
 	Price is (AdultCount*AdultPrice) + (ReducedCount*ReducedPrice),
 		write("-> Preis für " + Event + " ist: " + Price), nl. 
 	
@@ -421,9 +421,30 @@ calcHotelPrice(Persons, Hotel, Price):-
 /*
 Findet Hotels zur angegebenen Categorie
 */
-findHotelsForTrip(HotelCategorie, Hotel1):-
-	write('Suche Hotel zu Kategorien').
+findHotelsForTrip(HotelCategorie, Hotel1, Budget):-
+	findall([X,B,V], hotel(X,_,B,V), List),
+	compareCategoriesAndBudget(List,HotelCategorie,Budget,Hotels),
+	Hotel1 = Hotels.
+
+/*
+* Vergleicht die Liste der Kategorien & Budget mit der übergebenen Liste
+*/	
+compareCategoriesAndBudget([E|L],Categories,Budget,List1):-
+	compareCategoriesAndBudget(L,Categories,Budget,List2),
+	E = [X,B,Y],
+	(  (compare_list(Y,Categories), B =< Budget)
+	-> (
+		append([X],List2,List3),
+	   	List1 = List3
+	   )
+	   ;
+	   (
+	   	List1 = List2
+	   )	
+	).
 	
+compareCategoriesAndBudget([],_,_,List1):-
+	List1 = [].
 /*
 Findet Restaurant passend zur Gruppe
 */
@@ -434,7 +455,7 @@ findRestaurant():-
 Prüft die Öffnungszeiten
 */
 checkBussinesHours(ThisEvent, EventStartTime, EventTime):-
-	event(ThisEvent,_,_,_,_,[Opening, Closing],_),
+	event(ThisEvent,_,_,_,_,[Opening, Closing]),
 	EventStartTime >= Opening,
 	EventEndTime is EventStartTime + EventTime,
 	EventEndTime =< Closing.
