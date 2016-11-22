@@ -176,7 +176,7 @@ checkEventsOnTime(Persons,[EventHead|EventsTail],DayStart, DayEnd, Hotel, HotelC
 	;
 	(
 		var(Hotel),
-		findHotelForTrip(HotelCategorie, Hotel1),
+		findHotelsForTrip(HotelCategorie, Hotel1),
 		Hotel = Hotel1
 	)),
 	checkTimeLine(Persons,[EventHead|EventsTail],DayStart, DayEnd, Hotel, Budget, Return, Price).	
@@ -421,7 +421,7 @@ calcHotelPrice(Persons, Hotel, Price):-
 /*
 Findet Hotels zur angegebenen Categorie
 */
-findHotelForTrip(HotelCategorie, Hotel1):-
+findHotelsForTrip(HotelCategorie, Hotel1):-
 	write('Suche Hotel zu Kategorien').
 	
 /*
