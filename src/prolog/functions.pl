@@ -476,10 +476,36 @@ compareCategoriesAndBudget([],_,_,_,List1):-
 	
 /*
 Findet Restaurant passend zur Gruppe
+findRestaurant(['Fast-Food'], Restaurant, [1200,1500]).
 */
-findRestaurant():-
-	write().
+findRestaurant(FoodCategories, Restaurant,[Starting,Ending]):-
+ 
+	findall([Name,Cat,[Start,End]], event(Name,_,_,Cat,_,[Start,End],_), List),
+	compareRestaurants(List,FoodCategories,[Starting,Ending],Restaurants),
+	Restaurants = [Restaurant|_].
 	
+compareRestaurants([E|L],FoodCategories,[Start,End],List1):-
+	compareRestaurants(L,FoodCategories,[Start,End],List2),
+	E = [Name,Cat,[Opening,Closing]],
+	((
+	
+		compare_list(Cat,FoodCategories), 
+		Opening =< Start,
+		Duration is Start + 60,
+		Duration =< Closing 
+		)
+	-> (
+		append([Name, [Start,Duration]],List2,List3),
+	   	List1 = List3
+	   )
+	   ;
+	   (
+	   	List1 = List2
+	   )	
+	).
+	
+compareRestaurants([],_,_,List1):-
+	List1 = [].
 /*
 Prüft die Öffnungszeiten
 */
@@ -585,3 +611,5 @@ pivoting(H,[X|T],L,[X|G]):-
 	[_, _, HStartTime, _, _] = H,
 	XStartTime=<HStartTime,
 	pivoting(H,T,L,G).
+	
+
