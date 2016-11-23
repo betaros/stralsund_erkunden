@@ -48,12 +48,12 @@ findAllHotelCategories(Categories):-
 */	
 calcDistance(EventA, EventB, Distance) :-
 	(
-		event(EventA, [XA, YA], _, _, _, _)
+		event(EventA, [XA, YA], _, _, _, _, _)
 		;
 		hotel(EventA, [XA, YA], _, _)	
 	),
 		(
-		event(EventB, [XB, YB],  _, _, _, _)
+		event(EventB, [XB, YB],  _, _, _, _, _)
 		;
 		hotel(EventB, [XB, YB],  _, _)	
 	),
@@ -128,7 +128,7 @@ checkEventForBudget(_,_,[],ValidEvents):-
 checkEventForBudget(Persons,Budget,[Event|MyEvents],ValidEvents):-
 	checkEventForBudget(Persons,Budget,MyEvents,ValidEvents1),
 	((
-		event(Event,_,_,_,[AdultPrice,ReducedPrice],_),
+		event(Event,_,_,_,[AdultPrice,ReducedPrice],_,_),
 		[AdultCount|ReducedCount] = Persons,
 		Price is (AdultCount*AdultPrice)+(ReducedCount*ReducedPrice),
 		write(Price), nl,
@@ -198,7 +198,9 @@ checkEventsOnTime(Persons, EventList, DayStart, DayEnd, Hotel, HotelCategorie, B
 		Hotel = Hotel1
 	)),
 	Fill = false,
-	checkTimeLine(Fill, Persons, SortedEventList, DayStart, DayEnd, Hotel, Budget, Return, Price).	
+	checkTimeLine(Persons, SortedEventList, DayStart, DayEnd, Hotel, Budget, Return1, Price1),
+	Return = Return1,
+	Price = Price1.	
 
 
 
@@ -416,7 +418,7 @@ Genutzt werden Price1 und Price2 für die Berechnung in der Überprüfung der Timel
 */
 calcEventPrice([AdultCount,ReducedCount], Event, Price):-
 		write("Berechne Preis für "+Event), nl,
-	event(Event,_,_,_,[AdultPrice,ReducedPrice],_),
+	event(Event,_,_,_,[AdultPrice,ReducedPrice],_,_),
 	Price is (AdultCount*AdultPrice) + (ReducedCount*ReducedPrice),
 		write("-> Preis für " + Event + " ist: " + Price), nl. 
 	
@@ -481,7 +483,7 @@ findRestaurant():-
 Prüft die Öffnungszeiten
 */
 checkBussinesHours(ThisEvent, EventStartTime, EventTime):-
-	event(ThisEvent,_,_,_,_,[Opening, Closing]),
+	event(ThisEvent,_,_,_,_,[Opening, Closing],_),
 	EventStartTime >= Opening,
 	EventEndTime is EventStartTime + EventTime,
 	EventEndTime =< Closing.
