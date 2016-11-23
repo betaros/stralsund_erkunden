@@ -197,15 +197,12 @@ checkEventsOnTime(Persons, EventList, DayStart, DayEnd, Hotel, HotelCategorie, B
 		findHotelsForTrip(HotelCategorie, Hotel1), 
 		Hotel = Hotel1
 	)),
-	Fill = false,
 	checkTimeLine(Persons, SortedEventList, DayStart, DayEnd, Hotel, Budget, Return1, Price1),
 	Return = Return1,
 	Price = Price1.	
 
 
-
 /*
-
 checkTimeLine(Persons,[Eventlist] ,DayStart, Hotel, Budget, Return, Price):-
 Persons = Personen = [X,Y] = [Anzahl Erwachsene, Anzahl Ermäßigte]
 Eventlist = Eventliste = [Event1, Event2, .., EventX] 
@@ -358,6 +355,16 @@ checkTimeLine(Persons, PrevEventInput, [], _, DayEnd, Hotel, Budget, Return, Pri
 
 /*----------------------------------------------------------------------------------------------*/
 
+/*
+Füllt die bestehende Timeline mit Events
+*/
+
+fillTimeLine(Persons,[EventHead|EventsTail], DayStart, DayEnd, Hotel, HotelCategories, Budget, ResultTimeLine, Return, Price):-
+	ResultTimeLine = [],
+	[PrevName, PrevDay, PrevStart, PrevTime, PrevArrival] = EventHead. 
+
+
+/*----------------------------------------------------------------------------------------------*/
 	
 /*
 *calcApproachlForEvent
