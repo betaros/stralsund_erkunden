@@ -231,9 +231,19 @@ public class MainPanel extends JPanel {
 		 * TODO: 
 		 * Hotel
 		 * */
-		//String hotel = "";
+		String hotel = "";
+		if(_newEvent.getCategories().contains("hotel")){
+			hotel = _newEvent.getName();
+		} else {
+			for(Event e:timelineArrayList){
+				if(e.getCategories().contains("hotel")){
+					hotel = e.getName();
+				}
+			}
+		}
 		//boolean isEventOnTime = prologConnector.checkEventsOnTime(profile.getAdultCounter(), profile.getChildCounter(), timelineArrayList, profile.getDayStart(), hotel, profile.getBudgetInCent(), profile); 
-
+		//System.out.println("isEventOnTime: " + isEventOnTime);
+		
 		//if(isEventOnTime){
 			if(!timelineArrayList.contains(_newEvent)){
 				timelineArrayList.add(_newEvent);

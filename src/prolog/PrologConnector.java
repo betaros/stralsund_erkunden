@@ -434,6 +434,9 @@ public class PrologConnector {
 		Term People = Util.textToTerm(prologListGenerator(peopleList));
 		
 		ArrayList<Term> eventTermList = new ArrayList<Term>();
+		if(eventList.isEmpty()){
+			return true;
+		}
 		for(Event event:eventList){
 			ArrayList<String> eventStringList = new ArrayList<String>();
 			eventStringList.add(event.getName());
@@ -461,14 +464,11 @@ public class PrologConnector {
 		}
 		
 		// Term mit weiteren Termen fuellen
-		Term EventList = null;
-		for(Term t:eventTermList){
-			/* TODO:
-			 * Mehrere Terme in einen speichern
-			 */
+		Term[] EventList = new Term[eventTermList.size()];
+		for(int i = 0; i < eventTermList.size(); i++){
+			EventList[i] = eventTermList.get(i);
 		}
-		
-		
+		Compound EventListCompound = new Compound("EventList", EventList);
 		Atom DayStart = new Atom(String.valueOf(dayStart));
 		Atom Hotel = new Atom(hotel);
 		Atom Budget = new Atom(String.valueOf(budget));
@@ -478,7 +478,7 @@ public class PrologConnector {
 		Query query =
 				new Query(
 					"checkEventsOnTime",
-					new Term[]{People, EventList, DayStart, Hotel, Budget, ReturnValue, Price}
+					new Term[]{People, EventListCompound, DayStart, Hotel, Budget, ReturnValue, Price}
 				);
 		
 		boolean result = false;
