@@ -612,4 +612,55 @@ pivoting(H,[X|T],L,[X|G]):-
 	XStartTime=<HStartTime,
 	pivoting(H,T,L,G).
 	
-
+calculateFullTimeLine(Persons,Budget,DayStart,DayEnd,Categories,FoodCategories,Hotelcategories,TimeLine,Hotel,Vehicle):-
+	
+	findHotelsForTrip(Hotelcategories, Hotel1, Budget, Persons),
+	calcHotelPrice(Persons, Hotel1, Price),
+	Budget1 is Budget - Price,
+	Hotel is Hotel1,
+	findEvent(Persons,Budget,DayStart,DayEnd,Categories,Event),
+	Event = [Name,[Start,Duration],EventPrice],
+	Budget2 is Budget1 - Price,
+	calcApproachForEvent(Persons, Hotel, Name, Hotel, Vehicle, Start, Approach),
+	EventX = [Name, 1, Start, Duration, Approach],
+	append(EventX,TimeLine,TimeLine),
+	/*Persons = [A,C],
+	Kids = true,
+	(C=0,
+	Kids = false
+	)
+	*/
+	write(TimeLine).
+	
+% findEvent([2,2],100000, 600,2100,['Einkaufen'],Event).
+findEvent(Persons,Budget,Start,End,Categories,Event):-
+	findall([Name,Cat,[Adultprice,Childprice],[XStart,XEnd],Duration], event(Name,_,Cat,_,[Adultprice,Childprice],[XStart,XEnd],Duration), List),
+	compareEvents(List,Persons,Budget,Start,End,Categories,Events),
+	checkEventsForBudget(Persons,Budget,Events,ValidEvents),
+	ValidEvents = [Event|_].
+	
+% compareEvents([
+compareEvents([E|L],Persons,Budget,Start,End,Categories,List1):-
+	compareEvents(L,Persons,Budget,Start,End,Categories,List2),
+	E = [Name,Cat,[AdultPrice,ReducedPrice],[Opening,Closing],Duration],
+	Persons = [AdultCount,ReducedCount],
+	((
+		compare_list(Cat,Categories), 
+		Opening =< Start,
+		Duration+Start =< Closing,
+		End - Start >= Duration
+		)
+	-> (
+	
+		Price is (AdultCount*AdultPrice)+(ReducedCount*ReducedPrice),
+		append([Name, [Start,Duration],Price],List2,List3),
+	   	List1 = List3
+	   )
+	   ;
+	   (
+	   	List1 = List2
+	   )	
+	).
+	
+compareEvents([],_,_,_,_,_,List1):-
+	List1 = [].
