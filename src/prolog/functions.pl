@@ -355,13 +355,7 @@ checkTimeLine(Persons, PrevEventInput, [], _, DayEnd, Hotel, Budget, Return, Pri
 
 /*----------------------------------------------------------------------------------------------*/
 
-/*
-Füllt die bestehende Timeline mit Events
-*/
 
-fillTimeLine(Persons,[EventHead|EventsTail], DayStart, DayEnd, Hotel, HotelCategories, Budget, ResultTimeLine, Return, Price):-
-	ResultTimeLine = [],
-	[PrevName, PrevDay, PrevStart, PrevTime, PrevArrival] = EventHead. 
 
 
 /*----------------------------------------------------------------------------------------------*/
@@ -578,7 +572,7 @@ qSort([H|T],Acc,Sorted):-
 	qSort(L1,Acc,Sorted1),
 	qSort(L2,[H|Sorted1],Sorted).
 	
-pivoting(H,[],[],[]).
+pivoting(_,[],[],[]).
 
 pivoting(H,[X|T],[X|L],G):-
 	[_, _, XStartTime, _, _] = X,
