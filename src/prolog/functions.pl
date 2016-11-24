@@ -613,25 +613,86 @@ pivoting(H,[X|T],L,[X|G]):-
 	XStartTime=<HStartTime,
 	pivoting(H,T,L,G).
 	
-calculateFullTimeLine(Persons,Budget,DayStart,DayEnd,Categories,FoodCategories,Hotelcategories,TimeLine,Hotel,Vehicle):-
+list_zerolength(List, Empty) :-
+    length(List, Len),
+    (   Len == 0
+    ->  Empty = true
+    ;   Empty = false
+    ).	
+    
+noLunchEvent(TimeLine,Return):-
+	Return = false,
+	forall(member(Event, TimeLine), 
+		Event = [Name,_,_,_,_],
+		event(Name,_,_,FoodCats,_,_,_),
+		list_zerolength(FoodCats,Empty),
+		Empty = false,
+		Return = true)
+	.
 	
+	
+
+%calculateFullTimeLine([2,2],1000000,1,600,2100,['Schwimmen','Einkaufen'],['Fast-Food'],[3],TimeLine,Hotel,'Car').
+calculateFullTimeLine(Persons,Budget,Day,DayStart,DayEnd,Categories,FoodCategories,Hotelcategories,TimeLine,Hotel,Vehicle):-
+	
+	%Fall: komplett leer
+	(var(Hotel),
 	findHotelsForTrip(Hotelcategories, Hotel1, Budget, Persons),
 	calcHotelPrice(Persons, Hotel1, Price),
 	Budget1 is Budget - Price,
 	Hotel is Hotel1,
-	findEvent(Persons,Budget,DayStart,DayEnd,Categories,Event),
-	Event = [Name,[Start,Duration],EventPrice],
-	Budget2 is Budget1 - Price,
-	calcApproachForEvent(Persons, Hotel, Name, Hotel, Vehicle, Start, Approach),
-	EventX = [Name, 1, Start, Duration, Approach],
-	append(EventX,TimeLine,TimeLine),
+	findEventForFreeTime(TimeLine, Categories, Persons, Budget1, Hotel, Vehicle, DayStart, DayEnd, DayStart, Result),
+	calcEventPrice(Persons, Name, EventPrice),
+	Budget1 is Budget1 - EventPrice,
+	calcApproachForEvent(Persons, Hotel, Name, Hotel, Vehicle, DayStart, Approach),
+	Approach = [_, _, ArrivalTime, StartTime, ApproachPrice],
+	Budget1 is Budget1 - ApproachPrice,
+	event(Result,_,_,_,_,_,EventTime),
+	EventForTimeLine = [Result,Day,ArrivalTime,EventTime,Vehicle],
+	append(EventForTimeLine,TimeLine,TimeLine),
+	NewTime is ArrivalTime+EventTime,
+	calculateFullTimeLine(Persons,Budget1,Day,NewTime,DayEnd,Categories,FoodCategories,Hotelcategories,TimeLine,Hotel,Vehicle)
+	)
+	;
+	%Fall: 1. Event gefüllt, Mittagszeit, noch kein Restuarant ausgewählt
+	(
+	nonvar(Hotel),
+	DayStart > 660,
+	DayStart < 840,
+	noLunchEvent(TimeLine,Return),
+	Return,
+	findRestaurant(FoodCategories, Restaurant,[DayStart,DayEnd]),
+	Restaurant = [RestaurantName, [Start,Duration]],
+	TimeLine = [Head|_],
+	calcApproachForEvent(Persons, Head, RestaurantName, Hotel, Vehicle, Start, Approach),
+	Approach = [_, _, ArrivalTime, StartTime, ApproachPrice],
+	Budget1 is Budget - ApproachPrice,
+	EventForTimeLine = [RestaurantName,Day,ArrivalTime,Duration,Vehicle],
+	append(EventForTimeLine,TimeLine,TimeLine),
+	NewTime is ArrivalTime+Duration,
+	calculateFullTimeLine(Persons,Budget1,Day,NewTime,DayEnd,Categories,FoodCategories,Hotelcategories,TimeLine,Hotel,Vehicle)
+	)
+	;
+	(
+	write(TimeLine),
+	write(Hotel),
+	!
+	).
+	
+	
+%	findEvent(Persons,Budget,DayStart,DayEnd,Categories,Event),
+%	Event = [Name,[Start,Duration],EventPrice],
+%	Budget2 is Budget1 - Price,
+%	calcApproachForEvent(Persons, Hotel, Name, Hotel, Vehicle, Start, Approach),
+%	EventX = [Name, 1, Start, Duration, Approach],
+%	append(EventX,TimeLine,TimeLine),
 	/*Persons = [A,C],
 	Kids = true,
 	(C=0,
 	Kids = false
 	)
 	*/
-	write(TimeLine).
+%	write(TimeLine).
 	
 % findEvent([2,2],100000, 600,2100,['Einkaufen'],Event).
 findEvent(Persons,Budget,Start,End,Categories,Event):-
