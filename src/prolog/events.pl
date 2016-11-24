@@ -1,4 +1,4 @@
-:- module('events', [event/7,hotel/4,vehicle/3]).
+:- module('events', [event/7,hotel/4,vehicle/3,childCategories/1,adultCategories/1]).
 
 /*
 * Wissensdatenbank
@@ -64,7 +64,7 @@ event(	'Marinemuseum',
 	[],
 	[2000,1000],
 	[600, 2100],
-	[200]).
+	[400]).
 	
 event(	'Fachhochschule Stralsund',
 	[54.339149,13.076232],
@@ -118,3 +118,9 @@ vehicle('Car', [100, 100], 35).
 vehicle('Bus', [180, 120], 25).
 vehicle('Bike', [0,0], 15).
 vehicle('Foot', [0,0], 6).
+
+/*
+* Kategorien für Kinder und Erwachsene festlegen
+*/
+childCategories(['Freizeit','Tiere','Schwimmen']).
+adultCategories(['Bildung','Bar','Kneipe','Sauna']).

@@ -2,6 +2,7 @@
 :- use_module(java_connection_functions).
 
 :- use_module(library(lists)).
+:- use_module(library(random)).
  
 /*
 * Konstanten fuer die Berechnungen
@@ -664,3 +665,236 @@ compareEvents([E|L],Persons,Budget,Start,End,Categories,List1):-
 	
 compareEvents([],_,_,_,_,_,List1):-
 	List1 = [].
+
+ /*
+Füllt die bestehende Timeline mit Events
+fillTimeLine(Persons, PrevEvent, EventList, DayStart, DayEnd, Hotel, HotelCategorie, Budget, ResultTimeLine, Return, Price)
+fillTimeLine(A, B, C, D, E, F , G, H, I, J, K)
+A = Persons = [Erwachsene, Kinder]
+B = EventCategories
+C = PrevEvent = Vorhergehendes Event
+D = TimeLine = Restliche Eventliste
+E = DayStart = Startzeit des Tages
+F = DayEnd = Ende des Tages
+G = Hotel = Name des Hotels
+H = HotelCategorie = Kategorien des Hotels = ['Kat.Name', ...]
+I = Budget = Budget
+J = ResultTimeLine = Timeline nach Füllung
+K = Return = True oder False
+L = Price = Preis der gesamten Tour
+trace, fillTimeLine([1,0], ['Bar', 'Freizeit'], _, [['Haus 8',1,1030,100,'Car'],['Zoo',1,1230,100,'Car']],800, 2200, 'X Sterne Hotel', _, 1000000, X, Return, Price).
+trace, fillTimeLine([1,0], ['Bar', 'Freizeit'], _, [['Meeresmuseum',1,1030,100,'Car'],['Zoo',1,1230,100,'Car']],800, 2200, 'X Sterne Hotel', _, 1000000, X, Return, Price).
+
+*/
+fillTimeLine(Persons, EventCategories, PrevEvent, TimeLine, DayStart, DayEnd, Hotel, HotelCategories, Budget, ResultTimeLine, Return, Price):-
+	%checkEventsOnTime(Persons, TimeLine, DayStart, DayEnd, Hotel, HotelCategories, Budget, Return, Price),
+	[EventHead|EventsTail] = TimeLine,
+	checkRTL(ResultTimeLine, ResultTimeLine1),
+	((
+		% PrevEvent ist angegeben, damit befindet sich die Schleife mitten im Tag
+		nonvar(PrevEvent)
+	)
+	;
+	(
+		% kein PrevEvent angegeben, damit befindet sich die Schleife am Anfang des Tages
+		var(PrevEvent),
+		DayTimeLine = [],
+		findFirstEventOfDay(Persons, EventCategories, DayTimeLine, TimeLine, DayStart, DayEnd, Hotel, Budget, ResultTimeLine1, Return, Price)
+	)). 
+	
+/*
+Erstellt ein Event für den Zeitraum zwischen "Anfang des Tages" bis zum ersten Event
+Beispiel: findFirstEventOfDay(Persons, TimeLine, DayStart, DayEnd, Hotel, Budget, ResultTimeLine, Return, Price)
+*/
+findFirstEventOfDay(Persons, EventCategories, DayTimeLine, TimeLine, DayStart, DayEnd, Hotel, Budget, ResultTimeLine, Return, Price):-
+	[EventHead|EventTail] = TimeLine,
+	[FirstEvent, FirstDay, FirstStartTime, FirstTime, FirstVehicle] = EventHead,
+	calcApproachForEvent(Persons, _, FirstEvent, Hotel, Vehicle, FirstStartTime, [_,_,_,NextRealStartTime,Price1]),
+	(
+		NextRealStartTime > DayStart,
+		findEventForFreeTime(TimeLine, EventCategories, Persons, Budget, Hotel, FirstVehicle, DayStart, NextRealStartTime, Result)
+	).
+	
+findEventForFreeTime(TimeLine, EventCategories, Persons, Budget, Hotel, Vehicle, DayStart, NextRealStartTime, Result):-
+	searchEventsOnCategory(EventCategories, Events),
+	MaxDuration is NextRealStartTime - DayStart,
+		write(MaxDuration + Hotel + Vehicle + Events), nl,
+	searchPossibleEventsOnDuration(MaxDuration, Hotel, Vehicle, Events, PossibleEventsOnDuration),
+		write(PossibleEventsOnDuration), nl, 
+		write(Budget + Persons + Vehicle + Hotel + PossibleEventsOnDuration), nl,
+	searchPossibleEventsOnBudget(Budget, Persons, Vehicle, Hotel, PossibleEventsOnDuration, PossibleEventsOnBudget),
+		write(PossibleEventsOnBudget), nl, 
+	searchPossibleEventsOnAdultChildRatio(Persons, PossibleEventsOnBudget, PossibleEventOnAdultChildRatio),
+		write(PossibleEventOnAdultChildRatio), nl,
+		write(TimeLine), nl,
+	searchPossibleEventsOnTimeline(PossibleEventOnAdultChildRatio, TimeLine, PossibleEventsOnTimeline),
+		write(PossibleEventsOnTimeline), nl,
+	shuffleOneResult(PossibleEventsOnTimeline, Result), nl,
+		write(Result), nl
+	.
+
+
+/*
+Prüft ob die Events in der Zeit passen
+*/
+searchPossibleEventsOnTimeline([], _, PossibleEventsOnTimeline):-
+	% write("Ende der Suche"), nl,
+	PossibleEventsOnTimeline = [].
+			
+searchPossibleEventsOnTimeline([EventsHead|EventsTail], Timeline, PossibleEventsOnTimeline):-
+	searchPossibleEventsOnTimeline(EventsTail, Timeline, PossibleEventsOnTimeline1),
+	write("Suche zu " + EventsHead), nl,	
+	searchEventInTimeLine(EventsHead, Timeline, Result),
+	(
+		(
+			%write("Event noch nicht vorhanden"), nl,
+			Result = 'false',
+			append(PossibleEventsOnTimeline1, [EventsHead], PossibleEventsOnTimeline2)
+		)
+		;
+		(	
+			write("Event bereits vorhanden"), nl,
+			Result = 'true',
+			PossibleEventsOnTimeline2 = PossibleEventsOnTimeline1
+		)
+	),
+	PossibleEventsOnTimeline = PossibleEventsOnTimeline2.
+
+searchEventInTimeLine(_, [], Result):-
+	Result = 'false'.
+searchEventInTimeLine(Event, [Head|Tail], Result):-
+	[EventHead, _, _, _, _] = Head,
+	write("Suche für " + Event + EventHead), nl,
+	((
+		write("Vergleiche " + Event + EventHead), nl,
+		Event = EventHead,
+		Result = 'true',
+		write("Ist gleich")
+	)
+	;
+	(
+		searchEventInTimeLine(Event, Tail, Result)
+	)).
+
+shuffleOneResult([], []).
+shuffleOneResult(PossibleEventOnAdultChildRatio, Result) :-
+        length(PossibleEventOnAdultChildRatio, Length),
+        random(0, Length, Index),
+        nth0(Index, PossibleEventOnAdultChildRatio, Result).
+	
+/*
+Prüft ob die Events in der Zeit passen
+searchPossibleEventOnAdultChildRatio([2,3], ['Hansedom','Meeresmuseum','Zoo','Haus 8'], PossibleEventOnAdultChildRatio)
+searchPossibleEventOnAdultChildRatio([2,0], ['Hansedom','Meeresmuseum','Zoo','Haus 8'], PossibleEventOnAdultChildRatio)
+compareCategories(['Zoo','Kneipe'], ['Tiere','Museum'],  Result)
+compareCategories([['Hansedom',['Tiere','Museum']]], ['Tiere','Museum'],  Result)
+compareCategories([['Haus 8',['Bar','Kneipe']]], ['Tiere','Museum'],  Result)
+*/
+searchPossibleEventsOnAdultChildRatio(_, [], PossibleEventOnAdultChildRatio):-
+		% write("Ende der Suche"), nl,
+	PossibleEventOnAdultChildRatio = [].
+			
+searchPossibleEventsOnAdultChildRatio(Persons, [EventsHead|EventsTail], PossibleEventOnAdultChildRatio):-
+	searchPossibleEventsOnAdultChildRatio(Persons, EventsTail, PossibleEventOnAdultChildRatio1),
+		% write("Prüfe"), nl,
+	[_,Children] = Persons,
+	event(EventsHead, _, EventCategories, _, _, _, _),
+	(
+		(
+			Children =\= 0,
+			childCategories(ChildList),
+			compareCategories([[EventsHead, EventCategories]], ChildList,  Result)
+		)
+		;
+		(
+			Children = 0,
+			adultCategories(AdultList),
+			compareCategories([[EventsHead, EventCategories]], AdultList,  Result)
+		)
+		
+	),
+	(
+		(
+			Result = [],
+			PossibleEventOnAdultChildRatio2 = PossibleEventOnAdultChildRatio1
+		)
+		;
+		(
+			append(PossibleEventOnAdultChildRatio1, Result, PossibleEventOnAdultChildRatio2)
+		)
+	),
+	PossibleEventOnAdultChildRatio = PossibleEventOnAdultChildRatio2.
+
+
+
+/*
+Prüft ob die Events in der Zeit passen
+*/
+searchPossibleEventsOnBudget(_, _, _, _, [], PossibleEventsOnBudget):-
+	% write("Ende der Suche"), nl,
+	PossibleEventsOnBudget = [].
+			
+searchPossibleEventsOnBudget(Budget, Persons, Vehicle, Hotel, [EventsHead|EventsTail], PossibleEventsOnBudget):-
+	% write("SearchOnBudget"), nl,
+	% write(EventsHead), nl,
+	searchPossibleEventsOnBudget(Budget, Persons, Vehicle, Hotel, EventsTail, PossibleEventsOnBudget1),
+	% write("Kalkuliere weiter"), nl,
+	calcApproachForEvent([0,0], _, EventsHead, Hotel,  Vehicle, 0,  [_,_,_,_,ApproachPrice]),
+	calcEventPrice(Persons, EventsHead, EventPrice),
+	(
+		(
+			% write("Prüfe auf Budget dass korrekt"), nl,
+			FullEventPrice is EventPrice + ApproachPrice,
+			Budget >= FullEventPrice,
+			append(PossibleEventsOnBudget1, [EventsHead], PossibleEventsOnBudget2)
+		)
+		;
+		(	
+			% write("Budget reicht nicht"), nl,
+			PossibleEventsOnBudget2 = PossibleEventsOnBudget1
+		)
+	),
+	PossibleEventsOnBudget = PossibleEventsOnBudget2.
+
+/*
+Prüft ob die Events in der Zeit passen
+*/
+searchPossibleEventsOnDuration(_, _, _, [], PossibleEventsOnDuration):-
+	PossibleEventsOnDuration = [].
+			
+searchPossibleEventsOnDuration(MaxDuration, Hotel, FirstVehicle, [EventsHead|EventsTail], PossibleEventsOnDuration):-
+	searchPossibleEventsOnDuration(MaxDuration, Hotel, FirstVehicle, EventsTail, PossibleEventsOnDuration1),
+	calcApproachForEvent([0,0], _, EventsHead, Hotel,  FirstVehicle, 0,  [_,_,ApproachTime,_,_]),
+	event(EventsHead, _, _, _, _, _, [EventDuration]),
+	(
+		(
+			FullEventDuration is EventDuration + ApproachTime,
+			MaxDuration >= FullEventDuration,
+			append(PossibleEventsOnDuration1, [EventsHead], PossibleEventsOnDuration2)
+		)
+		;
+		(
+			PossibleEventsOnDuration2 = PossibleEventsOnDuration1
+		)
+	),
+	PossibleEventsOnDuration = PossibleEventsOnDuration2.
+		
+/*
+Prüft ob RTL leer oder nicht und gibt leere Liste zurück
+Beispiel1: checkRTL(ResultTimeLine, ResultTimeLine1)
+Beispiel2: checkRTL([], ResultTimeLine1)
+*/
+checkRTL(ResultTimeLine, ResultTimeLine1):-
+	((
+		% RTL ist angegeben
+		nonvar(ResultTimeLine)
+	)
+	;
+	(
+		% RTL ist angegeben
+		var(ResultTimeLine),
+		ResultTimeLine1 = []
+	)).
+
+
+	
