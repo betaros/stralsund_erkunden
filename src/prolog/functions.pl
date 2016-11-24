@@ -682,11 +682,11 @@ I = Budget = Budget
 J = ResultTimeLine = Timeline nach Füllung
 K = Return = True oder False
 L = Price = Preis der gesamten Tour
-trace, fillTimeLine([1,0], ['Bar', 'Freizeit'], _, [['Haus 8',1,1030,100,'Car'],['Zoo',1,1230,100,'Car']],800, 2200, 'X Sterne Hotel', _, 1000000, X, Return, Price).
-trace, fillTimeLine([1,0], ['Bar', 'Freizeit'], _, [['Meeresmuseum',1,1030,100,'Car'],['Zoo',1,1230,100,'Car']],800, 2200, 'X Sterne Hotel', _, 1000000, X, Return, Price).
+trace, fillTimeLine([1,0], ['Bar', 'Freizeit'], _, [['Haus 8',1,1030,100,'Car'],['Zoo',1,1230,100,'Car']], 1, 800, 2200, 'X Sterne Hotel', _, 1000000, X, Return, Price).
+trace, fillTimeLine([1,0], ['Bar', 'Freizeit'], _, [['Meeresmuseum',1,1030,100,'Car'],['Zoo',1,1230,100,'Car']], 1, 800, 2200, 'X Sterne Hotel', _, 1000000, X, Return, Price).
 
 */
-fillTimeLine(Persons, EventCategories, PrevEvent, TimeLine, DayStart, DayEnd, Hotel, HotelCategories, Budget, ResultTimeLine, Return, Price):-
+fillTimeLine(Persons, EventCategories, PrevEvent, TimeLine, Day, DayStart, DayEnd, Hotel, HotelCategories, Budget, ResultTimeLine, Return, Price):-
 	%checkEventsOnTime(Persons, TimeLine, DayStart, DayEnd, Hotel, HotelCategories, Budget, Return, Price),
 	[EventHead|EventsTail] = TimeLine,
 	checkRTL(ResultTimeLine, ResultTimeLine1),
@@ -699,21 +699,46 @@ fillTimeLine(Persons, EventCategories, PrevEvent, TimeLine, DayStart, DayEnd, Ho
 		% kein PrevEvent angegeben, damit befindet sich die Schleife am Anfang des Tages
 		var(PrevEvent),
 		DayTimeLine = [],
-		findFirstEventOfDay(Persons, EventCategories, DayTimeLine, TimeLine, DayStart, DayEnd, Hotel, Budget, ResultTimeLine1, Return, Price)
+		findFirstEventOfDay(Persons, EventCategories, DayTimeLine, TimeLine, Day,  DayStart, DayEnd, Hotel, Budget, ResultTimeLine1, Return, Price)
 	)). 
 	
 /*
 Erstellt ein Event für den Zeitraum zwischen "Anfang des Tages" bis zum ersten Event
 Beispiel: findFirstEventOfDay(Persons, TimeLine, DayStart, DayEnd, Hotel, Budget, ResultTimeLine, Return, Price)
 */
-findFirstEventOfDay(Persons, EventCategories, DayTimeLine, TimeLine, DayStart, DayEnd, Hotel, Budget, ResultTimeLine, Return, Price):-
+findFirstEventOfDay(Persons, EventCategories, DayTimeLine, TimeLine, Day, DayStart, DayEnd, Hotel, Budget, ResultTimeLine, Return, Price):-
 	[EventHead|EventTail] = TimeLine,
 	[FirstEvent, FirstDay, FirstStartTime, FirstTime, FirstVehicle] = EventHead,
 	calcApproachForEvent(Persons, _, FirstEvent, Hotel, Vehicle, FirstStartTime, [_,_,_,NextRealStartTime,Price1]),
 	(
 		NextRealStartTime > DayStart,
-		findEventForFreeTime(TimeLine, EventCategories, Persons, Budget, Hotel, FirstVehicle, DayStart, NextRealStartTime, Result)
+		findEventForFreeTime(TimeLine, EventCategories, Persons, Budget, Hotel, FirstVehicle, DayStart, NextRealStartTime, Result),
+			write("Füge Result zu Timeline"), nl,
+		addResultToTimeLine(Result, TimeLine, DayStart, Day, FirstVehicle, Hotel, ResultTimeLine1)
 	).
+
+addResultToTimeLine([], TimeLine, _, _, _, _, ResultTimeLine):-
+	ResultTimeLine = TimeLine.
+	
+addResultToTimeLine(Event, TimeLine, FromTime, Day, Vehicle, Hotel, ResultTimeLine):-
+	calcApproachForEvent([0,0], _, Event, Hotel,  Vehicle, 0,  [_,_,ArrivalTime,_,_]),
+	event(Event, _, _, _, _, [Opening, _], [Duration]),
+	findEarliest(Opening, FromTime, Earliest),
+	((
+		Earliest = FromTime,
+		RealEarliest is Earliest + ArrivalTime
+		)
+		;
+		(
+		Earliest = Opening,
+		RealEarliest is Earliest
+	)),
+	[[Event, Day, RealEarliest, Duration, Vehicle]] = ResultEvent,
+	append(ResultEvent, TimeLine, ResultTimeLine1),
+	ResultTimeLine = ResultTimeLine1,
+	write(ResultTimeLine), nl.
+	
+
 	
 findEventForFreeTime(TimeLine, EventCategories, Persons, Budget, Hotel, Vehicle, DayStart, NextRealStartTime, Result):-
 	searchEventsOnCategory(EventCategories, Events),
@@ -864,25 +889,7 @@ searchPossibleEventsOnDuration(From, To, Hotel, FirstVehicle, [EventsHead|Events
 	searchPossibleEventsOnDuration(From, To, Hotel, FirstVehicle, EventsTail, PossibleEventsOnDuration1),
 	calcApproachForEvent([0,0], _, EventsHead, Hotel,  FirstVehicle, 0,  [_,_,ApproachTime,_,_]),
 	event(EventsHead, _, _, _, _, [Opening, Closing], [EventDuration]),
-	write("From: " + From + " To: " + To + " Opening: " + Opening + " Closing: " + Closing), nl,
-	(( 	
-		Opening >= From,
-		Earliest = Opening
-		)
-		;
-		(
-		Opening < From,
-		Earliest = From
-	)),
-	(( 	
-		Closing >= To,
-		Latest = To
-		)
-		;
-		(
-		Closing < To,
-		Latest = Closing
-	)),
+	findEarliestLatest(Opening, From, Closing, To, Earliest, Latest),
 	MaxDuration is Latest - Earliest,
 	write("MaxDuration: " + MaxDuration + " EventDuration " + EventDuration), nl,
 	((
@@ -895,7 +902,35 @@ searchPossibleEventsOnDuration(From, To, Hotel, FirstVehicle, [EventsHead|Events
 			PossibleEventsOnDuration2 = PossibleEventsOnDuration1
 	)),
 	PossibleEventsOnDuration = PossibleEventsOnDuration2.
-		
+
+findEarliestLatest(Opening, From, Closing, To, Earliest, Latest):-
+	write("From: " + From + " To: " + To + " Opening: " + Opening + " Closing: " + Closing), nl,
+	findEarliest(Opening, From, Earliest1),
+	Earliest = Earliest1,
+	findLatest(Closing, To, Latest1),
+	Latest = Latest1.
+
+findLatest(Closing, To, Latest):-
+	(( 	
+		Closing >= To,
+		Latest = To
+		)
+		;
+		(
+		Closing < To,
+		Latest = Closing
+	)).
+	
+findEarliest(Opening, From, Earliest):-
+	(( 	
+		Opening >= From,
+		Earliest = Opening
+		)
+		;
+		(
+		Opening < From,
+		Earliest = From
+	)).	
 /*
 Prüft ob RTL leer oder nicht und gibt leere Liste zurück
 Beispiel1: checkRTL(ResultTimeLine, ResultTimeLine1)
