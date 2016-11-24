@@ -699,22 +699,28 @@ fillTimeLine(Persons, EventCategories, PrevEvent, TimeLine, Day, DayStart, DayEn
 		% kein PrevEvent angegeben, damit befindet sich die Schleife am Anfang des Tages
 		var(PrevEvent),
 		DayTimeLine = [],
-		findFirstEventOfDay(Persons, EventCategories, DayTimeLine, TimeLine, Day,  DayStart, DayEnd, Hotel, Budget, ResultTimeLine1, Return, Price)
+		findFirstEventOfDay(Persons, EventCategories, DayTimeLine, TimeLine, DayStart, DayEnd, Hotel, Budget, ResultDayTimeLine1, ReturnBudget)
 	)). 
 	
 /*
 Erstellt ein Event für den Zeitraum zwischen "Anfang des Tages" bis zum ersten Event
 Beispiel: findFirstEventOfDay(Persons, TimeLine, DayStart, DayEnd, Hotel, Budget, ResultTimeLine, Return, Price)
 */
-findFirstEventOfDay(Persons, EventCategories, DayTimeLine, TimeLine, Day, DayStart, DayEnd, Hotel, Budget, ResultTimeLine, Return, Price):-
-	[EventHead|EventTail] = TimeLine,
-	[FirstEvent, FirstDay, FirstStartTime, FirstTime, FirstVehicle] = EventHead,
-	calcApproachForEvent(Persons, _, FirstEvent, Hotel, Vehicle, FirstStartTime, [_,_,_,NextRealStartTime,Price1]),
+findFirstEventOfDay(Persons, EventCategories, DayTimeLine, TimeLine, DayStart, DayEnd, Hotel, Budget, ResultDayTimeLine, ReturnBudget):-
+	[EventHead|_] = TimeLine,
+	[FirstEvent, Day, FirstStartTime, _, Vehicle] = EventHead,
+	calcApproachForEvent(Persons, _, FirstEvent, Hotel, Vehicle, FirstStartTime, [_,_,_,NextRealStartTime,_]),
 	(
 		NextRealStartTime > DayStart,
-		findEventForFreeTime(TimeLine, EventCategories, Persons, Budget, Hotel, FirstVehicle, DayStart, NextRealStartTime, Result),
+		findEventForFreeTime(TimeLine, EventCategories, Persons, Budget, Hotel, Vehicle, DayStart, DayEnd, NextRealStartTime, Result),
 			write("Füge Result zu Timeline"), nl,
-		addResultToTimeLine(Result, TimeLine, DayStart, Day, FirstVehicle, Hotel, ResultTimeLine1)
+		addResultToTimeLine(Result, DayTimeLine, DayStart, Day, Vehicle, Hotel, ResultDayTimeLine1),
+		write(ResultDayTimeLine1), nl,
+		ResultDayTimeLine = ResultDayTimeLine1,
+		% Preis für das neues Event und Anfahrt berechnen und von Budget abziehen
+		% Preis für alte Anfahrt zum nächsten Event Berechnen und zu Budget hinfügen
+		% Preis für neue Anfahrt zum nächsten Event Berechnen und von Budget abziehen
+		ReturnBudget = Budget
 	).
 
 addResultToTimeLine([], TimeLine, _, _, _, _, ResultTimeLine):-
@@ -735,12 +741,11 @@ addResultToTimeLine(Event, TimeLine, FromTime, Day, Vehicle, Hotel, ResultTimeLi
 	)),
 	[[Event, Day, RealEarliest, Duration, Vehicle]] = ResultEvent,
 	append(ResultEvent, TimeLine, ResultTimeLine1),
-	ResultTimeLine = ResultTimeLine1,
-	write(ResultTimeLine), nl.
+	ResultTimeLine = ResultTimeLine1.
 	
 
 	
-findEventForFreeTime(TimeLine, EventCategories, Persons, Budget, Hotel, Vehicle, DayStart, NextRealStartTime, Result):-
+findEventForFreeTime(TimeLine, EventCategories, Persons, Budget, Hotel, Vehicle, DayStart, DayEnd, NextRealStartTime, Result):-
 	searchEventsOnCategory(EventCategories, Events),
 		write(Events), nl,
 	searchPossibleEventsOnDuration(DayStart, NextRealStartTime, Hotel, Vehicle, Events, PossibleEventsOnDuration),
