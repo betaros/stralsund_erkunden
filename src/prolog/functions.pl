@@ -717,16 +717,14 @@ findFirstEventOfDay(Persons, EventCategories, DayTimeLine, TimeLine, DayStart, D
 	
 findEventForFreeTime(TimeLine, EventCategories, Persons, Budget, Hotel, Vehicle, DayStart, NextRealStartTime, Result):-
 	searchEventsOnCategory(EventCategories, Events),
-	MaxDuration is NextRealStartTime - DayStart,
-		write(MaxDuration + Hotel + Vehicle + Events), nl,
-	searchPossibleEventsOnDuration(MaxDuration, Hotel, Vehicle, Events, PossibleEventsOnDuration),
+		write(Events), nl,
+	searchPossibleEventsOnDuration(DayStart, NextRealStartTime, Hotel, Vehicle, Events, PossibleEventsOnDuration),
 		write(PossibleEventsOnDuration), nl, 
 		write(Budget + Persons + Vehicle + Hotel + PossibleEventsOnDuration), nl,
 	searchPossibleEventsOnBudget(Budget, Persons, Vehicle, Hotel, PossibleEventsOnDuration, PossibleEventsOnBudget),
 		write(PossibleEventsOnBudget), nl, 
 	searchPossibleEventsOnAdultChildRatio(Persons, PossibleEventsOnBudget, PossibleEventOnAdultChildRatio),
 		write(PossibleEventOnAdultChildRatio), nl,
-		write(TimeLine), nl,
 	searchPossibleEventsOnTimeline(PossibleEventOnAdultChildRatio, TimeLine, PossibleEventsOnTimeline),
 		write(PossibleEventsOnTimeline), nl,
 	shuffleOneResult(PossibleEventsOnTimeline, Result), nl,
@@ -859,15 +857,35 @@ searchPossibleEventsOnBudget(Budget, Persons, Vehicle, Hotel, [EventsHead|Events
 /*
 Prüft ob die Events in der Zeit passen
 */
-searchPossibleEventsOnDuration(_, _, _, [], PossibleEventsOnDuration):-
+searchPossibleEventsOnDuration(_, _, _, _, [], PossibleEventsOnDuration):-
 	PossibleEventsOnDuration = [].
 			
-searchPossibleEventsOnDuration(MaxDuration, Hotel, FirstVehicle, [EventsHead|EventsTail], PossibleEventsOnDuration):-
-	searchPossibleEventsOnDuration(MaxDuration, Hotel, FirstVehicle, EventsTail, PossibleEventsOnDuration1),
+searchPossibleEventsOnDuration(From, To, Hotel, FirstVehicle, [EventsHead|EventsTail], PossibleEventsOnDuration):-
+	searchPossibleEventsOnDuration(From, To, Hotel, FirstVehicle, EventsTail, PossibleEventsOnDuration1),
 	calcApproachForEvent([0,0], _, EventsHead, Hotel,  FirstVehicle, 0,  [_,_,ApproachTime,_,_]),
-	event(EventsHead, _, _, _, _, _, [EventDuration]),
-	(
+	event(EventsHead, _, _, _, _, [Opening, Closing], [EventDuration]),
+	write("From: " + From + " To: " + To + " Opening: " + Opening + " Closing: " + Closing), nl,
+	(( 	
+		Opening >= From,
+		Earliest = Opening
+		)
+		;
 		(
+		Opening < From,
+		Earliest = From
+	)),
+	(( 	
+		Closing >= To,
+		Latest = To
+		)
+		;
+		(
+		Closing < To,
+		Latest = Closing
+	)),
+	MaxDuration is Latest - Earliest,
+	write("MaxDuration: " + MaxDuration + " EventDuration " + EventDuration), nl,
+	((
 			FullEventDuration is EventDuration + ApproachTime,
 			MaxDuration >= FullEventDuration,
 			append(PossibleEventsOnDuration1, [EventsHead], PossibleEventsOnDuration2)
@@ -875,8 +893,7 @@ searchPossibleEventsOnDuration(MaxDuration, Hotel, FirstVehicle, [EventsHead|Eve
 		;
 		(
 			PossibleEventsOnDuration2 = PossibleEventsOnDuration1
-		)
-	),
+	)),
 	PossibleEventsOnDuration = PossibleEventsOnDuration2.
 		
 /*
