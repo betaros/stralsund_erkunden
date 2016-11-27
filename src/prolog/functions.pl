@@ -254,8 +254,12 @@ checkTimeLine(Persons,[EventHead|EventsTail],DayStart, DayEnd, Hotel, Budget, Re
 			write("Startzeit des Tages: "+DayStart), nl,
 			write("Startzeit: "+RealStartTime), nl,
 		RealStartTime >= DayStart,
+			write("Zeiten Gültig"), nl,
 		Price3 is Price1 + Price2 + HotelPrice,
+			write("Prüfe auf Preis"), nl,
+			write(Budget + Price3), nl,
 		Budget >= Price3,
+			write("Preis gültig"), nl,
 		checkBussinesHours(ThisEvent, EventStartTime, EventTime),
 			write("Event gültig"), nl,
 		checkTimeLine(Persons, EventHead, EventsTail, DayStart, DayEnd, Hotel, Budget, Return1, Price4),
@@ -743,33 +747,42 @@ I = Budget = Budget
 J = ResultTimeLine = Timeline nach Füllung
 K = Return = True oder False
 L = Price = Preis der gesamten Tour
-trace, fillTimeLine([2,0], ['Bar', 'Freizeit'], _, [['Haus 8',1,1030,100,'Car'],['Zoo',1,1230,100,'Car']], [['Haus 8',1,1030,100,'Car'],['Zoo',1,1230,100,'Car']], 1, 800, 2200, 'X Sterne Hotel', _, 1000000, X, Return, Price).
-trace, fillTimeLine([1,1], ['Bar', 'Freizeit'], _, [['Meeresmuseum',1,1030,100,'Car'],['Zoo',1,1230,100,'Car']], [['Meeresmuseum',1,1030,100,'Car'],['Zoo',1,1230,100,'Car']], 1, 800, 2200, 'X Sterne Hotel', _, 1000000, X, Return, Price).
+trace, fillTimeLine([1,1], ['Bar', 'Freizeit'], _, _, [['Haus 8',1,1030,100,'Car'],['Zoo',1,1230,100,'Car']], [['Haus 8',1,1030,100,'Car'],['Zoo',1,1230,100,'Car']], 1, 800, 2200, 'X Sterne Hotel', _, 200000, 200000, X).
+trace, fillTimeLine([1,1], ['Bar', 'Freizeit'], _, _, [['Meeresmuseum',1,1030,100,'Car'],['Zoo',1,1230,100,'Car']], [['Meeresmuseum',1,1030,100,'Car'],['Zoo',1,1230,100,'Car']], 1, 800, 2200, 'X Sterne Hotel', _, 200000, 200000, X).
 
 */
-fillTimeLine(Persons, EventCategories, PrevEvent, DayTimeLine, TimeLine, Day, DayStart, DayEnd, Hotel, HotelCategories, Budget, ResultTimeLine, Return, Price):-
+fillTimeLine(Persons, EventCategories, PrevEvent, DayTimeLineFront, DayTimeLineBack, TimeLine, Day, DayStart, DayEnd, Hotel, HotelCategories, FullBudget, Budget, ResultTimeLine):-
 	checkRTL(ResultTimeLine, ResultTimeLine1),
+	checkEventsOnTime(Persons, TimeLine, DayStart, DayEnd, Hotel, HotelCategories, FullBudget, Return, OldPrice),
 	((
 		
 		% PrevEvent ist angegeben, damit befindet sich die Schleife mitten im Tag
 		nonvar(PrevEvent),
-		[EventHead|EventTail] = DayTimeLine,
+			nl, nl, nl, write("Suche zwischen 2 Events startet"), nl, nl, nl,
 		% findeventbetween aufrufen
-		findEventBetweenEvents(Persons, EventCategories, DayTimeLine, TimeLine, DayStart, DayEnd, Hotel, RestBudget, ResultDayTimeLine1, ReturnBudget),
+		findEventBetweenEvents(Persons, EventCategories, PrevEvent, DayTimeLineFront, DayTimeLineBack, TimeLine, Budget, FrontNew, TailNew, ResultDayTimeLine1, ReturnBudget),
 		% wenn daytimeline anders als resultdaytimeline 	berechne zwischem neuem event und dem darauffolgenden
 		% wenn daytimeline gleich resultdaytimeline 		berechne zwischen nächstem und üernächstem
-		write("bis hier")
+		% wenn EventTail [] leer				berechne bis zum Ende des Tages
+			nl, nl, nl, write("Suche zwischen 2 Events beendet"), nl, nl, nl,
+			write("InputBudget: " + Budget), nl,
+			write("InputPrice: " + OldPrice), nl,
+			write("OriginalBudget: " + FullBudget), nl,
+		NewPrice is FullBudget - ReturnBudget,
+			write("NewPrice: " + NewPrice), nl,
+		NewBudget is FullBudget - NewPrice,
+			write("NewBudget: " + NewBudget), nl
 	)
 	;
 	(
 		% kein PrevEvent angegeben, damit befindet sich die Schleife am Anfang des Tages
 		var(PrevEvent),
-		[EventHead|_] = DayTimeLine,
-		checkEventsOnTime(Persons, TimeLine, DayStart, DayEnd, Hotel, HotelCategories, Budget, Return, OldPrice),
+			nl, nl, nl, write("Suche FirstEventOfDay startet"), nl, nl, nl,
+		[EventHead|_] = DayTimeLineBack,
 		RestBudget is Budget-OldPrice,
-		findFirstEventOfDay(Persons, EventCategories, DayTimeLine, TimeLine, DayStart, DayEnd, Hotel, RestBudget, ResultDayTimeLine1, ReturnBudget),
+		findFirstEventOfDay(Persons, EventCategories, DayTimeLineBack, TimeLine, DayStart, DayEnd, Hotel, RestBudget, ResultDayTimeLine1, ReturnBudget),
 			write(Budget + "€"), nl,
-			write(DayTimeLine), nl,
+			write(DayTimeLineBack), nl,
 			write(OldPrice + "€"), nl,
 			write(RestBudget + "€"), nl,
 			write("Finden des Events beendet"), nl,
@@ -777,15 +790,52 @@ fillTimeLine(Persons, EventCategories, PrevEvent, DayTimeLine, TimeLine, Day, Da
 			write(ReturnBudget + "€"), nl,
 		NewPrice is Budget-ReturnBudget,
 			write(NewPrice + "€"), nl,
-		Price = NewPrice,
-		[_|Tail1] = ResultDayTimeLine1,
+		% Price = NewPrice,
+		[Front|Tail1] = ResultDayTimeLine1,
 		[PrevEvent1|Tail2] = Tail1,
+		append([Front],[PrevEvent1],DayTimeLineFront1), 
 		refreshTimeLine(ResultDayTimeLine1, Day, TimeLine, ResultFullTimeLine),
-		fillTimeLine(Persons, EventCategories, PrevEvent1, Tail2, ResultFullTimeLine, Day, DayStart, DayEnd, Hotel, HotelCategories, Budget, ResultTimeLine, Return, Price)
+			nl, nl, nl, write("Suche FirstEventOfDay beendet"), nl, nl, nl,
+		fillTimeLine(Persons, EventCategories, PrevEvent1, DayTimeLineFront1, Tail2, ResultFullTimeLine, Day, DayStart, DayEnd, Hotel, HotelCategories, FullBudget, ReturnBudget, ResultTimeLine)
 	)). 
 
-findEventBetweenEvents(Persons, EventCategories, DayTimeLine, TimeLine, DayStart, DayEnd, Hotel, RestBudget, ResultDayTimeLine1, ReturnBudget):-
-	write("bis hier").
+findEventBetweenEvents(Persons, EventCategories, PrevEvent, DayTimeLineFront, DayTimeLineBack, TimeLine, Budget, DayTimeLineFrontNew, DayTimeLineBackNew, ResultDayTimeLine, ReturnBudget):-
+		write("find Event Between Events startet"), nl,
+	[NextEvent|TailBack] = DayTimeLineBack,
+	[PrevEventName, Day, PrevStartTime, PrevEventTime, Vehicle] = PrevEvent,
+	[NextEventName, _, NextStartTime, _, Vehicle] = NextEvent,
+	findEventForFreeTime2(TimeLine, EventCategories, Persons, Budget, PrevEvent, NextEvent, Result),
+		write("Result: " + Result), nl,
+	((
+			% Wenn Result leer fahre fort mit nextevent zu übernextevent
+			Result = [],
+			DayTimeLineBackNew = TailBack,
+			append(DayTimeLineFront, NextEvent, DayTimeLineFrontNew),
+				write("Kein neues Event gefunden"), nl
+		)
+		;
+		(
+			% Wenn Result nicht leer fahre fort mit result zu nextevent
+			DayTimeLineBackNew = DayTimeLineBack,
+			addResultToTimeLineBetween(PrevEvent, Result, DayTimeLineFront, DayTimeLineBack, Day, Vehicle, ResultEvent, ResultDayTimeLine),
+				write("ResultDayTimeLine: " + ResultDayTimeLine), nl,
+			append(DayTimeLineFront, [ResultEvent], DayTimeLineFrontNew),
+			refreshTimeLine(ResultDayTimeLine, Day, TimeLine, ResultFullTimeLine),
+				write("Neues Event gefunden"), nl
+	)),
+		write("Neue Eventliste: " + ResultFullTimeLine), nl,
+		write("Neue Tagesliste Front: " +  DayTimeLineFrontNew), nl,
+		write("Neue Tagesliste Back: " +  DayTimeLineBackNew), nl,
+		write("find Event Between Events beendet, berechne jetzt das Budget neu"), nl,
+		write("Altes Budget: " + Budget), nl,
+	calcApproachForEvent(Persons, PrevEventName, NextEventName, _, Vehicle, 0, [_,_,_,_,PriceOld1]),
+	calcApproachForEvent(Persons, PrevEventName, Result, _, Vehicle, 0, [_,_,_,_,PriceNew1]),
+	calcApproachForEvent(Persons, Result, NextEventName, _, Vehicle, 0, [_,_,_,_,PriceNew2]),
+	calcEventPrice(Persons, Result, PriceNew3),
+	BudgetNew is Budget + PriceOld1 - PriceNew1 - PriceNew2 - PriceNew3,
+		write("Neues Budget: " + BudgetNew),
+	ReturnBudget = BudgetNew
+	.
 
 refreshTimeLine(ResultDayTimeLine, Day, TimeLine, ResultFullTimeLine):-
 	splitList(TimeLine, 1, Day1, Day2),
@@ -837,6 +887,32 @@ findFirstEventOfDay(Persons, EventCategories, DayTimeLine, TimeLine, DayStart, D
 		))
 	).
 
+addResultToTimeLineBetween(PrevEvent, Result, DayTimeLineFront, DayTimeLineBack, Day, Vehicle, ResultEvent, ResultDayTimeLine):-
+	[PrevEventName, Day, PrevStartTime, PrevEventTime, Vehicle] = PrevEvent,
+	calcApproachForEvent([0,0], PrevEventName, Result, _,  Vehicle, 0,  [_,_,ArrivalTime1,_,_]),
+	event(Result, _, _, _, _, [Opening, Closing], [Duration]),
+	From = PrevStartTime + PrevEventTime,
+	To = NextStartTime,
+	findEarliest(Opening, From, Earliest),
+	((
+		Earliest = From,
+		RealEarliest is Earliest + ArrivalTime1
+		)
+		;
+		(
+		Earliest = Opening,
+		RealEarliest is Earliest
+	)),
+	[[Result, Day, RealEarliest, Duration, Vehicle]] = ResultEvent,
+		write(DayTimeLineFront), nl,
+		write(ResultEvent), nl,
+		write(DayTimeLineBack), nl,		
+	append(DayTimeLineFront, ResultEvent, ResultDayTimeLineFront),
+	append(ResultDayTimeLineFront, DayTimeLineBack, ResultDayTimeLine1),
+	ResultDayTimeLine = ResultDayTimeLine1,
+		write(ResultDayTimeLine), nl.
+
+
 addResultToTimeLine([], TimeLine, _, _, _, _, ResultTimeLine):-
 	ResultTimeLine = TimeLine.
 	
@@ -858,6 +934,24 @@ addResultToTimeLine(Event, TimeLine, FromTime, Day, Vehicle, Hotel, ResultTimeLi
 	ResultTimeLine = ResultTimeLine1.
 	
 
+findEventForFreeTime2(TimeLine, EventCategories, Persons, Budget, PrevEvent, NextEvent, Result):-
+		write("findEventForFreeTime2 startet"), nl,
+	searchEventsOnCategory(EventCategories, Events),
+		write("Event: " +Events), nl,
+		write("PrevEvent: " + PrevEvent), nl,
+		write("NextEvent: " + NextEvent), nl,
+	searchPossibleEventsOnDuration2(PrevEvent, NextEvent, Events, PossibleEventsOnDuration),
+		write(PossibleEventsOnDuration), nl, 
+		write(Budget + Persons + PossibleEventsOnDuration), nl,
+	searchPossibleEventsOnBudget2(Budget, Persons, PrevEvent, NextEvent, PossibleEventsOnDuration, PossibleEventsOnBudget),
+		write(PossibleEventsOnBudget), nl, 
+	searchPossibleEventsOnAdultChildRatio(Persons, PossibleEventsOnBudget, PossibleEventOnAdultChildRatio),
+		write(PossibleEventOnAdultChildRatio), nl,
+	searchPossibleEventsOnTimeline(PossibleEventOnAdultChildRatio, TimeLine, PossibleEventsOnTimeline),
+		write(PossibleEventsOnTimeline), nl,
+	shuffleOneResult(PossibleEventsOnTimeline, Result), nl,
+		write(Result), nl
+	.
 	
 findEventForFreeTime(TimeLine, EventCategories, Persons, Budget, Hotel, Vehicle, DayStart, DayEnd, NextRealStartTime, Result):-
 	searchEventsOnCategory(EventCategories, Events),
@@ -911,7 +1005,7 @@ searchEventInTimeLine(Event, [Head|Tail], Result):-
 		write("Vergleiche " + Event + EventHead), nl,
 		Event = EventHead,
 		Result = 'true',
-		write("Ist gleich")
+		write("Ist gleich"), nl
 	)
 	;
 	(
@@ -970,7 +1064,7 @@ searchPossibleEventsOnAdultChildRatio(Persons, [EventsHead|EventsTail], Possible
 
 
 /*
-Prüft ob die Events in der Zeit passen
+Prüft ob die Events im Budget passen
 */
 searchPossibleEventsOnBudget(_, _, _, _, [], PossibleEventsOnBudget):-
 	% write("Ende der Suche"), nl,
@@ -987,6 +1081,40 @@ searchPossibleEventsOnBudget(Budget, Persons, Vehicle, Hotel, [EventsHead|Events
 		(
 			% write("Prüfe auf Budget dass korrekt"), nl,
 			FullEventPrice is EventPrice + ApproachPrice,
+			Budget >= FullEventPrice,
+			append(PossibleEventsOnBudget1, [EventsHead], PossibleEventsOnBudget2)
+		)
+		;
+		(	
+			% write("Budget reicht nicht"), nl,
+			PossibleEventsOnBudget2 = PossibleEventsOnBudget1
+		)
+	),
+	PossibleEventsOnBudget = PossibleEventsOnBudget2.
+
+/*
+Prüft ob die Events in der Zeit passen
+*/
+searchPossibleEventsOnBudget2(_, _, _, _, [], PossibleEventsOnBudget):-
+	% write("Ende der Suche"), nl,
+	PossibleEventsOnBudget = [].
+			
+searchPossibleEventsOnBudget2(Budget, Persons, PrevEvent, NextEvent, [EventsHead | EventsTail], PossibleEventsOnBudget):-
+	searchPossibleEventsOnBudget2(Budget, Persons,  PrevEvent, NextEvent, EventsTail, PossibleEventsOnBudget1),
+			write("SearchOnBudget2"), nl,
+	% write(EventsHead), nl,
+	[PrevEventName, Day, PrevEventStartTime, PrevEventTime, Vehicle] = PrevEvent,
+	[NextEventName, _, NextEventStartTime, _, _] = NextEvent,
+	
+	% write("Kalkuliere weiter"), nl,
+	calcApproachForEvent([0,0], PrevEventName, NextEventName, _,  Vehicle, 0,  [_,_,_,_,OldApproachPrice]),
+	calcApproachForEvent([0,0], PrevEventName, EventsHead, _,  Vehicle, 0,  [_,_,_,_,NewApproachPrice1]),
+	calcApproachForEvent([0,0], EventsHeade, NextEventName, _,  Vehicle, 0,  [_,_,_,_,NewApproachPrice2]),
+	calcEventPrice(Persons, EventsHead, EventPrice),
+	(
+		(
+			% write("Prüfe auf Budget dass korrekt"), nl,
+			FullEventPrice is EventPrice + NewApproachPrice1 + NewApproachPrice2 - OldApproachPrice,
 			Budget >= FullEventPrice,
 			append(PossibleEventsOnBudget1, [EventsHead], PossibleEventsOnBudget2)
 		)
@@ -1021,6 +1149,41 @@ searchPossibleEventsOnDuration(From, To, Hotel, FirstVehicle, [EventsHead|Events
 			PossibleEventsOnDuration2 = PossibleEventsOnDuration1
 	)),
 	PossibleEventsOnDuration = PossibleEventsOnDuration2.
+
+
+/*
+Prüft ob die Events in der Zeit passen
+*/	
+searchPossibleEventsOnDuration2(_, _, [], PossibleEventsOnDuration):-
+		write("Suche nach Duration 2 am Ende der Liste"), nl,
+	PossibleEventsOnDuration = [].
+			
+searchPossibleEventsOnDuration2(PrevEvent, NextEvent, [EventsHead | EventsTail], PossibleEventsOnDuration):-
+	write("Suche nach Duration 2"), nl,
+	searchPossibleEventsOnDuration2(PrevEvent, NextEvent, EventsTail, PossibleEventsOnDuration1),
+	[PrevEventName, _, PrevEventStartTime, PrevEventTime, Vehicle] = PrevEvent,
+	PrevEventEndTime is PrevEventStartTime + PrevEventTime,
+	[NextEventName, _, NextEventStartTime, _, _] = NextEvent,
+	calcApproachForEvent([0,0], PrevEventName, NextEventName, _,  Vehicle, 0,  [_,_,OldApproachTime,_,_]),
+	calcApproachForEvent([0,0], PrevEventName, EventsHead, _,  Vehicle, 0,  [_,_,NewApproachTime1,_,_]),
+	calcApproachForEvent([0,0], EventsHead, NextEventName, _,  Vehicle, 0,  [_,_,NewApproachTime2,_,_]),
+	RealNextEventStartTime is NewApproachTime2 + NextEventStartTime,
+	event(EventsHead, _, _, _, _, [Opening, Closing], [EventDuration]),
+	findEarliestLatest(Opening, PrevEventEndTime, Closing, RealNextEventStartTime, Earliest, Latest),
+	MaxDuration is Latest - Earliest,
+	write("MaxDuration: " + MaxDuration + " EventDuration " + EventDuration), nl,
+	((
+			FullEventDuration is EventDuration - OldApproachTime + NewApproachTime1 + NewApproachTime2,
+			MaxDuration >= FullEventDuration,
+			append(PossibleEventsOnDuration1, [EventsHead], PossibleEventsOnDuration2)
+		)
+		;
+		(
+			PossibleEventsOnDuration2 = PossibleEventsOnDuration1
+	)),
+	PossibleEventsOnDuration = PossibleEventsOnDuration2.
+	
+	
 
 findEarliestLatest(Opening, From, Closing, To, Earliest, Latest):-
 	write("From: " + From + " To: " + To + " Opening: " + Opening + " Closing: " + Closing), nl,
