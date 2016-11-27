@@ -751,7 +751,7 @@ L = Price = Preis der gesamten Tour
 trace, fillTimeLine([1,1] ,['Bar', 'Freizeit'], ['Cinestar',1,1131,20,'Car'], [['Marinemuseum',1,804,45,'Car'],['Meeresmuseum',1,1030,100,'Car'],['Cinestar',1,1131,20,'Car']], [['Zoo',1,1230,100,'Car']], [['Marinemuseum',1,804,45,'Car'],['Meeresmuseum',1,1030,100,'Car'],['Cinestar',1,1131,20,'Car'],['Zoo',1,1230,100,'Car']], 1, 800, 2200, 'X Sterne Hotel', _, 25000, 1294, FTL) 
 
 trace, fillTimeLine([1,1], ['Bar', 'Freizeit'], _, _, [['Haus 8',1,1030,100,'Car'],['Zoo',1,1230,100,'Car']], [['Haus 8',1,1030,100,'Car'],['Zoo',1,1230,100,'Car']], 1, 800, 2200, 'X Sterne Hotel', _, 200000, 200000, X).
-trace, fillTimeLine([1,1], ['Bar', 'Freizeit'], _, _, [['Meeresmuseum',1,1030,100,'Car'],['Zoo',1,1230,100,'Car']], [['Meeresmuseum',1,1030,100,'Car'],['Zoo',1,1230,100,'Car']], 1, 800, 2200, 'X Sterne Hotel', _, 100000, 100000, X).
+trace, fillTimeLine([1,0], ['Bar', 'Freizeit','Bildung'], _, _, [['Meeresmuseum',1,1030,100,'Car'],['Zoo',1,1230,100,'Car']], [['Meeresmuseum',1,1030,100,'Car'],['Zoo',1,1230,100,'Car']], 1, 800, 2200, 'X Sterne Hotel', _, 100000, 100000, X).
 
 */
 fillTimeLine(Persons, EventCategories, PrevEvent, DayTimeLineFront, DayTimeLineBack, TimeLine, Day, DayStart, DayEnd, Hotel, HotelCategories, FullBudget, Budget, ResultTimeLine):-
@@ -781,21 +781,7 @@ fillTimeLine(Persons, EventCategories, PrevEvent, DayTimeLineFront, DayTimeLineB
 		DayTimeLineBack = [],
 			nl, nl, nl, write("Suche LastEventOfDay startet"), nl, nl, nl,
 		findEventEndOfDay(Persons, EventCategories, PrevEvent, DayTimeLineFront, TimeLine, Budget, DayEnd, Hotel, PrevEventNew, FrontNew, ResultFullTimeLine, ReturnBudget),
-		[PrevEventResult] = PrevEventNew,
-		((
-			TimeLine = ResultFullTimeLine,
-			write("Ende der Suche")
-			)
-			;
-			(
-			write("Weiter"),
-			write(Persons+  EventCategories + PrevEventResult + FrontNew + DayTimeLineBack + ResultFullTimeLine + Day + DayStart + DayEnd + Hotel + HotelCategories + FullBudget + ReturnBudget + ResultTimeLine),
-			%fillTimeLine(Persons, EventCategories, PrevEventNew, FrontNew, DayTimeLineBack, ResultFullTimeLine, Day, DayStart, DayEnd, Hotel, HotelCategories, FullBudget, ReturnBudget, ResultTimeLine),
-	
-			write("Zurück")
-			
-		)),
-		write("Bis hier, Ende")
+		write(ResultFullTimeLine)
 	)
 	;
 	(
@@ -852,11 +838,11 @@ fillTimeLine(Persons, EventCategories, PrevEvent, DayTimeLineFront, DayTimeLineB
 
 
 /*
-fillTimeLine([1,1],['Bar','Freizeit'],['Zoo',1,1230,100,'Car'],[['Marinemuseum',1,804,45,'Car'],['Meeresmuseum',1,1030,100,'Car'],['Cinestar',1,1131,20,'Car'],['Nautineum',1,1153,60,'Car'],['Zoo',1,1230,100,'Car']],[],[['Marinemuseum',1,804,45,'Car'],['Meeresmuseum',1,1030,100,'Car'],['Cinestar',1,1131,20,'Car'],['Nautineum',1,1153,60,'Car'],['Zoo',1,1230,100,'Car']],1,800,2200,'X Sterne Hotel',_,200000,166983,X)
-fillTimeLine([1,0],['Bar','Freizeit','Bildung'],['Haus 8',1,1332,120,'Car'],[['Marinemuseum',1,804,45,'Car'],['Meeresmuseum',1,1030,100,'Car'],['Cinestar',1,1131,20,'Car'],['Nautineum',1,1153,60,'Car'],['Zoo',1,1230,100,'Car'],['Ozeaneum',1,1332,120,'Car'],['Fachhochschule Stralsund',1,1332,120,'Car'],['Haus 8',1,1332,120,'Car']],[],[['Marinemuseum',1,804,45,'Car'],['Meeresmuseum',1,1030,100,'Car'],['Cinestar',1,1131,20,'Car'],['Nautineum',1,1153,60,'Car'],['Zoo',1,1230,100,'Car'],['Ozeaneum',1,1332,120,'Car'],['Fachhochschule Stralsund',1,1332,120,'Car'],['Haus 8',1,1332,120,'Car']],1,800,2200,'X Sterne Hotel',_,200000,161339,X)
+fillTimeLine([1,0],['Bar','Freizeit','Bildung'],['Ozeaneum',1,1332,100,'Car'],[['Marinemuseum',1,804,45,'Car'],['Meeresmuseum',1,1030,100,'Car'],['Cinestar',1,1131,20,'Car'],['Nautineum',1,1153,60,'Car'],['Zoo',1,1230,100,'Car'],['Ozeaneum',1,1332,100,'Car']],[],[['Marinemuseum',1,804,45,'Car'],['Meeresmuseum',1,1030,100,'Car'],['Cinestar',1,1131,20,'Car'],['Nautineum',1,1153,60,'Car'],['Zoo',1,1230,100,'Car'],['Ozeaneum',1,1332,100,'Car']],1,800,2200,'X Sterne Hotel',_,200000,166983,X)
+fillTimeLine([1,0],['Bar','Freizeit','Bildung'],['Fachhochschule Stralsund',1,1500,120,'Car'],[['Marinemuseum',1,804,45,'Car'],['Meeresmuseum',1,1030,100,'Car'],['Cinestar',1,1131,20,'Car'],['Nautineum',1,1153,60,'Car'],['Zoo',1,1230,100,'Car'],['Ozeaneum',1,1332,120,'Car'],['Fachhochschule Stralsund',1,1500,120,'Car']],[],[['Marinemuseum',1,804,45,'Car'],['Meeresmuseum',1,1030,100,'Car'],['Cinestar',1,1131,20,'Car'],['Nautineum',1,1153,60,'Car'],['Zoo',1,1230,100,'Car'],['Ozeaneum',1,1332,120,'Car'],['Fachhochschule Stralsund',1,1500,120,'Car']],1,800,2200,'X Sterne Hotel',_,200000,161339,X)
 */
 
-findEventEndOfDay(Persons, EventCategories, PrevEvent, DayTimeLineFront, TimeLine, Budget, DayEnd, Hotel, PrevEventNew, FrontNew, ResultFullTimeLine, ReturnBudget):-
+findEventEndOfDay(Persons, EventCategories, PrevEvent, DayTimeLineFront, TimeLine, Budget, DayEnd, Hotel, PrevEventNew1, FrontNew1, ResultFullTimeLine1, ReturnBudget1):-
 		write("find Event End Of Day"), nl,
 	findEventForFreeTime3(TimeLine, PrevEvent, EventCategories, Persons, Budget, Hotel, DayEnd, Result),
 	[PrevEventName, Day, _, _, Vehicle] = PrevEvent,
@@ -879,9 +865,12 @@ findEventEndOfDay(Persons, EventCategories, PrevEvent, DayTimeLineFront, TimeLin
 		calcApproachForEvent(Persons, Result, _, Hotel,  Vehicle, 0,  [_,_,_,_,NewApproachPrice2]),
 		calcEventPrice(Persons, Result, EventPrice),
 		ReturnBudget is Budget + OldApproachPrice - NewApproachPrice1 - NewApproachPrice2 - EventPrice,
-		PrevEventNew = ResultEvent,
+		[PrevEventNew] = ResultEvent,
 			write("PrevEventNew: " + PrevEventNew), nl,
-			write("Neues Budget: " + ReturnBudget), nl
+			write("Neues Budget: " + ReturnBudget), nl,
+		write(Persons + EventCategories + PrevEventNew + FrontNew + ResultFullTimeLine + ReturnBudget + DayEnd + Hotel + PrevEventNew1 + FrontNew1 + ResultFullTimeLine1 + ReturnBudget1),
+		findEventEndOfDay(Persons, EventCategories, PrevEventNew, FrontNew, ResultFullTimeLine, ReturnBudget, DayEnd, Hotel, PrevEventNew1, FrontNew1, ResultFullTimeLine1, ReturnBudget1),
+		nl,nl,write("NEUE SUCHE BEENDET"), nl,nl
 	)),
 	write(PrevEventNew), nl,
 	write(FrontNew), nl,
