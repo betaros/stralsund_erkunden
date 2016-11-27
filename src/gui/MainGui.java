@@ -24,7 +24,7 @@ import java.awt.CardLayout;
 import javax.swing.JTextPane;
 import java.awt.SystemColor;
 
-public class MainGui {
+public class MainGui{
 
 	public JFrame frmStralsundErkunden;
 	private Profile profile;
@@ -83,6 +83,7 @@ public class MainGui {
 		profilpanel.add(profileButton, gbc_profileButton);
 
 		JButton btnGenerateTimeline = new JButton("F\u00FClle Timeline");
+		btnGenerateTimeline.setVisible(false);
 		GridBagConstraints gbc_btnGenerateTimeline = new GridBagConstraints();
 		gbc_btnGenerateTimeline.fill = GridBagConstraints.HORIZONTAL;
 		gbc_btnGenerateTimeline.insets = new Insets(0, 0, 5, 0);
@@ -148,12 +149,20 @@ public class MainGui {
 					}
 
 					cl.show(content, "mainpanel");
+					btnGenerateTimeline.setVisible(true);
 				} else {
 					// zeige ProfileEditor
 					profileButton.setText("Ergebnisse anzeigen");
 					profileVisible = true;
 					cl.show(content, "profileeditor");
+					btnGenerateTimeline.setVisible(false);
 				}
+			}
+		});
+		
+		btnGenerateTimeline.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				
 			}
 		});
 	}
@@ -171,7 +180,7 @@ public class MainGui {
 		summaryText.append(String.format( "%.2f", totalCost ) + " \u20AC");
 		summaryText.append("\n");
 		summaryText.append("\n");
-		
+
 		summaryText.append("Hotelkategorien:");
 		summaryText.append("\n");
 		for(String s:profile.getSelectedHotel()){
@@ -179,9 +188,9 @@ public class MainGui {
 			summaryText.append(" Sterne");
 			summaryText.append("\n");
 		}
-		
+
 		summaryText.append("\n");
-		
+
 		if(profile.getAdultCounter() > 0) {
 			summaryText.append(String.valueOf(profile.getAdultCounter()));
 			if(profile.getAdultCounter() == 1){

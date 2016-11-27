@@ -427,7 +427,7 @@ public class PrologConnector {
 	 * @param price
 	 * @return
 	 */
-	public boolean checkEventsOnTime(int adultCount, int reducedCount, ArrayList<Event> eventList, int dayStart, String hotel, int budget, Profile profile){
+	public boolean checkEventsOnTime(int adultCount, int reducedCount, ArrayList<Event> eventList, int dayStart, int dayEnd, String hotel, String hotelCategory, int budget, Profile profile){
 		ArrayList<String> peopleList = new ArrayList<String>();
 		peopleList.add(String.valueOf(adultCount));
 		peopleList.add(String.valueOf(reducedCount));
@@ -470,7 +470,9 @@ public class PrologConnector {
 		}
 		Compound EventListCompound = new Compound("EventList", EventList);
 		Atom DayStart = new Atom(String.valueOf(dayStart));
+		Atom DayEnd = new Atom(String.valueOf(dayEnd));
 		Atom Hotel = new Atom(hotel);
+		Atom HotelCategory = new Atom(hotelCategory);
 		Atom Budget = new Atom(String.valueOf(budget));
 		Variable Price = new Variable("Price");
 		Variable ReturnValue = new Variable("ReturnValue");
@@ -478,89 +480,7 @@ public class PrologConnector {
 		Query query =
 				new Query(
 					"checkEventsOnTime",
-					new Term[]{People, EventListCompound, DayStart, Hotel, Budget, ReturnValue, Price}
-				);
-		
-		boolean result = false;
-		
-		if(query.hasSolution()){
-			Map<String,Term> solution = query.oneSolution();
-			String array = solution.get("ReturnValue").toString();
-			String price = solution.get("Price").toString();
-			if(array.contains("true")){
-				result = true;
-				int priceInt = java.lang.Integer.parseInt(price);
-				profile.setTotalCost(priceInt);
-			}
-		}
-		
-		return result;
-	}
-	
-	/**
-	 * Ueberprueft, ob ein Event zeitlich passt (zwei Events)
-	 * 
-	 * @param adultCount
-	 * @param reducedCount
-	 * @param eventList
-	 * @param dayStart
-	 * @param hotel
-	 * @param budget
-	 * @param returnValue
-	 * @param price
-	 * @return
-	 */
-	public boolean checkEventsOnTime(int adultCount, int reducedCount, String prevEvent, ArrayList<Event> eventList, int dayStart, String hotel, int budget, Profile profile){
-		ArrayList<String> peopleList = new ArrayList<String>();
-		peopleList.add(String.valueOf(adultCount));
-		peopleList.add(String.valueOf(reducedCount));
-		Term People = Util.textToTerm(prologListGenerator(peopleList));
-		Atom PrevEvent = new Atom(prevEvent);
-		
-		ArrayList<String> eventStringList = new ArrayList<String>();
-		for(Event event:eventList){
-			StringBuilder eventString = new StringBuilder();
-			eventString.append("[");
-			eventString.append(event.getName());
-			eventString.append(",");
-			eventString.append(String.valueOf(event.getDay()));
-			eventString.append(",");
-			eventString.append(String.valueOf(event.getStartTime()));
-			eventString.append(",");
-			eventString.append(String.valueOf(event.getDuration()));
-			eventString.append(",");
-			
-			String arrival = profile.getArrival(); 
-			switch(arrival){
-			case "Zu Fuss":
-				eventString.append("Foot");
-				break;
-			case "Fahrrad":
-				eventString.append("Bike");
-				break;
-			case "Bus":
-				eventString.append("Bus");
-				break;
-			default:
-				eventString.append("Car");
-			}
-			eventString.append("]");
-			
-			eventStringList.add(eventString.toString());
-		}
-		
-		Term EventList = Util.textToTerm(prologListGenerator(eventStringList));
-		
-		Atom DayStart = new Atom(String.valueOf(dayStart));
-		Atom Hotel = new Atom(hotel);
-		Atom Budget = new Atom(String.valueOf(budget));
-		Variable Price = new Variable("Price");
-		Variable ReturnValue = new Variable("ReturnValue");
-		
-		Query query =
-				new Query(
-					"checkEventsOnTime",
-					new Term[]{People, PrevEvent, EventList, DayStart, Hotel, Budget, ReturnValue, Price}
+					new Term[]{People, EventListCompound, DayStart, DayEnd, Hotel, HotelCategory, Budget, ReturnValue, Price}
 				);
 		
 		boolean result = false;
@@ -620,6 +540,46 @@ public class PrologConnector {
 		}
 		
 		return result;
+	}
+	
+	public ArrayList<Event> fillTimeLine(String hotel, Profile profile){
+		ArrayList<String> peopleList = new ArrayList<String>();
+		peopleList.add(String.valueOf(profile.getAdultCounter()));
+		peopleList.add(String.valueOf(profile.getChildCounter()));
+		Term Persons = Util.textToTerm(prologListGenerator(peopleList));
+		Term EventCategories = Util.textToTerm(prologListGenerator(profile.getSelectedCategories()));
+		Atom Hotel = new Atom(hotel);
+		
+		Atom Day = new Atom(String.valueOf(profile.getDays()));
+		Atom DayStart = new Atom(String.valueOf(profile.getDayStart()));
+		Atom DayEnd = new Atom(String.valueOf(profile.getDayEnd()));
+		
+		Term HotelCategories = Util.textToTerm(prologListGenerator(profile.getSelectedHotel()));
+		Atom FullBudget = new Atom(String.valueOf(profile.getBudgetInCent()));
+		Variable ResultTimeLine = new Variable("ResultTimeLine");
+		
+		Variable PrevEvent = new Variable("PrevEvent");
+		Variable DayTimeLineFront = new Variable("DayTimeLineFront");
+		Variable DayTimeLineBack = new Variable("DayTimeLineBack");
+		Variable TimeLine = new Variable("TimeLine");
+		Variable Budget = new Variable("Budget");
+		
+		Query query =
+				new Query(
+						"fillTimeLine",
+						new Term[]{Persons, EventCategories, PrevEvent, DayTimeLineFront, DayTimeLineBack, TimeLine, Day, DayStart, DayEnd, Hotel, HotelCategories, FullBudget, Budget, ResultTimeLine}
+						);
+		
+		ArrayList<Event> resultArrayList = new ArrayList<Event>();
+		
+		if(query.hasSolution()){
+			Map<String,Term> solution = query.oneSolution();
+			String[] arrayResult = solution.get("ResultTimeLine").toString().split(",");
+			
+			
+		}
+		
+		return resultArrayList;
 	}
 	
 	/**

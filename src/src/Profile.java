@@ -4,7 +4,7 @@ import java.util.ArrayList;
 
 import prolog.PrologConnector;
 
-public class Profile {
+public class Profile{
 	
 	private int days;
 	private int budgetInCent;

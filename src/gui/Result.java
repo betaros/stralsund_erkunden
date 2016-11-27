@@ -41,7 +41,7 @@ public class Result extends JPanel {
 	/**
 	 * Create the panel.
 	 */
-	public Result(Event _event, Profile _profile, boolean _resultlist) {
+	public Result(int eventnumber, Event _event, Profile _profile, boolean _resultlist) {
 
 		event = _event;
 		profile = _profile;
@@ -74,7 +74,12 @@ public class Result extends JPanel {
 		gbc_panelTitle.gridy = 0;
 		add(panelTitle, gbc_panelTitle);
 
-		JLabel lblTitle = new JLabel(event.getName());
+		JLabel lblTitle = new JLabel("");
+		if(eventnumber == 0){
+			lblTitle.setText(event.getName());
+		} else {
+			lblTitle.setText(String.valueOf(eventnumber) + " - " + event.getName());
+		}
 		lblTitle.setFont(new Font("Tahoma", Font.BOLD, 15));
 		panelTitle.add(lblTitle);
 

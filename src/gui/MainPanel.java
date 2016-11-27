@@ -31,9 +31,8 @@ public class MainPanel extends JPanel {
 
 	private JPanel mainList;
 	private JPanel planList;
-	private Map map;
+	private JPanel mappanel;
 	private JXMapViewer mapViewer;
-	private ArrayList<GeoPosition> waypoints;
 
 	private PrologConnector prologConnector;
 	private Profile profile;
@@ -48,7 +47,7 @@ public class MainPanel extends JPanel {
 		prologConnector = new PrologConnector();
 		resultArrayList = new ArrayList<Event>();
 		timelineArrayList = new ArrayList<Event>();
-
+		
 		setBorder(null);
 		GridBagLayout gridBagLayout = new GridBagLayout();
 		gridBagLayout.columnWidths = new int[]{0, 0};
@@ -141,7 +140,7 @@ public class MainPanel extends JPanel {
 		gbc_planListScrollPane.gridy = 0;
 		routingpanel.add(planListScrollPane, gbc_planListScrollPane);
 
-		JPanel mappanel = new JPanel();
+		mappanel = new JPanel();
 		splitPane.setRightComponent(mappanel);
 		GridBagLayout gbl_mappanel = new GridBagLayout();
 		gbl_mappanel.columnWidths = new int[] {400, 0};
@@ -149,19 +148,6 @@ public class MainPanel extends JPanel {
 		gbl_mappanel.columnWeights = new double[]{1.0, Double.MIN_VALUE};
 		gbl_mappanel.rowWeights = new double[]{1.0, Double.MIN_VALUE};
 		mappanel.setLayout(gbl_mappanel);
-
-		map = new Map();
-		waypoints = new ArrayList<GeoPosition>();
-
-		mapViewer = map.getMap(waypoints);
-
-		mapViewer.setLayout(new FlowLayout(FlowLayout.CENTER, 5, 5));
-
-		GridBagConstraints gbc_mapViewer = new GridBagConstraints();
-		gbc_mapViewer.fill = GridBagConstraints.BOTH;
-		gbc_mapViewer.gridx = 0;
-		gbc_mapViewer.gridy = 0;
-		mappanel.add(mapViewer, gbc_mapViewer);
 	}
 
 	/**
@@ -190,21 +176,31 @@ public class MainPanel extends JPanel {
 
 		resultArrayList.removeAll(Collections.singleton(null));
 		mainList.removeAll();
-		waypoints.removeAll(waypoints);
+		
+		Map map = new Map();
+		ArrayList<GeoPosition> waypoints = new ArrayList<GeoPosition>();
+		int eventCounter = 1;
 
 		for(Event e:resultArrayList){
 			waypoints.add(new GeoPosition(e.getLatitude(), e.getLongitude()));
 
-			Result result = new Result(e, profile, true);
+			Result result = new Result(eventCounter, e, profile, true);
 			GridBagConstraints gbc = new GridBagConstraints();
 			gbc.gridwidth = GridBagConstraints.REMAINDER;
 			gbc.weightx = 1;
 			gbc.fill = GridBagConstraints.HORIZONTAL;
 			mainList.add(result, gbc, 0);
+			
+			eventCounter++;
 
 			result.btnNewButton.addActionListener(new ActionListener() {
 				public void actionPerformed(ActionEvent arg0) {
 					addToTimeplan(result.getEvent());
+					int totalCost = 0;
+					for(Event e:timelineArrayList){
+						totalCost += e.getPriceInCentAdult() + e.getPriceInCentAdult();
+					}
+					profile.setTotalCost(totalCost);
 					validate();
 					repaint();
 				}
@@ -213,10 +209,25 @@ public class MainPanel extends JPanel {
 			result.btnRemoveButton.addActionListener(new ActionListener() {
 				public void actionPerformed(ActionEvent arg0) {
 					mainList.remove(result);
+					int totalCost = 0;
+					for(Event e:timelineArrayList){
+						totalCost += e.getPriceInCentAdult() + e.getPriceInCentAdult();
+					}
+					profile.setTotalCost(totalCost);
 					validate();
 					repaint();
 				}
 			});
+
+			mapViewer = map.getMap(waypoints);
+			mapViewer.setLayout(new FlowLayout(FlowLayout.CENTER, 5, 5));
+
+			GridBagConstraints gbc_mapViewer = new GridBagConstraints();
+			gbc_mapViewer.fill = GridBagConstraints.BOTH;
+			gbc_mapViewer.gridx = 0;
+			gbc_mapViewer.gridy = 0;
+			mappanel.removeAll();
+			mappanel.add(mapViewer, gbc_mapViewer);
 		}
 
 		mapViewer = map.getMap(waypoints);
@@ -227,10 +238,6 @@ public class MainPanel extends JPanel {
 	}
 
 	public void addToTimeplan(Event _newEvent){
-		/*
-		 * TODO: 
-		 * Hotel
-		 * */
 		String hotel = "";
 		if(_newEvent.getCategories().contains("hotel")){
 			hotel = _newEvent.getName();
@@ -241,8 +248,8 @@ public class MainPanel extends JPanel {
 				}
 			}
 		}
-		//boolean isEventOnTime = prologConnector.checkEventsOnTime(profile.getAdultCounter(), profile.getChildCounter(), timelineArrayList, profile.getDayStart(), hotel, profile.getBudgetInCent(), profile); 
-		//System.out.println("isEventOnTime: " + isEventOnTime);
+		boolean isEventOnTime = prologConnector.checkEventsOnTime(profile.getAdultCounter(), profile.getChildCounter(), timelineArrayList, profile.getDayStart(), profile.getDayEnd(), hotel, hotel, profile.getBudgetInCent(), profile); 
+		System.out.println("isEventOnTime: " + isEventOnTime);
 		
 		//if(isEventOnTime){
 			if(!timelineArrayList.contains(_newEvent)){
@@ -253,7 +260,7 @@ public class MainPanel extends JPanel {
 			planList.removeAll();
 
 			for(Event e:timelineArrayList){			
-				Result result = new Result(e, profile, false);
+				Result result = new Result(0, e, profile, false);
 				GridBagConstraints gbc = new GridBagConstraints();
 				gbc.gridwidth = GridBagConstraints.REMAINDER;
 				gbc.weightx = 1;
