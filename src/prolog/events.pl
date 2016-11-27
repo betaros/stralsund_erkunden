@@ -54,7 +54,7 @@ event(	'Nautineum',
 	[54.305252,13.118912],
 	['Freizeit','Museum','Bildung'],
 	['Fast-Food'],
-	[1111,1000],
+	[8111,1000],
 	[900, 2100],
 	[60]).
 	
@@ -70,7 +70,7 @@ event(	'Fachhochschule Stralsund',
 	[54.339149,13.076232],
 	['Bildung','Studium'],
 	['Kantinenessen','Mittag'],
-	[0,0],
+	[100,1000],
 	[930, 2100],
 	[25]).
 	
