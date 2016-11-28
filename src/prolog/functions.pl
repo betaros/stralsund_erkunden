@@ -732,12 +732,27 @@ compareEvents([],_,_,_,_,_,List1):-
 	List1 = [].
 
 /*
-fillTimeLineAllDays([1,0] ,['Bar', 'Freizeit','Bildung'], [['Marinemuseum',1,1035,45,'Car'],['Cinestar',1,1131,20,'Car']], 800, 2200, 'X Sterne Hotel', _, 'Car', 500000, FTL) 
+fillTimeLineAllDays([1,0] ,['Bar', 'Freizeit','Bildung'], [['Marinemuseum',1,1035,45,'Car'],['Cinestar',2,1131,20,'Car']], 800, 2200, 'X Sterne Hotel', _, 'Car', 500000, FTL) 
 trace, fillTimeLineAllDays([1,0] ,['Bar', 'Freizeit','Bildung'], [], 800, 2200, 'X Sterne Hotel', _, 'Car', 500000, FTL) 
+trace, fillTimeLineAllDays([1,0] ,['Bar', 'Freizeit','Bildung'], [], 800, 2200, _, [4,5], 'Car', 500000, FTL) 
+fillTimeLineAllDays([1,0] ,['Bar', 'Freizeit','Bildung'], [], 800, 2200, _, [2], 'Car', 500000, FTL) 
 
 */
 
-fillTimeLineAllDays(Persons, EventCategories, TimeLine, DayStart, DayEnd, Hotel, HotelCategories, Vehicle, FullBudget, ResultTimeLine):-
+fillTimeLineAllDays(Persons, EventCategories, TimeLine, DayStart, DayEnd, Hotel1, HotelCategories, Vehicle, FullBudget, ResultTimeLine):-
+	((
+		var(Hotel1),
+		write("Kein Hotel angegeben"), nl,
+		findHotelsForTrip(HotelCategories, Hotel2, FullBudget, Persons),
+		write("Hotel: " + Hotel2), nl
+	)
+	;
+	(
+		Hotel2 = Hotel1,
+		write("Hotel: " + Hotel2), nl
+	)),
+	Hotel = Hotel2,
+	
 	splitList(TimeLine, 1, DayTimeLineBack1, DayTimeLineBack2),
 	
 	write("DTLB1" + DayTimeLineBack1), nl,
