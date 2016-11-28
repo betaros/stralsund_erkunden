@@ -162,7 +162,7 @@ public class MainGui{
 		
 		btnGenerateTimeline.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
-				
+				mp.fillTimeplan();
 			}
 		});
 	}

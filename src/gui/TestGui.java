@@ -69,7 +69,7 @@ public class TestGui {
 		Profile p = new Profile(2, 20000, 2, 1);
 		
 		for(Event e:eventList){
-			Result result = new Result(e, p, false);
+			Result result = new Result(0, e, p, false);
 			panel.add(result);
 		}
 		

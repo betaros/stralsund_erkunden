@@ -2,7 +2,7 @@
   <modelVersion>4.0.0</modelVersion>
   <groupId>stralsunderkunden</groupId>
   <artifactId>stralsunderkunden</artifactId>
-  <version>0.0.1-SNAPSHOT</version>
+  <version>1.0.0</version>
   <name>Stralsund Erkunden</name>
   <build>
     <sourceDirectory>src</sourceDirectory>

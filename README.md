@@ -1,5 +1,4 @@
 # Stralsund erkunden
-# Noch in Entwicklung !!!
 
 Erkunde Stralsund mit diesem hilfreichen Tool. Es stellt dir für deinen Aufenthalt alles notwendige zur Verfügung. Gebe ein was dich interessiert und schon zeigt es dir, was du hier erleben kannst!
 
