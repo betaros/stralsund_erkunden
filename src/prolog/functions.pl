@@ -402,6 +402,7 @@ calcApproachForEvent([1,1], 'Rathaus', _, 'Wyndham Stralsund', 'Car', 800, Appro
 
 */
 calcApproachForEvent([AdultCount,ReducedCount], PreviousEvent, ThisEvent, Hotel, Vehicle, EventTime, Approach):-
+	write(AdultCount + ReducedCount + PreviousEvent + ThisEvent + Hotel + Vehicle + EventTime),
 	((
 		nonvar(PreviousEvent),
 		Point1 = PreviousEvent
