@@ -256,7 +256,6 @@ public class MainPanel extends JPanel {
 			}
 		}
 		boolean isEventOnTime = prologConnector.checkEventsOnTime(profile.getAdultCounter(), profile.getChildCounter(), timelineArrayList, profile.getDayStart(), profile.getDayEnd(), hotel, hotel, profile.getBudgetInCent(), profile); 
-		System.out.println("isEventOnTime: " + isEventOnTime);
 		
 		//if(isEventOnTime){
 			if(!timelineArrayList.contains(_newEvent)){
@@ -266,13 +265,11 @@ public class MainPanel extends JPanel {
 									profile.getAdultCounter(), 
 									profile.getChildCounter(), 
 									timelineArrayList.get(timelineArrayList.size()-1).getName(), 
-									_newEvent.getName(), 
-									hotel, 
+									_newEvent.getName(),
 									profile.getArrival(), 
 									_newEvent.getStartTime()));
 				}
 				timelineArrayList.add(_newEvent);
-				//System.out.println("Timeline: " + _newEvent.getName());
 			}
 
 			planList.removeAll();

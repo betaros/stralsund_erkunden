@@ -518,15 +518,28 @@ public class PrologConnector {
 	 * @param eventTime
 	 * @return
 	 */
-	public int calcApproachForEvent(int adultCount, int reducedCount, String prevEvent, String thisEvent, String hotel, String vehicle, int eventTime){
+	public int calcApproachForEvent(int adultCount, int reducedCount, String prevEvent, String thisEvent, String vehicle, int eventTime){
 		ArrayList<String> peopleList = new ArrayList<String>();
 		peopleList.add(String.valueOf(adultCount));
 		peopleList.add(String.valueOf(reducedCount));
 		Term People = Util.textToTerm(prologListGenerator(peopleList));
 		Atom PrevEvent = new Atom(prevEvent);
 		Atom ThisEvent = new Atom(thisEvent);
-		Atom Hotel = new Atom(hotel);
-		Atom Vehicle = new Atom(vehicle);
+		Variable Hotel = new Variable("Hotel");
+		Atom Vehicle;
+		switch(vehicle){
+		case "Zu fuss":
+			Vehicle = new Atom("Foot");
+			break;
+		case "Fahrrad":
+			Vehicle = new Atom("Bike");
+			break;
+		case "Bus":
+			Vehicle = new Atom("Bus");
+			break;
+		default:
+			Vehicle = new Atom("Car");
+		}
 		Atom EventTime = new Atom(String.valueOf(eventTime));
 		
 		Variable Approach = new Variable("Approach");
@@ -541,9 +554,8 @@ public class PrologConnector {
 		
 		if(query.hasSolution()){
 			Map<String,Term> solution = query.oneSolution();
-			String array = solution.get("Approach").toString();
-			array = array.replaceAll("[^0-9.]", "");
-			result = java.lang.Integer.parseInt(array);
+			String[] array = solution.get("Approach").toString().split(",");
+			result = java.lang.Integer.parseInt(array[2].replaceAll("[^0-9.]", ""));
 		}
 		
 		return result;
