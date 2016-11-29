@@ -7,6 +7,7 @@ import java.util.Arrays;
 import java.util.Map;
 
 import org.jpl7.*;
+import org.jpl7.Integer;
 
 import src.Event;
 import src.Profile;
@@ -57,11 +58,55 @@ public class PrologConnector {
 			Map<String, Term> solution = query.oneSolution();
 			String arrayPosition[]     = solution.get("Position").toString().split(",");
 			String arrayCategories[]   = solution.get("Categories").toString().split(",");
-			String arrayFood[]         = solution.get("Food").toString().split(",");
 			String arrayPrice[]        = solution.get("Price").toString().split(",");
-			String arrayBusinesshours[] = solution.get("Businesshours").toString().split(",");
-			String arrayDuration[]     = solution.get("Duration").toString().split(",");
-
+			String arrayBusinesshours[];
+			String arrayDuration[];
+			String arrayFood[];
+			int duration = 0;
+			ArrayList<String> foodList = new ArrayList<String>();
+			int businessOpen = 0;
+			int businessClosed = 0;
+			
+			if(!hotel){
+				arrayBusinesshours = solution.get("Businesshours").toString().split(",");
+				arrayDuration      = solution.get("Duration").toString().split(",");
+				arrayFood          = solution.get("Food").toString().split(",");
+				
+				for(int i = 0; i<arrayBusinesshours.length; i++){
+					arrayBusinesshours[i] = arrayBusinesshours[i].replaceAll("[^A-Za-z0-9.]", "");
+					if(debug){
+						System.out.println("findEvent: Businesshours: " + arrayBusinesshours[i]);
+					}
+				}
+				
+				for(int i = 0; i<arrayDuration.length; i++){
+					arrayDuration[i] = arrayDuration[i].replaceAll("[^A-Za-z0-9.]", "");
+					if(debug){
+						System.out.println("findEvent: Duration: " + arrayDuration[i]);
+					}
+				}
+				
+				for(int i = 0; i<arrayFood.length; i++){
+					arrayFood[i] = arrayFood[i].replaceAll("[^A-Za-z0-9.]", "");
+					if(debug){
+						System.out.println("findEvent: Food:       " + arrayFood[i]);
+					}
+				}
+				
+				arrayBusinesshours = Arrays.copyOf(arrayBusinesshours, arrayBusinesshours.length-1);
+				arrayDuration = Arrays.copyOf(arrayDuration, arrayDuration.length-1);
+				arrayFood = Arrays.copyOf(arrayFood, arrayFood.length-1);
+				
+				duration = java.lang.Integer.parseInt(arrayDuration[0]);
+				
+				for(String food:arrayFood){
+					foodList.add(food);
+				}
+				
+				businessOpen = java.lang.Integer.parseInt(arrayBusinesshours[0]);
+				businessClosed = java.lang.Integer.parseInt(arrayBusinesshours[1]);
+			}
+				
 			for(int i = 0; i<arrayPosition.length; i++){
 				arrayPosition[i] = arrayPosition[i].replaceAll("[^A-Za-z0-9.]", "");
 				if(debug){
@@ -76,59 +121,41 @@ public class PrologConnector {
 				}
 			}
 			
-			for(int i = 0; i<arrayFood.length; i++){
-				arrayFood[i] = arrayFood[i].replaceAll("[^A-Za-z0-9.]", "");
-				if(debug){
-					System.out.println("findEvent: Food:       " + arrayFood[i]);
-				}
-			}
-			
 			for(int i = 0; i<arrayPrice.length; i++){
-				arrayPrice[i] = arrayPrice[i].replaceAll("[^A-Za-z0-9.]", "");
+				arrayPrice[i] = arrayPrice[i].replaceAll("[^0-9]", "");
 				if(debug){
 					System.out.println("findEvent: Price:      " + arrayPrice[i]);
 				}
 			}
 			
-			for(int i = 0; i<arrayBusinesshours.length; i++){
-				arrayBusinesshours[i] = arrayBusinesshours[i].replaceAll("[^A-Za-z0-9.]", "");
-				if(debug){
-					System.out.println("findEvent: Businesshours: " + arrayBusinesshours[i]);
-				}
-			}
-			
-			for(int i = 0; i<arrayDuration.length; i++){
-				arrayDuration[i] = arrayDuration[i].replaceAll("[^A-Za-z0-9.]", "");
-				if(debug){
-					System.out.println("findEvent: Duration: " + arrayDuration[i]);
-				}
-			}
-			
 			arrayPosition = Arrays.copyOf(arrayPosition, arrayPosition.length-1);
 			arrayCategories = Arrays.copyOf(arrayCategories, arrayCategories.length-1);
-			arrayFood = Arrays.copyOf(arrayFood, arrayFood.length-1);
-			arrayPrice = Arrays.copyOf(arrayPrice, arrayPrice.length-1);
-			arrayBusinesshours = Arrays.copyOf(arrayBusinesshours, arrayBusinesshours.length-1);
-			arrayDuration = Arrays.copyOf(arrayDuration, arrayDuration.length-1);
+			if(!hotel){
+				arrayPrice = Arrays.copyOf(arrayPrice, arrayPrice.length-1);
+			}
 			
 			double lat = Double.parseDouble(arrayPosition[0]);
 			double lon = Double.parseDouble(arrayPosition[1]);
-			int priceAdult = java.lang.Integer.parseInt(arrayPrice[0]);
-			int priceReduced = java.lang.Integer.parseInt(arrayPrice[1]);
-			int duration = java.lang.Integer.parseInt(arrayDuration[0]);
+			int priceAdult = 0;
+			int priceReduced = 0;
+			if(hotel){
+				System.out.println(title);
+				System.out.println(title + " " + arrayPrice[0]);
+				priceAdult = java.lang.Integer.parseInt(arrayPrice[0]);
+				priceReduced = java.lang.Integer.parseInt(arrayPrice[0]);
+			} else {
+				System.out.println(title);
+				System.out.println(title + " " + arrayPrice[0]);
+				System.out.println(title + " " + arrayPrice[1]);
+				priceAdult = java.lang.Integer.parseInt(arrayPrice[0]);
+				priceReduced = java.lang.Integer.parseInt(arrayPrice[1]);
+			}
+			
 			ArrayList<String> categoryList = new ArrayList<String>();
-			ArrayList<String> foodList = new ArrayList<String>();
-
+			
 			for(String category:arrayCategories){
 				categoryList.add(category);
 			}
-
-			for(String food:arrayFood){
-				foodList.add(food);
-			}
-			
-			int businessOpen = java.lang.Integer.parseInt(arrayBusinesshours[0]);
-			int businessClosed = java.lang.Integer.parseInt(arrayBusinesshours[1]);
 			
 			e = new Event(title, lat, lon, priceAdult, priceReduced, categoryList, foodList, 1, 480, duration, businessOpen, businessClosed);
 		}
@@ -143,7 +170,16 @@ public class PrologConnector {
 	 * @return
 	 */
 	public ArrayList<String> findHotels(ArrayList<String> hotelCategories){
-		Term HotelCategories = Util.textToTerm(prologListGenerator(hotelCategories));
+		StringBuilder sb = new StringBuilder();
+		sb.append("[");
+		for(String s:hotelCategories){
+			sb.append(s);
+			sb.append(",");
+		}
+		sb.deleteCharAt(sb.length()-1);
+		sb.append("]");
+		
+		Term HotelCategories = Util.textToTerm(sb.toString());
 		Variable Hotels = new Variable("Hotels");
 		
 		Query query =
@@ -249,19 +285,16 @@ public class PrologConnector {
 	 * @return
 	 */
 	public ArrayList<String> checkEventForBudget(int adultCount, int reducedCount, int budget, ArrayList<String> eventslist){
-		ArrayList<String> persons = new ArrayList<String>();
-		persons.add(String.valueOf(adultCount));
-		persons.add(String.valueOf(reducedCount));
+		Term People = Util.textToTerm("[" + adultCount + "," + reducedCount + "]");
 		
-		Term termPersons = Util.textToTerm(prologListGenerator(persons));
-		Atom Budget = new Atom(String.valueOf(budget));
+		Integer Budget = new Integer(budget);
 		Term termEvents = Util.textToTerm(prologListGenerator(eventslist));
 		Variable X = new Variable("X");
 
 		Query query =
 				new Query(
 						"checkEventForBudget",
-						new Term[] {termPersons,Budget,termEvents,X}
+						new Term[] {People,Budget,termEvents,X}
 						);
 
 		ArrayList<String> events = new ArrayList<String>();
@@ -293,11 +326,8 @@ public class PrologConnector {
 	public ArrayList<Event> searchUsefulEvents(int adultCount, int reducedCount, int budget, ArrayList<String> categories){
 		ArrayList<Event> eventList = new ArrayList<>();
 
-		ArrayList<String> peopleList = new ArrayList<String>();
-		peopleList.add(String.valueOf(adultCount));
-		peopleList.add(String.valueOf(reducedCount));
-		Term People = Util.textToTerm(prologListGenerator(peopleList));
-		Atom Budget = new Atom(String.valueOf(budget));
+		Term People = Util.textToTerm("[" + adultCount + "," + reducedCount + "]");
+		Integer Budget = new Integer(budget);
 		Term CategoryList = Util.textToTerm(prologListGenerator(categories));
 		Variable X = new Variable();
 
@@ -435,10 +465,7 @@ public class PrologConnector {
 	 * @return
 	 */
 	public boolean checkEventsOnTime(int adultCount, int reducedCount, ArrayList<Event> eventList, int dayStart, int dayEnd, String hotel, String hotelCategory, int budget, Profile profile){
-		ArrayList<String> peopleList = new ArrayList<String>();
-		peopleList.add(String.valueOf(adultCount));
-		peopleList.add(String.valueOf(reducedCount));
-		Term People = Util.textToTerm(prologListGenerator(peopleList));
+		Term People = Util.textToTerm("[" + adultCount + "," + reducedCount + "]");
 		
 		ArrayList<Term> eventTermList = new ArrayList<Term>();
 		if(eventList.isEmpty()){
@@ -476,11 +503,11 @@ public class PrologConnector {
 			EventList[i] = eventTermList.get(i);
 		}
 		Compound EventListCompound = new Compound("EventList", EventList);
-		Atom DayStart = new Atom(String.valueOf(dayStart));
-		Atom DayEnd = new Atom(String.valueOf(dayEnd));
+		Integer DayStart = new Integer(dayStart);
+		Integer DayEnd = new Integer(dayEnd);
 		Atom Hotel = new Atom(hotel);
 		Atom HotelCategory = new Atom(hotelCategory);
-		Atom Budget = new Atom(String.valueOf(budget));
+		Integer Budget = new Integer(budget);
 		Variable Price = new Variable("Price");
 		Variable ReturnValue = new Variable("ReturnValue");
 		
@@ -519,10 +546,7 @@ public class PrologConnector {
 	 * @return
 	 */
 	public int calcApproachForEvent(int adultCount, int reducedCount, String prevEvent, String thisEvent, String vehicle, int eventTime){
-		ArrayList<String> peopleList = new ArrayList<String>();
-		peopleList.add(String.valueOf(adultCount));
-		peopleList.add(String.valueOf(reducedCount));
-		Term People = Util.textToTerm(prologListGenerator(peopleList));
+		Term People = Util.textToTerm("[" + adultCount + "," + reducedCount + "]");
 		Atom PrevEvent = new Atom(prevEvent);
 		Atom ThisEvent = new Atom(thisEvent);
 		Variable Hotel = new Variable("Hotel");
@@ -540,7 +564,7 @@ public class PrologConnector {
 		default:
 			Vehicle = new Atom("Car");
 		}
-		Atom EventTime = new Atom(String.valueOf(eventTime));
+		Integer EventTime = new Integer(eventTime);
 		
 		Variable Approach = new Variable("Approach");
 		

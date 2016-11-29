@@ -256,6 +256,7 @@ public class MainPanel extends JPanel {
 			}
 		}
 		boolean isEventOnTime = prologConnector.checkEventsOnTime(profile.getAdultCounter(), profile.getChildCounter(), timelineArrayList, profile.getDayStart(), profile.getDayEnd(), hotel, hotel, profile.getBudgetInCent(), profile); 
+		System.out.println(isEventOnTime);
 		
 		//if(isEventOnTime){
 			if(!timelineArrayList.contains(_newEvent)){

@@ -99,69 +99,79 @@ public class Result extends JPanel {
 		gbl_panelCost.rowWeights = new double[]{0.0, 0.0, Double.MIN_VALUE};
 		panelCost.setLayout(gbl_panelCost);
 
-		JLabel lblChildren = new JLabel(String.valueOf(profile.getChildCounter()));
-		GridBagConstraints gbc_lblChildren = new GridBagConstraints();
-		gbc_lblChildren.insets = new Insets(0, 0, 5, 5);
-		gbc_lblChildren.gridx = 0;
-		gbc_lblChildren.gridy = 0;
-		panelCost.add(lblChildren, gbc_lblChildren);
+		if(!(event.getCategories().contains("0") ||
+				event.getCategories().contains("1") ||
+				event.getCategories().contains("2") ||
+				event.getCategories().contains("3") ||
+				event.getCategories().contains("4") ||
+				event.getCategories().contains("5"))){
+			JLabel lblChildren = new JLabel(String.valueOf(profile.getChildCounter()));
+			GridBagConstraints gbc_lblChildren = new GridBagConstraints();
+			gbc_lblChildren.insets = new Insets(0, 0, 5, 5);
+			gbc_lblChildren.gridx = 0;
+			gbc_lblChildren.gridy = 0;
+			panelCost.add(lblChildren, gbc_lblChildren);
 
-		JLabel lblKinder = new JLabel("");
-		if(profile.getChildCounter()==1){
-			lblKinder.setText("Kind");
+			JLabel lblKinder = new JLabel("");
+			if(profile.getChildCounter()==1){
+				lblKinder.setText("Kind");
+			} else {
+				lblKinder.setText("Kinder");
+			}
+			GridBagConstraints gbc_lblKinder = new GridBagConstraints();
+			gbc_lblKinder.anchor = GridBagConstraints.WEST;
+			gbc_lblKinder.insets = new Insets(0, 0, 5, 5);
+			gbc_lblKinder.gridx = 1;
+			gbc_lblKinder.gridy = 0;
+			panelCost.add(lblKinder, gbc_lblKinder);
+
+			JLabel lblReducedPrice = new JLabel(String.format( "%.2f", reducedPrice ) + " \u20AC");
+			GridBagConstraints gbc_lblReducedPrice = new GridBagConstraints();
+			gbc_lblReducedPrice.anchor = GridBagConstraints.WEST;
+			gbc_lblReducedPrice.insets = new Insets(0, 0, 5, 5);
+			gbc_lblReducedPrice.gridx = 3;
+			gbc_lblReducedPrice.gridy = 0;
+			panelCost.add(lblReducedPrice, gbc_lblReducedPrice);
+
+			JLabel lblTotalCost = new JLabel("Gesamtkosten");
+			GridBagConstraints gbc_lblTotalCost = new GridBagConstraints();
+			gbc_lblTotalCost.insets = new Insets(0, 0, 5, 0);
+			gbc_lblTotalCost.gridx = 4;
+			gbc_lblTotalCost.gridy = 0;
+			panelCost.add(lblTotalCost, gbc_lblTotalCost);
+
+			JLabel lblAdult = new JLabel(String.valueOf(profile.getAdultCounter()));
+			GridBagConstraints gbc_lblAdult = new GridBagConstraints();
+			gbc_lblAdult.insets = new Insets(0, 0, 0, 5);
+			gbc_lblAdult.gridx = 0;
+			gbc_lblAdult.gridy = 1;
+			panelCost.add(lblAdult, gbc_lblAdult);
+
+			JLabel lblErwachsene = new JLabel("");
+			if(profile.getAdultCounter()==1){
+				lblErwachsene.setText("Erwachsener");
+			} else {
+				lblErwachsene.setText("Erwachsene");
+			}
+			GridBagConstraints gbc_lblErwachsene = new GridBagConstraints();
+			gbc_lblErwachsene.insets = new Insets(0, 0, 0, 5);
+			gbc_lblErwachsene.anchor = GridBagConstraints.WEST;
+			gbc_lblErwachsene.gridx = 1;
+			gbc_lblErwachsene.gridy = 1;
+			panelCost.add(lblErwachsene, gbc_lblErwachsene);
+
+			JLabel lblAdultPrice = new JLabel(String.format( "%.2f", adultPrice ) + " \u20AC");
+			GridBagConstraints gbc_lblAdultPrice = new GridBagConstraints();
+			gbc_lblAdultPrice.anchor = GridBagConstraints.WEST;
+			gbc_lblAdultPrice.insets = new Insets(0, 0, 0, 5);
+			gbc_lblAdultPrice.gridx = 3;
+			gbc_lblAdultPrice.gridy = 1;
+			panelCost.add(lblAdultPrice, gbc_lblAdultPrice);
+			
 		} else {
-			lblKinder.setText("Kinder");
+			totalPrice = event.getPriceInCentAdult() / 100;
 		}
-		GridBagConstraints gbc_lblKinder = new GridBagConstraints();
-		gbc_lblKinder.anchor = GridBagConstraints.WEST;
-		gbc_lblKinder.insets = new Insets(0, 0, 5, 5);
-		gbc_lblKinder.gridx = 1;
-		gbc_lblKinder.gridy = 0;
-		panelCost.add(lblKinder, gbc_lblKinder);
-
-		JLabel lblReducedPrice = new JLabel(String.format( "%.2f", reducedPrice ) + " \u20AC");
-		GridBagConstraints gbc_lblReducedPrice = new GridBagConstraints();
-		gbc_lblReducedPrice.anchor = GridBagConstraints.WEST;
-		gbc_lblReducedPrice.insets = new Insets(0, 0, 5, 5);
-		gbc_lblReducedPrice.gridx = 3;
-		gbc_lblReducedPrice.gridy = 0;
-		panelCost.add(lblReducedPrice, gbc_lblReducedPrice);
-
-		JLabel lblTotalCost = new JLabel("Gesamtkosten");
-		GridBagConstraints gbc_lblTotalCost = new GridBagConstraints();
-		gbc_lblTotalCost.insets = new Insets(0, 0, 5, 0);
-		gbc_lblTotalCost.gridx = 4;
-		gbc_lblTotalCost.gridy = 0;
-		panelCost.add(lblTotalCost, gbc_lblTotalCost);
-
-		JLabel lblAdult = new JLabel(String.valueOf(profile.getAdultCounter()));
-		GridBagConstraints gbc_lblAdult = new GridBagConstraints();
-		gbc_lblAdult.insets = new Insets(0, 0, 0, 5);
-		gbc_lblAdult.gridx = 0;
-		gbc_lblAdult.gridy = 1;
-		panelCost.add(lblAdult, gbc_lblAdult);
-
-		JLabel lblErwachsene = new JLabel("");
-		if(profile.getAdultCounter()==1){
-			lblErwachsene.setText("Erwachsener");
-		} else {
-			lblErwachsene.setText("Erwachsene");
-		}
-		GridBagConstraints gbc_lblErwachsene = new GridBagConstraints();
-		gbc_lblErwachsene.insets = new Insets(0, 0, 0, 5);
-		gbc_lblErwachsene.anchor = GridBagConstraints.WEST;
-		gbc_lblErwachsene.gridx = 1;
-		gbc_lblErwachsene.gridy = 1;
-		panelCost.add(lblErwachsene, gbc_lblErwachsene);
-
-		JLabel lblAdultPrice = new JLabel(String.format( "%.2f", adultPrice ) + " \u20AC");
-		GridBagConstraints gbc_lblAdultPrice = new GridBagConstraints();
-		gbc_lblAdultPrice.anchor = GridBagConstraints.WEST;
-		gbc_lblAdultPrice.insets = new Insets(0, 0, 0, 5);
-		gbc_lblAdultPrice.gridx = 3;
-		gbc_lblAdultPrice.gridy = 1;
-		panelCost.add(lblAdultPrice, gbc_lblAdultPrice);
-
+		
 		JLabel lblTotalCostResult = new JLabel(String.format( "%.2f", totalPrice ) + " \u20AC");
 		lblTotalCostResult.setFont(new Font("Tahoma", Font.PLAIN, 16));
 		GridBagConstraints gbc_lblTotalCostResult = new GridBagConstraints();
@@ -255,6 +265,22 @@ public class Result extends JPanel {
 		panelSettings.add(lblDuration, gbc_lblDuration);
 
 		// Funktionen
+		if(!(event.getCategories().contains("0") ||
+				event.getCategories().contains("1") ||
+				event.getCategories().contains("2") ||
+				event.getCategories().contains("3") ||
+				event.getCategories().contains("4") ||
+				event.getCategories().contains("5"))){
+			panelSettings.setVisible(false);
+			lblTag.setVisible(false);
+			lblBeginn.setVisible(false);
+			lblStarttime.setVisible(false);
+			lblDauer.setVisible(false);
+			lblDuration.setVisible(false);
+			sliderDuration.setVisible(false);
+			sliderStarttime.setVisible(false);
+		}
+		
 		sliderStarttime.addChangeListener(new ChangeListener() {
 			public void stateChanged(ChangeEvent arg0) {
 				starttime = sliderStarttime.getValue() * 60;
@@ -291,7 +317,6 @@ public class Result extends JPanel {
 		JLabel lblAnfahrt = new JLabel("Anfahrt");
 		panelButtons.add(lblAnfahrt);
 		
-		
 		JLabel lblTraveltime = new JLabel(String.valueOf(event.getTraveltime()));
 		panelButtons.add(lblTraveltime);
 		
@@ -308,6 +333,18 @@ public class Result extends JPanel {
 		
 		if(!event.getFood().isEmpty()){
 			Color foodColor = Color.yellow;
+			panelButtons.setBackground(foodColor);
+			panelCost.setBackground(foodColor);
+			panelSettings.setBackground(foodColor);
+			panelTitle.setBackground(foodColor);
+			this.setBackground(foodColor);
+		} else if(event.getCategories().contains("0") ||
+				event.getCategories().contains("1") ||
+				event.getCategories().contains("2") ||
+				event.getCategories().contains("3") ||
+				event.getCategories().contains("4") ||
+				event.getCategories().contains("5")){
+			Color foodColor = Color.orange;
 			panelButtons.setBackground(foodColor);
 			panelCost.setBackground(foodColor);
 			panelSettings.setBackground(foodColor);
