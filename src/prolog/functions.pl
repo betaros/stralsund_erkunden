@@ -185,17 +185,17 @@ Beispiel:
 trace, 
 checkEventsOnTime([1,2], 
 [
-['Cinestar', 1, 1100, 100, 'Car'],
-['Fachhochschule Stralsund', 1, 1700, 100, 'Car'],
-['Marinemuseum', 2, 700, 100, 'Car'],
-['Nautineum', 1, 900, 100, 'Car'], 
-['Meeresmuseum', 2, 1100, 100, 'Car'],
-['Ozeaneum', 2, 1700, 100, 'Car'],
-['Citti', 1, 700, 100, 'Car'],
-['Strelapark', 2, 900, 100, 'Car']
+['Cinestar Kino', 1, 660, 40, 'Car'],
+['Strandbad', 1, 1020, 60, 'Car'],
+['Torschliesserhaus', 2, 720, 50, 'Car'],
+['Museumsspeicher', 1, 920, 50, 'Car'], 
+['Störtebeker Braumanufaktur', 2, 950, 50, 'Car'],
+['Hansedom', 2, 1200, 60, 'Car'],
+['Strelapark', 1, 720, 100, 'Car'],
+['Katharinenkloster', 2, 800, 100, 'Car']
 ], 
-500, 2200, 'X Sterne Hotel', _, 
-10000000, Return, Price).
+500, 1380, 'Hiddenseer Hotel', _, 
+100000, Return, Price).
 
 */
 checkEventsOnTime(Persons, EventList, DayStart, DayEnd, Hotel, HotelCategorie, Budget, Return, Price):-
@@ -228,16 +228,17 @@ Return = Rückgabewert wird true oder false
 Price = Gesamtpreis der Tour
 
 Beispiel positiv an einem Tag:
-checkTimeLine([1,2], [['Haus 8',1,1030,100,'Car'],['Zoo',1,1230,100,'Car']],800, 2200, 'X Sterne Hotel', 1000000, Return, Price).
+checkTimeLine([1,2], [['Ozeaneum',1,1030,40,'Car'],['Rathaus',1,1100,30,'Car']],800, 1320, 'Hiddenseer Hotel', 1000000, Return, Price).
 Beispiel positiv an 2 Tagen:
-checkTimeLine([1,2],[['Haus 8',1,1030,100,'Car'],['Zoo',2,1030,100,'Car']],800, 2200, '1 Sterne Hotel', 100000, Return, Price).
+checkTimeLine([1,2],[['Ozeaneum',1,1030,40,'Car'],['Rathaus',2,1100,30,'Car']],800, 1320, 'Hiddenseer Hotel', 100000, Return, Price).
 Beispiel positiv an 2 Tagen:
-checkTimeLine([1,2],[['Haus 8',1,930,100,'Car'],['Meeresmuseum',2,930,100,'Car'],['Zoo',2,1100,100,'Car']], 800, 2200, '2 Sterne Hotel', 100000, Return, Price).
+checkTimeLine([1,2],[['Ozeaneum',1,1030,40,'Car'],['Ozeaneum',2,1030,40,'Car'],['Rathaus',2,1100,30,'Car']], 800, 2200, 'Hiddenseer Hotel', 100000, Return, Price).
 
+Diese Beispiele funktionieren nur mit den TestObjekten, diese müssen zuvor einkommentiert und die originaldaten auskommentiert werden
 Beispiel negativ an einem Tag:
 checkTimeLine([1,2],[['Haus 8',1,1030,100,'Car'],['Zoo',1,1130,100,'Car']],800, 2200, '1 Sterne Hotel', 100000, Return, Price).
 Beispiel negativ an einem Tag:
-checkTimeLine([1,2], [['Haus 8',1,830,100,'Car'],['Zoo',1,1230,100,'Car']],800, 2200, 'X Sterne Hotel', 1000000, Return, Price).
+checkTimeLine([1,2], [['Haus 8',1,830,100,'Car'],['Zoo',1,1230,100,'Car']],800, 2200, 'Hiddenseer Hotel', 1000000, Return, Price).
 Beispiel negativ an 2 Tagen weil letztes Event zu lange:
 checkTimeLine([1,2],[['Haus 8',1,830,100,'Car'],['Zoo',2,2130,100,'Car']],800, 2200, '1 Sterne Hotel', 100000, Return, Price).
 Beispiel negativ an 2 Tagen:
@@ -395,7 +396,10 @@ Wenn PreviousEvent leer, dann wird vom Hotel berechnet
 Wenn ThisEvent leer, dann wird zum Hotel berechnet
 
 Beispiel: 
-calcApproachForEvent([1,1], 'Cinestar', 'Haus 8', 'Hansedom', 'Car', 800, Approach).
+calcApproachForEvent([1,1], 'Rathaus', 'Ozeaneum', 'Wyndham Stralsund', 'Car', 800, Approach).
+calcApproachForEvent([1,1], _, 'Ozeaneum', 'Wyndham Stralsund', 'Car', 800, Approach).
+calcApproachForEvent([1,1], 'Rathaus', _, 'Wyndham Stralsund', 'Car', 800, Approach).
+
 */
 calcApproachForEvent([AdultCount,ReducedCount], PreviousEvent, ThisEvent, Hotel, Vehicle, EventTime, Approach):-
 	((
@@ -451,7 +455,7 @@ HotelName = Name des Hotels
 Price = Rückgabewert des Preises
 
 Beispiel:
-calcHotelPrice([1,1], 'X Sterne Hotel', Price)
+calcHotelPrice([1,1], 'Hiddenseer Hotel', Price)
 */
 calcHotelPrice(Persons, Hotel, Price):-
 	hotel(Hotel,_,PricePerRoom,_),
@@ -477,7 +481,7 @@ Persons = [Erwachsene, Kinder]
 Beispiel:
 findHotelsForTrip([1,4], Hotel, 20000, [1,2])
 findHotelsForTrip([3], Hotel, 10, [2,2])
-findHotelsForTrip([5], Hotel, 10000000, [2,0])
+trace, findHotelsForTrip([4], Hotel, 10000000, [2,0])
 
 */
 findHotelsForTrip(HotelCategorie, Hotel, Budget, Persons):-
@@ -570,7 +574,7 @@ EventStartTime = Uhrzeit wann das Event starten soll
 EventTime = Dauer des Events
 
 Beispiel:
-checkBussinesHours('Hansedom', 1600, 100)
+checkBussinesHours('Hansedom', 1100, 100)
 
 */
 checkBussinesHours(ThisEventName, EventStartTime, EventTime):-
@@ -599,10 +603,10 @@ Price = Preis der gesamten Tour
 
 
 Beispiele:
-fillTimeLineAllDays([1,0] ,['Bar', 'Freizeit','Bildung'], [['Marinemuseum',1,1035,45,'Car'],['Cinestar',2,1131,20,'Car']], 800, 2200, 'X Sterne Hotel', _, 'Car', 500000, FTL) 
-trace, fillTimeLineAllDays([1,0] ,['Bar', 'Freizeit','Bildung'], [], 800, 2200, 'X Sterne Hotel', _, 'Car', 500000, FTL) 
-trace, fillTimeLineAllDays([1,0] ,['Bar', 'Freizeit','Bildung'], [], 800, 2200, _, [4,5], 'Car', 500000, FTL) 
-fillTimeLineAllDays([1,0] ,['Bar', 'Freizeit','Bildung'], [], 800, 2200, _, [2], 'Car', 500000, FTL) 
+fillTimeLineAllDays([1,0] ,['Bar', 'Freizeit','Bildung'], [['Strelapark',1,600,45,'Car'],['Theater Stralsund',2,1131,20,'Car']], 500, 1320, 'Hiddenseer Hotel', _, 'Car', 500000, FTL) 
+trace, fillTimeLineAllDays([1,0] ,['Bar', 'Freizeit','Bildung'], [], 500, 1320, 'Hiddenseer Hotel', _, 'Car', 500000, FTL) 
+trace, fillTimeLineAllDays([1,2] ,['Bar', 'Freizeit','Bildung','Unterhaltung'], [], 500, 1320, _, [4,5], 'Car', 500000, FTL) 
+fillTimeLineAllDays([1,0] ,['Bar', 'Freizeit','Bildung'], [], 500, 1320, _, [2], 'Car', 500000, FTL) 
 
 */
 
@@ -679,19 +683,6 @@ FullBudget = Maximales Budget
 Budget = aktuelles Restbudget in der Berechnung
 ResultTimeLine = Timeline nach Füllung
 Price = Preis der gesamten Tour
-
-trace, fillTimeLine([1,1] ,['Bar', 'Freizeit'], ['Cinestar',1,1131,20,'Car'], [['Marinemuseum',1,804,45,'Car'],['Meeresmuseum',1,1030,100,'Car'],['Cinestar',1,1131,20,'Car']], [['Zoo',1,1230,100,'Car']], [['Marinemuseum',1,804,45,'Car'],['Meeresmuseum',1,1030,100,'Car'],['Cinestar',1,1131,20,'Car'],['Zoo',1,1230,100,'Car']], 1, 800, 2200, 'X Sterne Hotel', _, 'Car', 25000, 1294, FTL) 
-trace, fillTimeLine([1,1], ['Bar', 'Freizeit'], _, _, [['Haus 8',1,1030,100,'Car'],['Zoo',1,1230,100,'Car']], [['Haus 8',1,1030,100,'Car'],['Zoo',1,1230,100,'Car']], 1, 800, 2200, 'X Sterne Hotel', _, 'Car', 200000, 200000, X).
-trace, fillTimeLine([1,0], ['Bar', 'Freizeit','Bildung'], _, _, [['Meeresmuseum',1,1030,100,'Car'],['Zoo',1,2030,100,'Car']], [['Meeresmuseum',1,1030,100,'Car'],['Zoo',1,2030,100,'Car']], 1, 800, 2200, 'X Sterne Hotel', _, 'Car', 100000, 100000, X).
-fillTimeLine([1,0], ['Bar', 'Freizeit','Bildung'], _, _, [['Meeresmuseum',1,900,100,'Car']], [['Meeresmuseum',1,900,100,'Car']], 1, 800, 2200, 'X Sterne Hotel', _, 'Car',100000, 100000, X).
-fillTimeLine([1,0], ['Bar', 'Freizeit','Bildung'], _, _, [['Meeresmuseum',1,1500,100,'Car']], [['Meeresmuseum',1,1500,100,'Car']], 1, 800, 2200, 'X Sterne Hotel', _,'Car', 100000, 100000, X).
-fillTimeLine([1,0], ['Bar', 'Freizeit','Bildung'], _, _, [], [], 1, 800, 2200, 'X Sterne Hotel', _, 'Car', 100000, 100000, X).
-fillTimeLine([1,1],['Bar','Freizeit','Bildung'],['Ozeaneum',1,1332,100,'Car'],[['Ozeaneum',1,1332,100,'Car']],[['Zoo',1,1730,100,'Car']],[['Ozeaneum',1,1332,100,'Car'],['Zoo',1,1230,100,'Car']],1,800,2200,'X Sterne Hotel',_,'Car',200000,166983,X)
-fillTimeLine([1,0],['Bar','Freizeit','Bildung','Einkaufen','Sport'],_,_,[['Ozeaneum',1,1332,100,'Car'],['Zoo',1,1730,100,'Car']],[['Ozeaneum',1,1332,100,'Car'],['Zoo',1,1230,100,'Car']],1,800,2200,'X Sterne Hotel',_,'Car',200000,166983,X)
-fillTimeLine([1,0],['Bar','Freizeit','Bildung'],['Ozeaneum',1,1332,100,'Car'],[['Marinemuseum',1,804,45,'Car'],['Meeresmuseum',1,1030,100,'Car'],['Cinestar',1,1131,20,'Car'],['Nautineum',1,1153,60,'Car'],['Zoo',1,1230,100,'Car'],['Ozeaneum',1,1332,100,'Car']],[],[['Marinemuseum',1,804,45,'Car'],['Meeresmuseum',1,1030,100,'Car'],['Cinestar',1,1131,20,'Car'],['Nautineum',1,1153,60,'Car'],['Zoo',1,1230,100,'Car'],['Ozeaneum',1,1332,100,'Car']],1,800,2200,'X Sterne Hotel',_,'Car',200000,166983,X)
-fillTimeLine([1,0],['Bar','Freizeit','Bildung'],['Fachhochschule Stralsund',1,1500,120,'Car'],[['Marinemuseum',1,804,45,'Car'],['Meeresmuseum',1,1030,100,'Car'],['Cinestar',1,1131,20,'Car'],['Nautineum',1,1153,60,'Car'],['Zoo',1,1230,100,'Car'],['Ozeaneum',1,1332,120,'Car'],['Fachhochschule Stralsund',1,1500,120,'Car']],[],[['Marinemuseum',1,804,45,'Car'],['Meeresmuseum',1,1030,100,'Car'],['Cinestar',1,1131,20,'Car'],['Nautineum',1,1153,60,'Car'],['Zoo',1,1230,100,'Car'],['Ozeaneum',1,1332,120,'Car'],['Fachhochschule Stralsund',1,1500,120,'Car']],1,800,2200,'X Sterne Hotel',_,'Car',200000,161339,X)
-trace, fillTimeLineAllDays([1,0] ,['Bar', 'Freizeit','Bildung'], [], 800, 2200, 'X Sterne Hotel', _, 'Car', 500000, FTL) 
-
 */
 fillTimeLine(Persons, EventCategories, PrevEvent, DayTimeLineFront, DayTimeLineBack, TimeLine, Day, DayStart, DayEnd, Hotel, HotelCategories, Vehicle, FullBudget, Budget, ResultTimeLine):-
 		nl, write("Starte fillTimeLine"), nl, nl,
@@ -944,9 +935,6 @@ findEventBetweenEvents
 wird von fillTimeLine verwendet
 Erstellt ein Event für den Zeitraum zwischen "Anfang des Tages" bis zum ersten Event
 alle Parameter wie bei fillTimeLine
-findFirstEventOfDay([1,1], ['Bar','Freizeit'] ,[['Marinemuseum',1,1110,45,'Car'],['Cinestar',1,1531,20,'Car']], [['Marinemuseum',1,1110,45,'Car'],['Cinestar',1,1531,20,'Car']], 800, 2200, 'X Sterne Hotel', 37702, X, Y)
-findFirstEventOfDay([1,1], ['Bar','Freizeit'] ,[['Marinemuseum',1,810,45,'Car'],['Cinestar',1,1131,20,'Car']], [['Marinemuseum',1,810,45,'Car'],['Cinestar',1,1131,20,'Car']], 800, 2200, 'X Sterne Hotel', 37702, X, Y)
-
 */
 findFirstEventOfDay(Persons, EventCategories, DayTimeLine, TimeLine, DayStart, DayEnd, Hotel, RestBudget, ResultDayTimeLine, ReturnBudget):-
 	[EventHead|_] = TimeLine,
@@ -1328,8 +1316,8 @@ Prüft ob die Events für alle Gruppenmitglieder geeignet sind
 wrid von findEventForFreeTime, findEventForFreeTime2, findEventForFreeTime3, findEventForFreeTime4 verwendet
 
 Beispiel:
-searchPossibleEventsOnAdultChildRatio([2,3], ['Hansedom','Meeresmuseum','Zoo','Haus 8'], PossibleEventOnAdultChildRatio)
-searchPossibleEventsOnAdultChildRatio([2,0], ['Hansedom','Meeresmuseum','Zoo','Haus 8'], PossibleEventOnAdultChildRatio)
+searchPossibleEventsOnAdultChildRatio([2,3], ['Theater Stralsund','Strelapark','Hansedom','Nautineum'], PossibleEventOnAdultChildRatio)
+searchPossibleEventsOnAdultChildRatio([2,0], ['Theater Stralsund','Strelapark','Hansedom','Nautineum'], PossibleEventOnAdultChildRatio)
 */
 searchPossibleEventsOnAdultChildRatio(_, [], PossibleEventOnAdultChildRatio):-
 	PossibleEventOnAdultChildRatio = [].
@@ -1373,7 +1361,7 @@ searchPossibleEventsOnAdultChildRatio(Persons, [EventsHead|EventsTail], Possible
 /*
 searchPossibleEventsOnTimeline
 Prüft ob die Events in der TimeLine vorhanden sind und sortiert sie aus
-wrid von findEventForFreeTime, findEventForFreeTime2, findEventForFreeTime3, findEventForFreeTime4 verwendet
+wird von findEventForFreeTime, findEventForFreeTime2, findEventForFreeTime3, findEventForFreeTime4 verwendet
 */
 searchPossibleEventsOnTimeline([], _, PossibleEventsOnTimeline):-
 	PossibleEventsOnTimeline = [].
@@ -1461,7 +1449,6 @@ Day = Tag
 Vehicle = Fahrzeugt
 ResultEvent = Rückgabe des Events nach zusammenbau =[ResultEventName, Day, ResultStartTime, ResultEventTime, Vehicle]
 ResultDayTimeLine = Rückgabe der aktualisierten kompletten Tagesliste
-
 */
 addResultToTimeLineBetween(PrevEvent, Result, DayTimeLineFrontIn, DayTimeLineBack, Day, Vehicle, ResultEvent, ResultDayTimeLine):-
 	nl, write("Starte mit AddResult"), nl,
