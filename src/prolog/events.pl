@@ -16,7 +16,7 @@ event(	'Hansedom',
 	['Fast-Food'],
 	[2222,1000],
 	[600, 2100],
-	[20]).
+	[200]).
 
 event(	'Strelapark',
 	[54.320678,13.046984],
@@ -24,7 +24,7 @@ event(	'Strelapark',
 	['Fast-Food'],
 	[3333,1000],
 	[600, 2100],
-	[60]).
+	[600]).
 	
 event(	'Citti', 
 	[54.320071,13.047413], 
@@ -48,7 +48,7 @@ event(	'Meeresmuseum',
 	['Fast-Food'],
 	[5555,1000],
 	[900, 2100],
-	[20]).
+	[200]).
 	
 event(	'Nautineum',
 	[54.305252,13.118912],
@@ -56,7 +56,7 @@ event(	'Nautineum',
 	['Fast-Food'],
 	[8111,1000],
 	[900, 2100],
-	[60]).
+	[600]).
 	
 event(	'Marinemuseum',
 	[54.309746,13.119041],
@@ -64,7 +64,7 @@ event(	'Marinemuseum',
 	[],
 	[2332,1000],
 	[600, 2100],
-	[45]).
+	[450]).
 	
 event(	'Fachhochschule Stralsund',
 	[54.339149,13.076232],
@@ -72,7 +72,7 @@ event(	'Fachhochschule Stralsund',
 	['Kantinenessen','Mittag'],
 	[100,1000],
 	[930, 2100],
-	[25]).
+	[250]).
 	
 event(	'Zoo',
 	[54.319651,13.051815],
@@ -80,7 +80,7 @@ event(	'Zoo',
 	[],
 	[3453,1000],
 	[930, 2100],
-	[30]).
+	[300]).
 	
 event(	'Cinestar',
 	[54.311055,13.090076],
@@ -88,7 +88,7 @@ event(	'Cinestar',
 	[],
 	[5366,1000],
 	[930, 2100],
-	[20]).
+	[200]).
 	
 event(	'Haus 8',
 	[54.340094,13.076638],
@@ -96,7 +96,7 @@ event(	'Haus 8',
 	[],
 	[0,0],
 	[930, 2200],
-	[20]).
+	[200]).
 	
 
 /*Hotels
@@ -123,7 +123,7 @@ vehicle('Foot', [0,0], 6).
 * Kategorien für Kinder und Erwachsene festlegen
 */
 childCategories(['Freizeit','Tiere','Schwimmen']).
-adultCategories(['Bildung','Bar','Kneipe','Sauna']).
+adultCategories(['Bildung','Bar','Kneipe','Sauna','Einkaufen','Sport']).
 
 /*
 event(	'Ozeaneum',
@@ -612,3 +612,6 @@ event(	'Suthai',
 	[60]).
 
 */
+
+
+

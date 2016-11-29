@@ -237,6 +237,13 @@ public class MainPanel extends JPanel {
 		return true;
 	}
 
+	public void fillTimeplan(){
+		ArrayList<Event> resultTimeLine = prologConnector.fillTimeLine("", profile);
+		for(Event e:resultTimeLine){
+			addToTimeplan(e);
+		}
+	}
+	
 	public void addToTimeplan(Event _newEvent){
 		String hotel = "";
 		if(_newEvent.getCategories().contains("hotel")){
