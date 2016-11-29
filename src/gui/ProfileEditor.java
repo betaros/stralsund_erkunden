@@ -69,9 +69,9 @@ public class ProfileEditor extends JPanel {
 		gbc_panel.gridy = 0;
 		add(panel, gbc_panel);
 		GridBagLayout gbl_panel = new GridBagLayout();
-		gbl_panel.columnWidths = new int[]{0, 0, 0, 0, 0, 0, 0, 0, 0, 0};
+		gbl_panel.columnWidths = new int[]{0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0};
 		gbl_panel.rowHeights = new int[]{0, 0, 0, 0, 0};
-		gbl_panel.columnWeights = new double[]{0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 1.0, Double.MIN_VALUE};
+		gbl_panel.columnWeights = new double[]{0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 1.0, Double.MIN_VALUE};
 		gbl_panel.rowWeights = new double[]{0.0, 0.0, 0.0, 1.0, Double.MIN_VALUE};
 		panel.setLayout(gbl_panel);
 
@@ -157,7 +157,7 @@ public class ProfileEditor extends JPanel {
 		Component horizontalStrut = Box.createHorizontalStrut(20);
 		GridBagConstraints gbc_horizontalStrut = new GridBagConstraints();
 		gbc_horizontalStrut.insets = new Insets(0, 0, 5, 5);
-		gbc_horizontalStrut.gridx = 2;
+		gbc_horizontalStrut.gridx = 3;
 		gbc_horizontalStrut.gridy = 0;
 		panel.add(horizontalStrut, gbc_horizontalStrut);
 
@@ -165,7 +165,7 @@ public class ProfileEditor extends JPanel {
 		GridBagConstraints gbc_lblArrival = new GridBagConstraints();
 		gbc_lblArrival.anchor = GridBagConstraints.EAST;
 		gbc_lblArrival.insets = new Insets(0, 0, 5, 5);
-		gbc_lblArrival.gridx = 3;
+		gbc_lblArrival.gridx = 4;
 		gbc_lblArrival.gridy = 0;
 		panel.add(lblArrival, gbc_lblArrival);
 
@@ -174,14 +174,14 @@ public class ProfileEditor extends JPanel {
 		GridBagConstraints gbc_comboBoxArrival = new GridBagConstraints();
 		gbc_comboBoxArrival.anchor = GridBagConstraints.WEST;
 		gbc_comboBoxArrival.insets = new Insets(0, 0, 5, 5);
-		gbc_comboBoxArrival.gridx = 4;
+		gbc_comboBoxArrival.gridx = 5;
 		gbc_comboBoxArrival.gridy = 0;
 		panel.add(comboBoxArrival, gbc_comboBoxArrival);
 
 		Component horizontalStrut_1 = Box.createHorizontalStrut(100);
 		GridBagConstraints gbc_horizontalStrut_1 = new GridBagConstraints();
 		gbc_horizontalStrut_1.insets = new Insets(0, 0, 5, 5);
-		gbc_horizontalStrut_1.gridx = 5;
+		gbc_horizontalStrut_1.gridx = 6;
 		gbc_horizontalStrut_1.gridy = 0;
 		panel.add(horizontalStrut_1, gbc_horizontalStrut_1);
 
@@ -195,18 +195,25 @@ public class ProfileEditor extends JPanel {
 
 		textFieldBudget = new JTextField();
 		GridBagConstraints gbc_textFieldBudget = new GridBagConstraints();
-		gbc_textFieldBudget.anchor = GridBagConstraints.WEST;
+		gbc_textFieldBudget.fill = GridBagConstraints.HORIZONTAL;
 		gbc_textFieldBudget.insets = new Insets(0, 0, 5, 5);
 		gbc_textFieldBudget.gridx = 1;
 		gbc_textFieldBudget.gridy = 1;
 		panel.add(textFieldBudget, gbc_textFieldBudget);
 		textFieldBudget.setColumns(10);
+		
+		JLabel label = new JLabel("\u20AC");
+		GridBagConstraints gbc_label = new GridBagConstraints();
+		gbc_label.insets = new Insets(0, 0, 5, 5);
+		gbc_label.gridx = 2;
+		gbc_label.gridy = 1;
+		panel.add(label, gbc_label);
 
 		JLabel lblDayBegin = new JLabel("Tagesbeginn");
 		GridBagConstraints gbc_lblDayBegin = new GridBagConstraints();
 		gbc_lblDayBegin.anchor = GridBagConstraints.EAST;
 		gbc_lblDayBegin.insets = new Insets(0, 0, 5, 5);
-		gbc_lblDayBegin.gridx = 3;
+		gbc_lblDayBegin.gridx = 4;
 		gbc_lblDayBegin.gridy = 1;
 		panel.add(lblDayBegin, gbc_lblDayBegin);
 
@@ -216,7 +223,7 @@ public class ProfileEditor extends JPanel {
 		GridBagConstraints gbc_sliderDayBegin = new GridBagConstraints();
 		gbc_sliderDayBegin.fill = GridBagConstraints.HORIZONTAL;
 		gbc_sliderDayBegin.insets = new Insets(0, 0, 5, 5);
-		gbc_sliderDayBegin.gridx = 4;
+		gbc_sliderDayBegin.gridx = 5;
 		gbc_sliderDayBegin.gridy = 1;
 		panel.add(sliderDayBegin, gbc_sliderDayBegin);
 
@@ -224,7 +231,7 @@ public class ProfileEditor extends JPanel {
 		GridBagConstraints gbc_lblDayEnd = new GridBagConstraints();
 		gbc_lblDayEnd.anchor = GridBagConstraints.EAST;
 		gbc_lblDayEnd.insets = new Insets(0, 0, 5, 5);
-		gbc_lblDayEnd.gridx = 6;
+		gbc_lblDayEnd.gridx = 7;
 		gbc_lblDayEnd.gridy = 1;
 		panel.add(lblDayEnd, gbc_lblDayEnd);
 
@@ -234,7 +241,7 @@ public class ProfileEditor extends JPanel {
 		GridBagConstraints gbc_sliderDayEnd = new GridBagConstraints();
 		gbc_sliderDayEnd.fill = GridBagConstraints.HORIZONTAL;
 		gbc_sliderDayEnd.insets = new Insets(0, 0, 5, 5);
-		gbc_sliderDayEnd.gridx = 7;
+		gbc_sliderDayEnd.gridx = 8;
 		gbc_sliderDayEnd.gridy = 1;
 		panel.add(sliderDayEnd, gbc_sliderDayEnd);
 
@@ -292,14 +299,14 @@ public class ProfileEditor extends JPanel {
 		JLabel lblSpinnerValueDayBegin = new JLabel("8.00 Uhr");
 		GridBagConstraints gbc_lblSpinnerValueDayBegin = new GridBagConstraints();
 		gbc_lblSpinnerValueDayBegin.insets = new Insets(0, 0, 5, 5);
-		gbc_lblSpinnerValueDayBegin.gridx = 4;
+		gbc_lblSpinnerValueDayBegin.gridx = 5;
 		gbc_lblSpinnerValueDayBegin.gridy = 2;
 		panel.add(lblSpinnerValueDayBegin, gbc_lblSpinnerValueDayBegin);
 
 		JLabel lblSpinnerValueDayEnd = new JLabel("22.00 Uhr");
 		GridBagConstraints gbc_lblSpinnerValueDayEnd = new GridBagConstraints();
 		gbc_lblSpinnerValueDayEnd.insets = new Insets(0, 0, 5, 5);
-		gbc_lblSpinnerValueDayEnd.gridx = 7;
+		gbc_lblSpinnerValueDayEnd.gridx = 8;
 		gbc_lblSpinnerValueDayEnd.gridy = 2;
 		panel.add(lblSpinnerValueDayEnd, gbc_lblSpinnerValueDayEnd);
 
@@ -331,7 +338,7 @@ public class ProfileEditor extends JPanel {
 		GridBagConstraints gbc_lblFood = new GridBagConstraints();
 		gbc_lblFood.anchor = GridBagConstraints.NORTHEAST;
 		gbc_lblFood.insets = new Insets(0, 0, 0, 5);
-		gbc_lblFood.gridx = 3;
+		gbc_lblFood.gridx = 4;
 		gbc_lblFood.gridy = 3;
 		panel.add(lblFood, gbc_lblFood);
 		
@@ -347,7 +354,7 @@ public class ProfileEditor extends JPanel {
 		GridBagConstraints gbc_checkBoxListFood = new GridBagConstraints();
 		gbc_checkBoxListFood.insets = new Insets(0, 0, 0, 5);
 		gbc_checkBoxListFood.fill = GridBagConstraints.BOTH;
-		gbc_checkBoxListFood.gridx = 4;
+		gbc_checkBoxListFood.gridx = 5;
 		gbc_checkBoxListFood.gridy = 3;
 		panel.add(checkBoxListFood, gbc_checkBoxListFood);
 
@@ -355,7 +362,7 @@ public class ProfileEditor extends JPanel {
 		GridBagConstraints gbc_lblHotel = new GridBagConstraints();
 		gbc_lblHotel.anchor = GridBagConstraints.NORTHEAST;
 		gbc_lblHotel.insets = new Insets(0, 0, 0, 5);
-		gbc_lblHotel.gridx = 6;
+		gbc_lblHotel.gridx = 7;
 		gbc_lblHotel.gridy = 3;
 		panel.add(lblHotel, gbc_lblHotel);
 		
@@ -371,7 +378,7 @@ public class ProfileEditor extends JPanel {
 		GridBagConstraints gbc_checkBoxListHotel = new GridBagConstraints();
 		gbc_checkBoxListHotel.insets = new Insets(0, 0, 0, 5);
 		gbc_checkBoxListHotel.fill = GridBagConstraints.BOTH;
-		gbc_checkBoxListHotel.gridx = 7;
+		gbc_checkBoxListHotel.gridx = 8;
 		gbc_checkBoxListHotel.gridy = 3;
 		panel.add(checkBoxListHotel, gbc_checkBoxListHotel);
 

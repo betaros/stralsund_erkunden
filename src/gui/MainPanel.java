@@ -30,12 +30,12 @@ public class MainPanel extends JPanel {
 	private static final long serialVersionUID = -8438576029794021570L;
 
 	private JPanel mainList;
-	private JPanel planList;
+	public JPanel planList;
 	private JPanel mappanel;
 	private JXMapViewer mapViewer;
 
 	private PrologConnector prologConnector;
-	private Profile profile;
+	public Profile profile;
 
 	private ArrayList<Event> resultArrayList;
 	private ArrayList<Event> timelineArrayList;
@@ -164,7 +164,6 @@ public class MainPanel extends JPanel {
 
 		ArrayList<String> eventStringList = prologConnector.getEventsByPrologWithCategories(categoryList);
 		ArrayList<String> hotelStringList = prologConnector.findHotels(hotelList);
-		eventStringList.removeAll(Collections.singleton(null));
 
 		resultArrayList.removeAll(resultArrayList);
 		for(String s:eventStringList){
@@ -175,6 +174,7 @@ public class MainPanel extends JPanel {
 		}
 
 		resultArrayList.removeAll(Collections.singleton(null));
+		
 		mainList.removeAll();
 		
 		Map map = new Map();
@@ -260,6 +260,17 @@ public class MainPanel extends JPanel {
 		
 		//if(isEventOnTime){
 			if(!timelineArrayList.contains(_newEvent)){
+				if(!timelineArrayList.isEmpty()){
+					_newEvent.setTraveltime(
+							prologConnector.calcApproachForEvent(
+									profile.getAdultCounter(), 
+									profile.getChildCounter(), 
+									timelineArrayList.get(timelineArrayList.size()-1).getName(), 
+									_newEvent.getName(), 
+									hotel, 
+									profile.getArrival(), 
+									_newEvent.getStartTime()));
+				}
 				timelineArrayList.add(_newEvent);
 				//System.out.println("Timeline: " + _newEvent.getName());
 			}

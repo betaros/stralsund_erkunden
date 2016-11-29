@@ -21,6 +21,7 @@ public class Event {
 	private int duration;
 	private int businesshoursBegin;
 	private int businesshoursEnd;
+	private int traveltime;
 
 	/**
 	 * 
@@ -50,6 +51,7 @@ public class Event {
 		this.duration = _duration;
 		this.businesshoursBegin = _businesshoursBegin;
 		this.businesshoursEnd = _businesshoursEnd;
+		this.traveltime = 0;
 		
 		this.geoPos = new GeoPosition(_lat, _lon);
 	}
@@ -179,4 +181,19 @@ public class Event {
 	public void setDay(int day) {
 		this.day = day;
 	}
+	
+	/**
+	 * @return the traveltime
+	 */
+	public int getTraveltime() {
+		return traveltime;
+	}
+
+	/**
+	 * @param traveltime the traveltime to set
+	 */
+	public void setTraveltime(int traveltime) {
+		this.traveltime = traveltime;
+	}
+
 }

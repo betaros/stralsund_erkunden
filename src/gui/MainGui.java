@@ -19,6 +19,8 @@ import java.awt.Toolkit;
 import javax.swing.UIManager;
 import java.awt.Color;
 import java.awt.event.ActionListener;
+import java.awt.event.ContainerEvent;
+import java.awt.event.ContainerListener;
 import java.awt.event.ActionEvent;
 import java.awt.CardLayout;
 import javax.swing.JTextPane;
@@ -82,7 +84,7 @@ public class MainGui{
 		gbc_profileButton.gridy = 0;
 		profilpanel.add(profileButton, gbc_profileButton);
 
-		JButton btnGenerateTimeline = new JButton("F\u00FClle Timeline");
+		JButton btnGenerateTimeline = new JButton("F\u00FClle Zeitablauf");
 		btnGenerateTimeline.setVisible(false);
 		GridBagConstraints gbc_btnGenerateTimeline = new GridBagConstraints();
 		gbc_btnGenerateTimeline.fill = GridBagConstraints.HORIZONTAL;
@@ -163,6 +165,20 @@ public class MainGui{
 		btnGenerateTimeline.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
 				mp.fillTimeplan();
+			}
+		});
+		
+		mp.planList.addContainerListener(new ContainerListener() {
+			
+			@Override
+			public void componentRemoved(ContainerEvent arg0) {
+				generateSummary();
+			}
+			
+			@Override
+			public void componentAdded(ContainerEvent arg0) {
+				generateSummary();
+				
 			}
 		});
 	}

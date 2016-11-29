@@ -5,6 +5,8 @@ import java.awt.GridBagLayout;
 import java.awt.GridBagConstraints;
 import java.awt.Insets;
 import javax.swing.JLabel;
+
+import java.awt.Color;
 import java.awt.FlowLayout;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
@@ -285,6 +287,16 @@ public class Result extends JPanel {
 		gbc_panelButtons.gridx = 0;
 		gbc_panelButtons.gridy = 3;
 		add(panelButtons, gbc_panelButtons);
+		
+		JLabel lblAnfahrt = new JLabel("Anfahrt");
+		panelButtons.add(lblAnfahrt);
+		
+		
+		JLabel lblTraveltime = new JLabel(String.valueOf(event.getTraveltime()));
+		panelButtons.add(lblTraveltime);
+		
+		JLabel lblMin = new JLabel("min");
+		panelButtons.add(lblMin);
 
 		btnRemoveButton = new JButton("-");
 		panelButtons.add(btnRemoveButton);
@@ -292,6 +304,15 @@ public class Result extends JPanel {
 		if(_resultlist){
 			btnNewButton = new JButton("+");
 			panelButtons.add(btnNewButton);
+		}
+		
+		if(!event.getFood().isEmpty()){
+			Color foodColor = Color.yellow;
+			panelButtons.setBackground(foodColor);
+			panelCost.setBackground(foodColor);
+			panelSettings.setBackground(foodColor);
+			panelTitle.setBackground(foodColor);
+			this.setBackground(foodColor);
 		}
 	}
 

@@ -172,7 +172,14 @@ public class PrologConnector {
 		
 		return hotelList;
 	}
+	
+	public ArrayList<String> findFood(ArrayList<String> foodCategories){
+		ArrayList<String> resultfood = new ArrayList<String>();
 		
+		
+		return resultfood;
+	}
+	
 	/**
 	 * Berechnet die Distanz zwischen zwei Orten
 	 * @param placeA
@@ -542,6 +549,13 @@ public class PrologConnector {
 		return result;
 	}
 	
+	/**
+	 * Fuellt Timeline aus
+	 * 
+	 * @param hotel
+	 * @param profile
+	 * @return
+	 */
 	public ArrayList<Event> fillTimeLine(String hotel, Profile profile){
 		ArrayList<String> peopleList = new ArrayList<String>();
 		peopleList.add(String.valueOf(profile.getAdultCounter()));
@@ -549,25 +563,21 @@ public class PrologConnector {
 		Term Persons = Util.textToTerm(prologListGenerator(peopleList));
 		Term EventCategories = Util.textToTerm(prologListGenerator(profile.getSelectedCategories()));
 		Atom Hotel = new Atom(hotel);
+		Atom Vehicle = new Atom(profile.getArrival());
 		
-		Atom Day = new Atom(String.valueOf(profile.getDays()));
 		Atom DayStart = new Atom(String.valueOf(profile.getDayStart()));
 		Atom DayEnd = new Atom(String.valueOf(profile.getDayEnd()));
 		
 		Term HotelCategories = Util.textToTerm(prologListGenerator(profile.getSelectedHotel()));
 		Atom FullBudget = new Atom(String.valueOf(profile.getBudgetInCent()));
-		Variable ResultTimeLine = new Variable("ResultTimeLine");
 		
-		Variable PrevEvent = new Variable("PrevEvent");
-		Variable DayTimeLineFront = new Variable("DayTimeLineFront");
-		Variable DayTimeLineBack = new Variable("DayTimeLineBack");
+		Variable ResultTimeLine = new Variable("ResultTimeLine");
 		Variable TimeLine = new Variable("TimeLine");
-		Variable Budget = new Variable("Budget");
 		
 		Query query =
 				new Query(
-						"fillTimeLine",
-						new Term[]{Persons, EventCategories, PrevEvent, DayTimeLineFront, DayTimeLineBack, TimeLine, Day, DayStart, DayEnd, Hotel, HotelCategories, FullBudget, Budget, ResultTimeLine}
+						"fillTimeLineAllDays",
+						new Term[]{Persons, EventCategories, TimeLine, DayStart, DayEnd, Hotel, HotelCategories, Vehicle, FullBudget, ResultTimeLine}
 						);
 		
 		ArrayList<Event> resultArrayList = new ArrayList<Event>();
@@ -575,7 +585,9 @@ public class PrologConnector {
 		if(query.hasSolution()){
 			Map<String,Term> solution = query.oneSolution();
 			String[] arrayResult = solution.get("ResultTimeLine").toString().split(",");
-			
+			for(String s:arrayResult){
+				System.out.println(s);
+			}
 			
 		}
 		
