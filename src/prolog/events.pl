@@ -138,8 +138,8 @@ vehicle('Foot', [0,0], 6).
 /*
 * Kategorien für Kinder und Erwachsene festlegen
 */
-childCategories(['Freizeit','Tiere','Schwimmen','Unterhaltung']).
-adultCategories(['Bildung','Bar','Kneipe','Sauna','Einkaufen','Sport']).
+childCategories(['Tiere','Unterhaltung','Wasser']).
+adultCategories(['Bildung','Bar','Kultur']).
 
 
 /*----------------------------------------------------------------------------------------------*/	
@@ -287,7 +287,7 @@ event(	'Cinestar Kino',
 
 event(	'Strandbad',
 	[54.329695,13.083078],
-	['Wasser','Sport','Schwimmen','Unterhaltung'],
+	['Wasser','Sport','Schwimmen','Outdoor'],
 	['Snack','Mittag','Cafe','Fast-Food','guenstige Preisklasse'],
 	[0,0],
 	[0, 1440],
@@ -338,7 +338,7 @@ event(event(Name,[Long, Lat],[Event-Kategorien],[Foot-Kategorien],[Öffnung, Schl
 event(	'Burgermeister',
 	[54.316155,13.091236],
 	['Altstadt'],
-	['Mittag','Abend','Amerikanisch','mittlere Preisklasse'],
+	['Mittag','Abend','Amerikanisch','Mittlere Preisklasse'],
 	[0,0],
 	[720, 1260],
 	[60]).
@@ -346,7 +346,7 @@ event(	'Burgermeister',
 event(	'Goldener Löwe',
 	[54.316318,13.091024],
 	['Altstadt'],
-	['Mittag','Cafe','Abend','Regional','Mediteran','Deftig','mittlere Preisklasse'],
+	['Mittag','Cafe','Abend','Regional','Mediterran','Deftig','Mittlere Preisklasse'],
 	[0,0],
 	[540, 1320],
 	[60]).
@@ -354,7 +354,7 @@ event(	'Goldener Löwe',
 event(	'Speicher 8',
 	[54.316200,13.097803],
 	['Hafen'],
-	['Mittag','Abend','Regional','Fisch','Gourmet','gehobene Preisklasse'],
+	['Mittag','Abend','Regional','Fisch','Gourmet','Gehobene Preisklasse'],
 	[0,0],
 	[600, 1320],
 	[60]).
@@ -362,7 +362,7 @@ event(	'Speicher 8',
 event(	'The Black Bull',
 	[54.317141,13.094705],
 	['Hafen'],
-	['Abend','Amerikanisch','gehobene Preisklasse'],
+	['Abend','Amerikanisch','Gehobene Preisklasse'],
 	[0,0],
 	[900, 1320],
 	[60]).
@@ -370,7 +370,7 @@ event(	'The Black Bull',
 event(	'Fischermanns',
 	[54.316833,13.096586],
 	['Hafen'],
-	['Mittag','Cafe','Abend','Fisch','deftig','mittlere Preisklasse'],
+	['Mittag','Cafe','Abend','Fisch','Deftig','Mittlere Preisklasse'],
 	[0,0],
 	[720, 1320],
 	[60]).
@@ -378,7 +378,7 @@ event(	'Fischermanns',
 event(	'Ventspils',
 	[54.319306,13.088673],
 	[],
-	['Mittag','Cafe','Abend','regional','mittlere Preisklasse'],
+	['Mittag','Cafe','Abend','Regional','Mittlere Preisklasse'],
 	[0,0],
 	[600, 1320],
 	[60]).
@@ -386,7 +386,7 @@ event(	'Ventspils',
 event(	'Torschliesserhaus',
 	[54.313868,13.086779],
 	['Altstadt'],
-	['Mittag','Abend','deftig','mittlere Preisklasse'],
+	['Mittag','Abend','Deftig','Mittlere Preisklasse'],
 	[0,0],
 	[720, 1380],
 	[60]).
@@ -402,7 +402,7 @@ event(	'Wallensteinkeller',
 event(	'Brasserie',
 	[54.310806,13.087224],
 	['Altstadt','Bar'],
-	['Mittag','Cafe','Abend','Deftig','Mediteran','Mittlere Preisklasse'],
+	['Mittag','Cafe','Abend','Deftig','Mediterran','Mittlere Preisklasse'],
 	[0,0],
 	[540, 1440],
 	[60]).
