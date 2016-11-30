@@ -165,6 +165,7 @@ public class MainGui{
 		btnGenerateTimeline.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
 				mp.fillTimeline();
+				txtpnSummary.setText(generateSummary());
 			}
 		});
 		
@@ -172,12 +173,12 @@ public class MainGui{
 			
 			@Override
 			public void componentRemoved(ContainerEvent arg0) {
-				generateSummary();
+				txtpnSummary.setText(generateSummary());
 			}
 			
 			@Override
 			public void componentAdded(ContainerEvent arg0) {
-				generateSummary();
+				txtpnSummary.setText(generateSummary());
 				
 			}
 		});
@@ -189,7 +190,7 @@ public class MainGui{
 	 */
 	private String generateSummary(){
 		StringBuilder summaryText = new StringBuilder();
-
+		
 		summaryText.append("Gesamtkosten: ");
 		summaryText.append("\n");
 		double totalCost = (double)profile.getTotalCost() / 100.0;

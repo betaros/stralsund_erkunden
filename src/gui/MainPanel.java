@@ -253,6 +253,7 @@ public class MainPanel extends JPanel {
 			}
 		}
 		ArrayList<Event> resultTimeLine = prologConnector.fillTimeLine(hotel, profile);
+		timelineArrayList.removeAll(timelineArrayList);
 		for(Event e:resultTimeLine){
 			addToTimeplan(e);
 		}
@@ -284,7 +285,9 @@ public class MainPanel extends JPanel {
 
 			planList.removeAll();
 
-			for(Event e:timelineArrayList){			
+			int totalcost = 0;
+			for(Event e:timelineArrayList){
+				totalcost += ((profile.getAdultCounter() * e.getPriceInCentAdult()) + (profile.getChildCounter() * e.getPriceInCentChild()));
 				Result result = new Result(0, e, profile, false);
 				GridBagConstraints gbc = new GridBagConstraints();
 				gbc.gridwidth = GridBagConstraints.REMAINDER;
@@ -301,6 +304,7 @@ public class MainPanel extends JPanel {
 					}
 				});
 			}
+			profile.setTotalCost(totalcost);
 			validate();
 			repaint();
 		//}
