@@ -265,22 +265,6 @@ public class Result extends JPanel {
 		panelSettings.add(lblDuration, gbc_lblDuration);
 
 		// Funktionen
-		if(!(event.getCategories().contains("0") ||
-				event.getCategories().contains("1") ||
-				event.getCategories().contains("2") ||
-				event.getCategories().contains("3") ||
-				event.getCategories().contains("4") ||
-				event.getCategories().contains("5"))){
-			panelSettings.setVisible(false);
-			lblTag.setVisible(false);
-			lblBeginn.setVisible(false);
-			lblStarttime.setVisible(false);
-			lblDauer.setVisible(false);
-			lblDuration.setVisible(false);
-			sliderDuration.setVisible(false);
-			sliderStarttime.setVisible(false);
-		}
-		
 		sliderStarttime.addChangeListener(new ChangeListener() {
 			public void stateChanged(ChangeEvent arg0) {
 				starttime = sliderStarttime.getValue() * 60;

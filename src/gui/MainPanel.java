@@ -301,6 +301,8 @@ public class MainPanel extends JPanel {
 					}
 				});
 			}
+			validate();
+			repaint();
 		//}
 	}
 }
