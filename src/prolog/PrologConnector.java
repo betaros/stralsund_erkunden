@@ -278,17 +278,18 @@ public class PrologConnector {
 
 	/**
 	 * Ueberprueft, ob die Evente im Budget liegen
-	 * @param adultCount
-	 * @param reducedCount
-	 * @param budget
 	 * @param eventslist
+	 * @param profile
 	 * @return
 	 */
-	public ArrayList<String> checkEventForBudget(int adultCount, int reducedCount, int budget, ArrayList<String> eventslist){
-		Term People = Util.textToTerm("[" + adultCount + "," + reducedCount + "]");
+	public ArrayList<String> checkEventForBudget(ArrayList<Event> eventlist, Profile profile){
+		Term People = Util.textToTerm("[" + profile.getAdultCounter() + "," + profile.getChildCounter() + "]");
 		
-		Integer Budget = new Integer(budget);
-		Term termEvents = Util.textToTerm(prologListGenerator(eventslist));
+		Integer Budget = new Integer(profile.getBudgetInCent());
+		String eventTermList = prologTermFromEvent(eventlist);
+		System.out.println(eventTermList);
+		
+		Term termEvents = Util.textToTerm(eventTermList);
 		Variable X = new Variable("X");
 
 		Query query =
@@ -593,19 +594,39 @@ public class PrologConnector {
 	 * @return
 	 */
 	public ArrayList<Event> fillTimeLine(String hotel, Profile profile){
-		ArrayList<String> peopleList = new ArrayList<String>();
-		peopleList.add(String.valueOf(profile.getAdultCounter()));
-		peopleList.add(String.valueOf(profile.getChildCounter()));
-		Term Persons = Util.textToTerm(prologListGenerator(peopleList));
+		Term Persons = Util.textToTerm("[" + profile.getAdultCounter() + "," + profile.getChildCounter() + "]");
 		Term EventCategories = Util.textToTerm(prologListGenerator(profile.getSelectedCategories()));
 		Atom Hotel = new Atom(hotel);
 		Atom Vehicle = new Atom(profile.getArrival());
+		switch(profile.getArrival()){
+		case "Zu fuss":
+			Vehicle = new Atom("Foot");
+			break;
+		case "Fahrrad":
+			Vehicle = new Atom("Bike");
+			break;
+		case "Bus":
+			Vehicle = new Atom("Bus");
+			break;
+		default:
+			Vehicle = new Atom("Car");
+		}
 		
-		Atom DayStart = new Atom(String.valueOf(profile.getDayStart()));
-		Atom DayEnd = new Atom(String.valueOf(profile.getDayEnd()));
+		Integer DayStart = new Integer(profile.getDayStart());
+		Integer DayEnd = new Integer(profile.getDayEnd());
 		
-		Term HotelCategories = Util.textToTerm(prologListGenerator(profile.getSelectedHotel()));
-		Atom FullBudget = new Atom(String.valueOf(profile.getBudgetInCent()));
+		StringBuilder hc = new StringBuilder();
+		hc.append("[");
+		for(String s:profile.getSelectedHotel()){
+			hc.append(s);
+			hc.append(",");
+		}
+		if(!profile.getSelectedHotel().isEmpty()){
+			hc.deleteCharAt(hc.length()-1);
+		}
+		hc.append("]");
+		Term HotelCategories = Util.textToTerm(hc.toString());
+		Integer FullBudget = new Integer(profile.getBudgetInCent());
 		
 		Variable ResultTimeLine = new Variable("ResultTimeLine");
 		Variable TimeLine = new Variable("TimeLine");
@@ -620,11 +641,48 @@ public class PrologConnector {
 		
 		if(query.hasSolution()){
 			Map<String,Term> solution = query.oneSolution();
-			String[] arrayResult = solution.get("ResultTimeLine").toString().split(",");
-			for(String s:arrayResult){
-				System.out.println(s);
+			String[] arrayResult = solution.get("ResultTimeLine").toString().split(", ");
+			ArrayList<String> queryResultArrayList = new ArrayList<String>();
+			for(int i = 0; i<arrayResult.length; i++){
+				arrayResult[i] = arrayResult[i].replaceAll("[^A-Za-z0-9. ]", "");
+				if(!arrayResult[i].equals("")){
+					queryResultArrayList.add(arrayResult[i]);
+				}
+			}
+			int counter = 0;
+			String title = "";
+			String day = "";
+			String eventStart = "";
+			String duration = "";
+			for(String s:queryResultArrayList){
+				switch(counter){
+				case 0:
+					title = s;
+					counter++;
+					break;
+				case 1:
+					day = s;
+					counter++;
+					break;
+				case 2:
+					eventStart = s;
+					counter++;
+					break;
+				case 3:
+					duration = s;
+					counter++;
+					break;
+				default:
+					Event tempEvent = findEvent(title, false);
+					if(tempEvent != null){
+						resultArrayList.add(new Event(title, tempEvent.getLatitude(), tempEvent.getLongitude(), tempEvent.getPriceInCentAdult(), tempEvent.getPriceInCentChild(), tempEvent.getCategories(), tempEvent.getFood(), java.lang.Integer.parseInt(day), java.lang.Integer.parseInt(eventStart), java.lang.Integer.parseInt(duration), tempEvent.getBusinesshoursBegin(), tempEvent.getBusinesshoursEnd()));
+					}
+					counter = 0;
+				}
 			}
 			
+			Event hotelEvent = findEvent(hotel, true);
+			resultArrayList.add(hotelEvent);
 		}
 		
 		return resultArrayList;
@@ -647,6 +705,60 @@ public class PrologConnector {
 		sb.deleteCharAt(sb.length()-1);
 		sb.append("]");
 
+		return sb.toString();
+	}
+	
+	/**
+	 * Generiert aus EventListe einen Term
+	 * @param eventlist
+	 * @return
+	 */
+	private String prologTermFromEvent(ArrayList<Event> eventlist){
+		StringBuilder sb = new StringBuilder();
+		sb.append("[");
+		for(Event e:eventlist){
+			sb.append("[");
+			sb.append(e.getName());
+			sb.append(",[");
+			sb.append(e.getLongitude());
+			sb.append(",");
+			sb.append(e.getLatitude());
+			sb.append("],");
+			sb.append("[");
+			for(String s:e.getCategories()){
+				sb.append(s);
+				sb.append(",");
+			}
+			if(!e.getCategories().isEmpty()){
+				sb.deleteCharAt(sb.length()-1);
+			}
+			sb.append("],");
+			sb.append("[");
+			for(String s:e.getFood()){
+				sb.append(s);
+				sb.append(",");
+			}
+			if(!e.getFood().isEmpty()){
+				sb.deleteCharAt(sb.length()-1);
+			}
+			sb.append("],");
+			sb.append("[");
+			sb.append(e.getPriceInCentAdult());
+			sb.append(",");
+			sb.append(e.getPriceInCentChild());
+			sb.append("],");
+			sb.append("[");
+			sb.append(e.getBusinesshoursBegin());
+			sb.append(",");
+			sb.append(e.getBusinesshoursEnd());
+			sb.append("],");
+			sb.append("[");
+			sb.append(e.getDuration());
+			sb.append("]");
+			sb.append("]");
+		}
+		sb.append("]");
+		
 		return sb.toString();
 	}
 }

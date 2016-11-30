@@ -51,7 +51,7 @@ public class MainGui{
 		frmStralsundErkunden.setBounds(100, 100, 1100, 635);
 		frmStralsundErkunden.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
-		profile = new Profile(2, 20000, 2, 1); 
+		profile = new Profile(2, 50000, 2, 1); 
 		profileVisible = true;
 		GridBagLayout gridBagLayout = new GridBagLayout();
 		gridBagLayout.columnWidths = new int[] {173, 1000, 0};
@@ -164,7 +164,7 @@ public class MainGui{
 		
 		btnGenerateTimeline.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
-				mp.fillTimeplan();
+				mp.fillTimeline();
 			}
 		});
 		

@@ -237,26 +237,35 @@ public class MainPanel extends JPanel {
 		return true;
 	}
 
-	public void fillTimeplan(){
-		ArrayList<Event> resultTimeLine = prologConnector.fillTimeLine("", profile);
+	/**
+	 * Generiere Timeline
+	 */
+	public void fillTimeline(){
+		String hotel = "Pension Am Ozeaneum";
+		for(Event e:resultArrayList){
+			if(e.getCategories().contains("0") ||
+					e.getCategories().contains("1") ||
+					e.getCategories().contains("2") ||
+					e.getCategories().contains("3") ||
+					e.getCategories().contains("4")){
+				hotel = e.getName();
+				break;
+			}
+		}
+		ArrayList<Event> resultTimeLine = prologConnector.fillTimeLine(hotel, profile);
 		for(Event e:resultTimeLine){
 			addToTimeplan(e);
 		}
 	}
 	
+	/**
+	 * Fuege Event zur Timeline hinzu
+	 * @param _newEvent
+	 */
 	public void addToTimeplan(Event _newEvent){
-		String hotel = "";
-		if(_newEvent.getCategories().contains("hotel")){
-			hotel = _newEvent.getName();
-		} else {
-			for(Event e:timelineArrayList){
-				if(e.getCategories().contains("hotel")){
-					hotel = e.getName();
-				}
-			}
-		}
-		boolean isEventOnTime = prologConnector.checkEventsOnTime(profile.getAdultCounter(), profile.getChildCounter(), timelineArrayList, profile.getDayStart(), profile.getDayEnd(), hotel, hotel, profile.getBudgetInCent(), profile); 
-		System.out.println(isEventOnTime);
+		//String hotel = "";
+		//boolean isEventOnTime = prologConnector.checkEventsOnTime(profile.getAdultCounter(), profile.getChildCounter(), timelineArrayList, profile.getDayStart(), profile.getDayEnd(), hotel, hotel, profile.getBudgetInCent(), profile); 
+		//System.out.println(isEventOnTime);
 		
 		//if(isEventOnTime){
 			if(!timelineArrayList.contains(_newEvent)){
