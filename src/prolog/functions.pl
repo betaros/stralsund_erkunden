@@ -1,3 +1,236 @@
+/*
+
+functions.pl Benutzerhandbuch
+
+Über diese Anleitung:
+In dieser Anleitung wird die grundlegende Funktionalität, Programmablauf und die wichtigsten Einstiegspunkte an Hand von Beispielen erläutert.
+
+
+Grundlegende Funktionalität:
+	- Suche nach Events, Kategorien und Hotels
+	- Suche nach Events und Hotels auf Grundlage gewählter Kategorien
+	- Prüfung der Timeline auf Budget, zeitlichen Abläufen, Kindergeeignetheit, Öffnungszeiten
+	- Erstellen einer neuen Timeline oder befüllen einer vorgegebenen an Hand der gewählten Kategorien
+
+
+Programmablauf:
+	1. Abrufen der Event-, Hotel- und Foot-Kategorien
+	2. Wahl der gewünschten Kategorien und Abruf der passenden Events und Hotels
+	3. Wahl von Events, deren Dauer und Startzeit, Überführung der Events in eine Timeline und Prüfung dieser Timeline
+	4. Automatisierte Befüllung der Timeline mit Events passend zu den gewünschten Kategorien
+
+Beispielhafter Programmablauf:
+	0. Ausgabe der kompletten Listen.
+		Damit JPL-Prolog in Eclipse die komplette Liste anzeigt nutzen Sie folgenden Aufruf:
+			set_prolog_flag(answer_write_options,
+                		[ quoted(true),
+                    	 	portray(true),
+                     		spacing(next_argument)
+                   	]).
+	
+
+	1. Abrufen der Event- , Hotel und Foot-Kategorien:
+		Aufruf:
+			findAllCategories(Categories).
+		Ergebnis:
+			Liste aller Event-Kategorien die in der Wissensbasis verfügbar sind.
+			Categories = ['Altstadt', 'Bar', 'Altstadt', 'Bar', 'Altstadt', 'Disko', 'Bar', 'Altstadt', 'Bar'|...]
+		Hinweis:
+			Bei diesem Aufruf wird nicht gefiltert welche Kategorien sich wiederholen. Die muss das verarbeitende Programm erledigen.
+
+		Aufruf:		
+			findAllFoodCategories(Categories).
+		Ergebnis:
+			Liste aller Foot-Kategorien die in der Wissensbasis verfügbar sind.
+			Categories = ['Mittag', 'Abend', 'Chinesisch', 'Sushi', 'Mittlere Preisklasse', 'Snacks', 'Mittlere Preisklasse'|...]
+		Hinweis:
+			Bei diesem Aufruf wird nicht gefiltert welche Kategorien sich wiederholen. Die muss das verarbeitende Programm erledigen.
+
+		Aufruf:		
+			findAllHotelCategories(Categories).
+		Ergebnis:
+			Liste aller Hotel-Kategorien die in der Wissensbasis verfügbar sind.
+			Categories = [2, 4, 0, 3, 3, 3, 3, 0, 3, 4, 3, 3, 4, 3, 3, 4, 4, 3] 
+		Hinweis:
+			Bei diesem Aufruf wird nicht gefiltert welche Kategorien sich wiederholen. Die muss das verarbeitende Programm erledigen.
+
+
+	2. Wahl der gewünschten Kategorien und Abruf der passenden Events, Hotels
+		Nach Abruf der Kategorien kann der Nutzer seine Wahl treffen.
+		Mit Hilfe der von ihm erstellten Kategorie-Listen können dann weitere Daten abgerufen werden.
+			Für dieses Beispiel wählt der Nutzer:
+				- die Event-Kategorien "Altstadt", "Bar" und "Bildung"
+				- die Hotel-Kategorien "1" und "2"
+			
+
+		Aufruf:
+			searchEventsOnCategory(Categories,Events).
+			searchEventsOnCategory([Altstadt,Bar,Bildung], Events).
+		Ergebnis:
+			Events = ['Ozeaneum', 'Rathaus', 'Deutsches Meeresmuseum', 'Gorch Fock', 'St Marienkirche', 'Nikolaikirche', 'Kulturhistorisches Museum Stralsund'|...]
+		Hinweis:
+			Bei der Ausgabe handelt es sich um die Namen der Events. Jedes Event taucht nur einmal auf und die Liste muss somit nicht auf Doppelungen geprüft werden.
+
+		Aufruf:
+			searchHotelsOnCategory(Category,Hotels).
+			searchHotelsOnCategory([1,2], Hotels).
+		Ergebnis:
+			Hotels = ['Schweriner Hof'].
+		Hinweis:
+			Bei der Ausgabe handelt es sich um die Namen der Hotels. Jedes Hotel taucht nur einmal auf und die Liste muss somit nicht auf Doppelungen geprüft werden.	
+
+		
+
+	3. Wahl von Events, deren Dauer und Startzeit, Überführung der Events in eine Timeline und Prüfung dieser Timeline
+		Nachdem nun alle zu den Kategorien passenden Events und Hotels angezeigt werden, kann der Nutzer beginnen sich die Timeline aufzubauen.
+		Hierzu wählt er an welchem Tag, zu welcher Uhrzeit und wie lange er das Event durchführen möchte.
+		Die Wahl des Fahrzeuges bestimmt, wie er zu dem Event gelangt und falls es das letzte Event des Tages ist, wie er zum Hotel zurückkehrt.
+		Damit die Timeline keine Einträge enthält, welche auf Grund der Öffnungszeiten des Events, eines nicht ausreichenden Budgets ... nicht möglich sind, sollte die 
+		Timeline nach jedem hinzugefügten Event geprüft werden.
+		Die Reihenfolge der Events in der Timeline spielt keine Rolle, da die Timeline mit der Prüfung auch sortiert wird.
+		
+		Beispiel 1:
+		In diesem Beispiel wird als Event das "Ozeaneum" gewählt und soll 12 Uhr beginnen und eine Stunde dauern. 
+		Die Anfahrt findet mit dem Auto statt.
+		Die Uhrzeiten und Dauer müssen auf Minuten umgerechnet werden.
+		Die Gruppe besteht aus 2 Erwachsenen und 1 Kindern.
+		Die Startzeit des Tages ist 11 Uhr und die Endzeit des Tages ist 19 Uhr.
+		Als Hotel wurde das "Hiddenseer Hotel" gewählt.
+		Die Hotelkategorien können leer bleiben, da das Hotel gewählt wurde.
+		Das Budget ist mit 1000 Euro angegeben.
+		Der Tag an dem das Event stattfindet ist der 1.
+		
+			Personen 2 Erw. und 1 Kind = [2,1]
+			Tag des Events = 1
+			Startuhrzeit 12 Uhr = 720 Minute des Tages
+			Dauer 1 Stunde = 60 Minuten
+			Anfahrt mit Auto = "Car"
+			Startzeit des Tages = 660
+			Endzeit des Tages = 1140
+			Budget 1000 Euro = 100000 (Cent)  
+			
+			Zusammenbau des Events:
+				[Name, Day, Starttime, Duration, Vehicle]
+				['Ozeaneum', 1, 720, 60, 'Car']
+			
+		Aufruf:
+			checkEventsOnTime(Persons, EventList, DayStart, DayEnd, Hotel, HotelCategorie, Budget, Return, Price)
+			checkEventsOnTime([2,1],[['Ozeaneum', 1, 720, 60, 'Car']],660, 1140, 'Hiddenseer Hotel', _,100000, Return, Price).
+	
+		Rückgabe:
+			Return = true,
+			Price = 25100
+
+		Hinweis:
+			Return gibt an ob die Timeline allen Anforderungen entspricht
+			Price gibt den Gesamtpreis aus
+			
+			Sollte es zu Unstimmigkeiten in der Timeline kommen (sich überschneidende Events, zu wenig Budget ...) dann wird Return = False zurückgegeben.
+
+
+		Beispiel 2:
+
+		Die Timeline wird nun um ein Event ergänzt.
+		Es soll nun am 2. Tag um 11.30 Uhr ins Rathaus gefahren und dieses für 30 minuten besichtigt werden.
+		
+			Zusammenbau des Events:
+				[Name, Day, Starttime, Duration, Vehicle]
+				['Rathaus', 2, 690, 30, 'Car']
+
+		Aufruf:
+			checkEventsOnTime(Persons, EventList, DayStart, DayEnd, Hotel, HotelCategorie, Budget, Return, Price)
+			checkEventsOnTime([2,1],[['Ozeaneum', 1, 720, 60, 'Car'],['Rathaus', 2, 690, 30, 'Car']],660, 1140, 'Hiddenseer Hotel', _,100000, Return, Price).
+	
+		Rückgabe:
+			Return = true,
+			Price = 35900
+
+		Hinweis:
+			Return gibt an ob die Timeline allen Anforderungen entspricht
+			Price gibt den Gesamtpreis aus
+			
+			Sollte es zu Unstimmigkeiten in der Timeline kommen (sich überschneidende Events, zu wenig Budget ...) dann wird Return = False zurückgegeben.
+
+
+	4. Automatisierte Befüllung der Timeline mit Events passend zu den gewünschten Kategorien 
+		Die Gruppe hat sich nun ein Stück Timeline zusammengebaut und möchte die restliche Planung der Tour in die fähigen Hände Prologs legen.
+
+		Hierzu ist es nötig, zusätzlich zu den bisherigen Angaben die EventCategorien zu übertragen. Sollte sich die Gruppe bisher nicht auf ein Hotel geeinigt haben, kann 
+		auch dies mit Angabe der Hotelkategorien und freilassen des Hotels durch Prolog erledigt werden.
+
+			Persons = Personen = 2 Erw. und 1 Kind = [2,1]
+			EventCategories = Kategorien der Events = [Altstadt,Bar,Bildung]
+			Timeline = die Timeline aus dem vorherigen Beispiel = [['Ozeaneum', 1, 720, 60, 'Car'],['Rathaus', 2, 690, 30, 'Car']]
+			DayStart = 960, DaEnd = 1140
+			Hotel = 'Hiddenseer Hotel'
+			HotelCategories = _
+			Vehicle = 'Car'
+			FullBudget = 100000
+
+		Aufruf:
+			fillTimeLineAllDays(Persons, EventCategories, TimeLine, DayStart, DayEnd, Hotel1, HotelCategories, Vehicle, FullBudget, ResultTimeLine)
+			fillTimeLineAllDays([2,1], [Altstadt,Bar,Bildung], [['Ozeaneum', 1, 720, 60, 'Car'],['Rathaus', 2, 690, 30, 'Car']], 
+				660, 1140, 'Hiddenseer Hotel', _, 'Car', 100000, ResultTimeLine).
+		
+		Ergebnis:
+			ResultTimeLine = [['Ozeaneum', 1, 720, 60, 'Car'], ['Deutsches Meeresmuseum', 1, 781, 120, 'Car'], ['Störtebeker Braumanufaktur', 1, 906, 90, 'Car'], 
+						['Cinestar Kino', 1, 1000, 120, 'Car'], ['Rathaus', 2, 690, 30, 'Car'], ['Gorch Fock', 2, 721, 60, 'Car'], 
+						['Hafenrundfahrt', 2, 782, 60, 'Car'], ['Mr. Lucky Spielhalle', 2, 844, 60, 'Car'], ['Museum für komische Kunst', 2, 906, 90, 'Car'], 
+						['Theater Stralsund', 2, 997, 120, 'Car']] 
+		
+		Hinweis:
+			Die zuvor erstellte Timeline wird erweitert mit Events welche zu den gewählten Kategorien passen. Es wird kein Events 2 mal angeboten.
+			Im Laufe des Auswahlprozesses wird mit Random dafür gesorgt, dass die Timeline immer anders aussieht. Lediglich die vorgewählten Events bleiben gleich.
+
+
+
+Was passiert im Hintergrund?
+	checkEventsOnTime:
+		Entgegen dem Funktionsnamen prüft checkEventsOnTime nicht nur bezüglich der Zeit.
+		Zuerst wird die Timeline nach Tagen und Uhrzeit der Events sortiert. Anschließend wird geprüft ob die einzelnen Events folgende Kriterien erfüllen:
+			- Budget ist ausreichend für An- und Abfahrten, Eventpreise und Hotelübernachtungen
+			- Anfahrtszeiten kollidieren nicht mit den Endzeiten des vorhergehenden Events
+			- Start bzw. Ende der Events befinden sich innerhalb der Tages Start- und Endzeiten (incl. der Anfahrt und Abfahrt die benötigt werden)
+			- Start bzw. Ende der Events liegen ausserhalb der Start- und Endezeiten anderer Events (also keine Überschneidungen) (incl. der An- und Abfahrt des Events)
+			- Start bzw. Ende der Events liegen innerhalb der Öffnungszeiten
+
+		Für die Berechnung der Anfahrten wird:
+			- beim ersten Event des Tages die Tour von Hotel zum Event 
+			- bei Events mittem im Tag die Tour von vorherigem Event zu nächsten Event 
+			- beim letzten Event des Tages die Tour vom Event zum Hotel 
+			  genutzt. Hierbei wird die Entfernung berechnet und mit Hilfe des gewählten Fahrzeuges der Preis und die Dauer berechnet.
+
+	fillTimeLineAllDays:
+		Mit Hilfe dieser Funktion lässt sich eine Timeline füllen.
+		Hierbei wird unter Angabe der gewünschten Kategorien alle möglichen Events in Betracht gezogen und die Timeline Stück für Stück erweitert bis keine weiteren Events 
+		zur Verfügung stehen, keine Zeit mehr zu vergeben ist oder das Budget nicht mehr ausreicht.
+		Hierbei wird darauf geachtet, dass:
+			- jedes Event, incl. Anfahrt, das Budget nicht überschreitet
+			- wenn Kinder anwesend sind, jedes Event Kindergerecht ist (laut Definition in events.pl)
+			- jedes Event, incl. Anfahrt, nicht in den Zeitraum eines anderen Events hineingeht
+			- jedes Event, incl. Anfahrt, erst ab Tagesbeginn startet und, incl. Rückfahrt, vor Tagesende endet
+			- jedes Event nur während der Öffnungszeiten stattfindet
+			- die Anfahrt zum ersten Event des Tages vom Hotel aus berechnet wird
+			- die Rückfahrt des letzten Events des Tages zum Hotel berechnet wird
+		Nach dem Hinzufügen eines Events zur Timeline wird mit Hilfe von "CheckEventsOnTime" die "neue" Timeline geprüft und validiert.
+		
+		Der Ablauf hierbei ist:
+			- prüfe Timeline und unterscheide ob ein Event am Anfang, zwischen 2 Events, am Ende oder in eine komplett leere Timeline eingefügt werden soll
+			- suche zu den angegebenen Kategorien passende Events
+			- prüfe ob das Budget mit den neuen Event incl. neuer Anfahrt und der ggf. geänderten Anfahrt zum nächsten Event ausreichend ist
+			- prüfe ob der freie Zeitraum mit den neuen Event incl. neuer Anfahrt und der ggf. geänderten Anfahrt zum nächsten Event ausreichend ist
+			- prüfe ob die Öffnungszeiten des Events gültig sind
+			- prüfe ob die Events in der Timeline nicht auftauchen
+			- prüfe ob das Event, wenn Kinder anwesend, Kindergerecht ist
+			- wähle zufällig ein Event aus den übriggebliebenen aus
+			- setze das Event in die Timeline ein
+			- rufe die Funktion erneut auf, bis kein Event mehr einzufügen ist
+	
+
+
+*/
+
+
 :- use_module(events).
 :- use_module(java_connection_functions).
 
@@ -90,12 +323,16 @@ searchHotelsOnCategory(Categories,Hotels):-
 	compareCategories(List,Categories,Hotels1),
 	Hotels = Hotels1.
 
+
 /*
 * Vergleicht die Liste der Kategorien mit der übergebenen Liste
 
 Beispiel:
-compareCategories([['Hansedom',['Tiere','Museum']],['Haus 8',['Bar','Kneipe']]], ['Tiere','Museum', 'Bar'],  Result)
+compareCategories([['Hansedom',['Tiere','Museum']],['Haus 8',['Bar','Kneipe']]], ['Tiere','Museum', 'Bar'],  Result).
+	Result = ['Hansedom', 'Haus 8'].
+
 compareCategories([['Haus 8',['Bar','Kneipe']]], ['Tiere','Museum'],  Result)
+	Result = [].
 */
 compareCategories([E|L],Categories,List1):-
 	compareCategories(L,Categories,List2),
@@ -197,6 +434,12 @@ checkEventsOnTime([1,2],
 500, 1380, 'Hiddenseer Hotel', _,
 100000, Return, Price).
 
+Rückgabe:
+	Return = true,
+	Price = 42380
+	- Return gibt an ob die Timeline gültig ist
+	- Price gibt den Gesamtpreis der Timeline an
+
 */
 checkEventsOnTime(Persons, EventList, DayStart, DayEnd, Hotel, HotelCategorie, Budget, Return, Price):-
 	sortEventList(EventList,SortedEventList),
@@ -229,24 +472,30 @@ Price = Gesamtpreis der Tour
 
 Beispiel positiv an einem Tag:
 checkTimeLine([1,2], [['Ozeaneum',1,1030,40,'Car'],['Rathaus',1,1100,30,'Car']],800, 1320, 'Hiddenseer Hotel', 1000000, Return, Price).
+	Return = true,
+	Price = 25900 
+
 Beispiel positiv an 2 Tagen:
 checkTimeLine([1,2],[['Ozeaneum',1,1030,40,'Car'],['Rathaus',2,1100,30,'Car']],800, 1320, 'Hiddenseer Hotel', 100000, Return, Price).
+	Return = true,
+	Price = 36400
+
 Beispiel positiv an 2 Tagen:
 checkTimeLine([1,2],[['Ozeaneum',1,1030,40,'Car'],['Ozeaneum',2,1030,40,'Car'],['Rathaus',2,1100,30,'Car']], 800, 2200, 'Hiddenseer Hotel', 100000, Return, Price).
+	Return = true,
+	Price = 41300
 
-Diese Beispiele funktionieren nur mit den TestObjekten, diese müssen zuvor einkommentiert und die originaldaten auskommentiert werden
-Beispiel negativ an einem Tag:
-checkTimeLine([1,2],[['Haus 8',1,1030,100,'Car'],['Zoo',1,1130,100,'Car']],800, 2200, '1 Sterne Hotel', 100000, Return, Price).
-Beispiel negativ an einem Tag:
-checkTimeLine([1,2], [['Haus 8',1,830,100,'Car'],['Zoo',1,1230,100,'Car']],800, 2200, 'Hiddenseer Hotel', 1000000, Return, Price).
-Beispiel negativ an 2 Tagen weil letztes Event zu lange:
-checkTimeLine([1,2],[['Haus 8',1,830,100,'Car'],['Zoo',2,2130,100,'Car']],800, 2200, '1 Sterne Hotel', 100000, Return, Price).
-Beispiel negativ an 2 Tagen:
-checkTimeLine([1,2],[['Haus 8',1,830,100,'Car'],['Haus 8',2,830,100,'Car'],['Zoo',2,930,100,'Car']],800, 2200, '1 Sterne Hotel', 100000, Return, Price).
-Beispiel negativ an 2 Tagen weil zu früh begonnen:
-checkTimeLine([1,2],[['Haus 8',1,830,100,'Car'],['Haus 8',2,830,100,'Car'],['Zoo',2,930,100,'Car']],830, 2200, '1 Sterne Hotelm', 100000, Return, Price).
-Beispiel negativ an 2 Tagen weil Budget zu gering:
-checkTimeLine([1,2],[['Haus 8',1,830,100,'Car'],['Haus 8',2,830,100,'Car'],['Zoo',2,1030,100,'Car']],800, 2200, '1 Sterne Hotel', 450000, Return, Price).
+Beispiel negativ:
+- Event "Ozeaneum" beginnt vor dem Tagesbeginn 
+checkTimeLine([1,2],[['Ozeaneum',1,1030,40,'Car'],['Ozeaneum',2,1030,40,'Car'],['Rathaus',2,1100,30,'Car']], 1100, 2200, 'Hiddenseer Hotel', 100000, Return, Price).
+	Return = false,
+	Price = 0.
+
+Beispiel negativ:
+- Budget reicht nicht aus
+checkTimeLine([1,2],[['Ozeaneum',1,1030,40,'Car'],['Ozeaneum',2,1030,40,'Car'],['Rathaus',2,1100,30,'Car']], 900, 2200, 'Hiddenseer Hotel', 100, Return, Price).
+	Return = false,
+	Price = 0.
 */
 
 
@@ -395,10 +644,17 @@ Arrivel wird zurückgegeben (Arrival = ('Anfahrt', Vehicle, Zeit in Minuten, Star
 Wenn PreviousEvent leer, dann wird vom Hotel berechnet
 Wenn ThisEvent leer, dann wird zum Hotel berechnet
 
-Beispiel:
+Beispiel Event zu Event:
 calcApproachForEvent([1,1], 'Rathaus', 'Ozeaneum', 'Wyndham Stralsund', 'Car', 800, Approach).
+	Approach = ['Anfahrt', 'Car', 1, 799, 200]
+
+Beispiel Hotel zu Event:
 calcApproachForEvent([1,1], _, 'Ozeaneum', 'Wyndham Stralsund', 'Car', 800, Approach).
+	Approach = ['Anfahrt', 'Car', 2, 798, 200]
+
+Beispiel Event zu Hotel:
 calcApproachForEvent([1,1], 'Rathaus', _, 'Wyndham Stralsund', 'Car', 800, Approach).
+	Approach = ['Anfahrt', 'Car', 2, 798, 200]
 
 */
 calcApproachForEvent([AdultCount,ReducedCount], PreviousEvent, ThisEvent, Hotel, Vehicle, EventTime, Approach):-
@@ -438,8 +694,9 @@ Persons = [Erwachsene, Kinder]
 EventName = Name des Events
 Price = Rückgabewert des Preises
 
-Beispiel:
+Beispiel für das Event Hansedom:
 calcEventPrice([1,1], 'Hansedom', Price)
+	Price = 2550.
 */
 calcEventPrice([AdultCount,ReducedCount], EventName, Price):-
 	event(EventName,_,_,_,[AdultPrice,ReducedPrice],_,_),
@@ -454,8 +711,9 @@ Persons = [Erwachsene, Kinder]
 HotelName = Name des Hotels
 Price = Rückgabewert des Preises
 
-Beispiel:
-calcHotelPrice([1,1], 'Hiddenseer Hotel', Price)
+Beispiel für eine Übernachtung im Hiddenseer Hotel:
+calcHotelPrice([1,1], 'Hiddenseer Hotel', Price).
+	Price = 5100
 */
 calcHotelPrice(Persons, Hotel, Price):-
 	hotel(Hotel,_,PricePerRoom,_),
@@ -478,10 +736,17 @@ Hotel = Rückgabe des Hotels
 Budget = Das maximale Bugdet für das Hotel (in cent)
 Persons = [Erwachsene, Kinder]
 
-Beispiel:
-findHotelsForTrip([1,4], Hotel, 20000, [1,2])
+Beispiel positiv:
+findHotelsForTrip([1,4], Hotel, 20000, [1,2]).
+	Hotel = 'arcona Baltic'.
+
+Beispiel negativ, da zu wenig Budget:
 findHotelsForTrip([3], Hotel, 10, [2,2])
+	false 
+
+Beispiel positiv:
 trace, findHotelsForTrip([4], Hotel, 10000000, [2,0])
+	Hotel = 'arcona Baltic'.
 
 */
 findHotelsForTrip(HotelCategorie, Hotel, Budget, Persons):-
@@ -529,7 +794,10 @@ FoodCategories = Kategorien der Restaurants
 Restaurant = Rückgabewert
 [Starting, Ending] = Zeitrahmen
 
+Beispiel positiv:
 findRestaurant(['Fast-Food'], Restaurant, [1200,1500]).
+	Restaurant = 'Hansedom'.
+
 */
 findRestaurant(FoodCategories, Restaurant,[Starting,Ending]):-
 
@@ -574,7 +842,8 @@ EventStartTime = Uhrzeit wann das Event starten soll
 EventTime = Dauer des Events
 
 Beispiel:
-checkBussinesHours('Hansedom', 1100, 100)
+checkBussinesHours('Hansedom', 1100, 100).
+	true
 
 */
 checkBussinesHours(ThisEventName, EventStartTime, EventTime):-
@@ -604,9 +873,18 @@ Price = Preis der gesamten Tour
 
 Beispiele:
 fillTimeLineAllDays([1,0] ,['Bar', 'Freizeit','Bildung'], [['Strelapark',1,600,45,'Car'],['Theater Stralsund',2,1131,20,'Car']], 500, 1320, 'Hiddenseer Hotel', _, 'Car', 500000, FTL)
-trace, fillTimeLineAllDays([1,0] ,['Bar', 'Freizeit','Bildung'], [], 500, 1320, 'Hiddenseer Hotel', _, 'Car', 500000, FTL)
+	FTL = [['Strelapark', 1, 600, 45, 'Car'], ['Ben Gunn', 1, 1140, 60, 'Car'], ['KULTurschmiede', 1, 1201, 60, 'Car'], ['Essbar', 1, 1262, 60, 'Car'], ['Theater Stralsund', 2, 1131, 20, 'Car'], ['Coconut', 2, 1152, 60, 'Car'], ['Salsarico', 2, 1213, 60, 'Car']] 
+
+trace, fillTimeLineAllDays([1,0] ,['Bar', 'Freizeit','Bildung'], [], 500, 1320, 'Hiddenseer Hotel', _, 'Car', 500000, FTL).
+	FTL = [['Ozeaneum', 1, 570, 120, 'Car'], ['Ristorante Bellini', 1, 1080, 60, 'Car'], ['Essbar', 1, 1141, 60, 'Car'], ['Shisha und Cocktaillounge', 1, 1202, 60, 'Car'], ['Artemis', 1, 1263, 60, 'Car'], ['Coconut', 2, 1140, 60, 'Car'], ['Fürst Wizlaw I', 2, 1201, 60, 'Car'], ['Fritz Braugasthaus', 2, 1262, 60, 'Car']] 
+
 trace, fillTimeLineAllDays([1,2] ,['Bar', 'Freizeit','Bildung','Unterhaltung'], [], 500, 1320, _, [4,5], 'Car', 500000, FTL)
+	FTL = [['Tierpark Stralsund', 1, 540, 180, 'Car'], ['Cinestar Kino', 1, 723, 120, 'Car'], ['Theater Stralsund', 1, 845, 120, 'Car'], ['Mr. Lucky Spielhalle', 1, 967, 60, 'Car'], ['Hallenkartbahn', 1, 1029, 60, 'Car'], ['Hafenrundfahrt', 2, 660, 60, 'Car'], ['Museum für komische Kunst', 2, 721, 90, 'Car'], ['Deutsches Meeresmuseum', 2, 812, 120, 'Car'], ['Hansedom', 2, 934, 240, 'Car']] 
+
 fillTimeLineAllDays([1,0] ,['Bar', 'Freizeit','Bildung'], [], 500, 1320, _, [2], 'Car', 500000, FTL)
+	FTL = [['Kulturhistorisches Museum Stralsund', 1, 600, 120, 'Car'], ['Restaurant Jorgos', 1, 721, 60, 'Car'], ['Deutsches Meeresmuseum', 1, 782, 120, 'Car'], ['Artemis', 1, 904, 60, 'Car'], ['Gastmahl am Sund', 1, 965, 60, 'Car'], ['Shisha und Cocktaillounge', 1, 1080, 60, 'Car'], ['Brasserie', 1, 1141, 60, 'Car'], ['Ben Gunn', 1, 1203, 60, 'Car'], ['Salsarico', 1, 1265, 60, 'Car'], ['Ristorante Bellini', 2, 1080, 60, 'Car'], ['KULTurschmiede', 2, 1140, 60, 'Car'], ['Fritz Braugasthaus', 2, 1201, 60, 'Car'], ['Fürst Wizlaw I', 2, 1262, 60, 'Car']] 
+
+* Die hier angegebenen Ausgaben der BEispiele können Variieren.
 
 */
 
@@ -1315,9 +1593,12 @@ searchPossibleEventsOnBudget4(Budget, Persons, Hotel, Vehicle, [EventsHead | Eve
 Prüft ob die Events für alle Gruppenmitglieder geeignet sind
 wrid von findEventForFreeTime, findEventForFreeTime2, findEventForFreeTime3, findEventForFreeTime4 verwendet
 
-Beispiel:
-searchPossibleEventsOnAdultChildRatio([2,3], ['Theater Stralsund','Strelapark','Hansedom','Nautineum'], PossibleEventOnAdultChildRatio)
-searchPossibleEventsOnAdultChildRatio([2,0], ['Theater Stralsund','Strelapark','Hansedom','Nautineum'], PossibleEventOnAdultChildRatio)
+Beispiel mit Kinder:
+searchPossibleEventsOnAdultChildRatio([2,3], ['Theater Stralsund','Strelapark','Hansedom','Nautineum'], PossibleEventOnAdultChildRatio).
+	PossibleEventOnAdultChildRatio = ['Hansedom', 'Theater Stralsund']
+Beispiel unter Kinder:
+searchPossibleEventsOnAdultChildRatio([2,0], ['Theater Stralsund','Strelapark','Hansedom','Nautineum'], PossibleEventOnAdultChildRatio).
+	PossibleEventOnAdultChildRatio = ['Nautineum', 'Theater Stralsund']
 */
 searchPossibleEventsOnAdultChildRatio(_, [], PossibleEventOnAdultChildRatio):-
 	PossibleEventOnAdultChildRatio = [].
@@ -1610,6 +1891,14 @@ sortEventList([
 ['E1_4', 1, 700, 100, 'Car'],
 ['E2_4', 2, 900, 100, 'Car']],
 SortedEventList).
+	SortedEventList = 	[['E1_4', 1, 700, 100, 'Car'], 
+				['E1_3', 1, 900, 100, 'Car'], 
+				['E1_1', 1, 1000, 100, 'Car'], 
+				['E1_2', 1, 1700, 100, 'Car'], 
+				['E2_1', 2, 700, 100, 'Car'], 
+				['E2_4', 2, 900, 100, 'Car'], 
+				['E2_2', 2, 1000, 100, 'Car'], 
+				['E2_3', 2, 1700, 100, 'Car']]
 
 */
 sortEventList(EventList,SortedEventList):-
@@ -1624,6 +1913,8 @@ sortEventList(EventList,SortedEventList):-
 Teilt die Liste in jeweils eine Liste pro Tag auf
 Funktioniert nur bei 2 Tagen
 splitList([['E1_1', 1, 1000, 100, 'Car'],['E2_2', 2, 900, 100, 'Car'],['E1_2', 2, 1200, 200, 'Car'],['E2_1', 2, 1300, 100, 'Car'],['E1_2', 1, 1200, 100, 'Car'],['E2_1', 2, 2100, 100, 'Car']], 1, List1, List2).
+	List1 = [['E1_1', 1, 1000, 100, 'Car'], ['E1_2', 1, 1200, 100, 'Car']],
+	List2 = [['E2_2', 2, 900, 100, 'Car'], ['E1_2', 2, 1200, 200, 'Car'], ['E2_1', 2, 1300, 100, 'Car'], ['E2_1', 2, 2100, 100, 'Car']] 
 */
 
 splitList([], _, [], []).
@@ -1641,6 +1932,7 @@ splitList([Head|Rest], B, Rest1, [Head|Rest2]) :-
 /*
 Sortiert die Liste der Events
 quickSort([['E1_1', 1, 1000, 100, 'Car'],['E1_2', 1, 1700, 100, 'Car'],['E1_2', 1, 700, 100, 'Car'],['E1_2', 1, 900, 100, 'Car']], SortedList).
+	SortedList = [['E1_2', 1, 700, 100, 'Car'], ['E1_2', 1, 900, 100, 'Car'], ['E1_1', 1, 1000, 100, 'Car'], ['E1_2', 1, 1700, 100, 'Car']]
 */
 quickSort(List,Sorted):-
 	qSort(List,[],Sorted).
