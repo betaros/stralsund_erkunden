@@ -153,7 +153,7 @@ event(	'Ozeaneum',
 	[54.315691,13.097708],
 	['Bildung','Museum','Wasser','Hafen','Tiere','Kultur'],
 	['Cafe','Mittag','regional','deftig','mittlere Preisklasse'],
-	[1200,1700],
+	[1700,1200],
 	[570, 1080],
 	[120]).
 

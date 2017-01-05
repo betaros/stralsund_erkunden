@@ -94,7 +94,7 @@ Beispielhafter Programmablauf:
 		Die Anfahrt findet mit dem Auto statt.
 		Die Uhrzeiten und Dauer müssen auf Minuten umgerechnet werden.
 		Die Gruppe besteht aus 2 Erwachsenen und 1 Kindern.
-		Die Startzeit des Tages ist 11 Uhr und die Endzeit des Tages ist 19 Uhr.
+		Die Startzeit des Tages ist 12 Uhr und die Endzeit des Tages ist 19 Uhr.
 		Als Hotel wurde das "Hiddenseer Hotel" gewählt.
 		Die Hotelkategorien können leer bleiben, da das Hotel gewählt wurde.
 		Das Budget ist mit 1000 Euro angegeben.
@@ -190,8 +190,8 @@ Was passiert im Hintergrund?
 		Zuerst wird die Timeline nach Tagen und Uhrzeit der Events sortiert. Anschließend wird geprüft ob die einzelnen Events folgende Kriterien erfüllen:
 			- Budget ist ausreichend für An- und Abfahrten, Eventpreise und Hotelübernachtungen
 			- Anfahrtszeiten kollidieren nicht mit den Endzeiten des vorhergehenden Events
-			- Start bzw. Ende der Events befinden sich innerhalb der Tages Start- und Endzeiten (incl. der Anfahrt und Abfahrt die benötigt werden)
-			- Start bzw. Ende der Events liegen ausserhalb der Start- und Endezeiten anderer Events (also keine Überschneidungen) (incl. der An- und Abfahrt des Events)
+			- Start bzw. Ende der Events befinden sich innerhalb der Tages Start- und Endzeiten (inkl. der Anfahrt und Abfahrt die benötigt werden)
+			- Start bzw. Ende der Events liegen ausserhalb der Start- und Endezeiten anderer Events (also keine Überschneidungen) (inkl. der An- und Abfahrt des Events)
 			- Start bzw. Ende der Events liegen innerhalb der Öffnungszeiten
 
 		Für die Berechnung der Anfahrten wird:
